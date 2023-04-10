@@ -1,0 +1,365 @@
+/* Tests */
+.myLegend {
+    display: block;
+    width: 100%;
+    max-width: 100%;
+    padding: 0;
+    margin-bottom: .5rem;
+    font-size: 1.5rem;
+    line-height: inherit;
+    color: inherit;
+    white-space: normal;
+}
+
+.card-body-mylist {
+    -ms-flex: 1 1 auto;
+    flex: 1 1 auto;
+    min-height: 1px;
+    padding: 0.25rem 1.25rem;         /* top&bottom :: left&right */
+}
+
+
+
+.a-mcq {
+    color: #BC75A9;
+}
+.a-mcq:hover {
+    color: #894276;
+}
+
+.a-qa {
+    color: #7CC1AD;
+}
+.a-qa:hover {
+    color: #30619F;
+}
+
+
+.input-mcq {
+    font-weight: bolder;
+}
+.input-mcq::placeholder, .input-qa::placeholder {
+    font-weight: lighter;
+}
+.input-mcq:focus {
+    border-color: #BC75A9;
+    box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 8px #FFF4FF;
+}
+.input-qa:focus {
+    border-color: #30619F;
+    box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 8px #FFF4FF;
+}
+
+.input-heap {
+    font-weight: bolder;
+}
+.input-heap::placeholder {
+    font-weight: lighter;
+}
+.input-heap:focus {
+    border-color: #E8CDA8;
+    box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 8px #FFF4FF;
+}
+
+
+
+.border-left-qa {
+    border-left: 0.25rem solid #30619F !important;
+    border-radius: 2rem;
+}
+.border-left-mcq {
+    border-left: 0.25rem solid #BC75A9 !important;
+    border-radius: 2rem;
+}
+.border-left-heap {
+    border-left: 0.25rem solid #E8CDA8 !important;
+    border-radius: 2rem;
+}
+.border-left-dark {
+    border-left: 0.25rem solid #5a5c69 !important;
+    border-radius: 2rem;
+}
+
+/* Welcome Messages */
+.border-left-info {
+    border-left: 0.25rem solid #36b9cc !important;
+}
+
+/* Heap Test */
+.border-left-heap {
+    border-left: 0.25rem solid #E8CDA8 !important;
+}
+
+
+.heap_checkbox {
+    appearance: none;           /* ignore platform settings */
+    width: 12px;
+    height: 12px;
+    /*margin-top: 10px;*/
+    background: #E6E8ED;
+    box-shadow: inset 0 0 0 .4em white, 0 0 0 .2em; /* inner, outer */
+    border-radius: 2%;
+    transition: .2s;
+    cursor: pointer;
+    color: #afafb0;
+}
+.heap_checkbox:hover {
+    background: #afafb0;
+    box-shadow: inset 0 0 0 .2em white, 0 0 0 .3em; /* inner, outer */
+}
+.heap_checkbox:checked {
+    background: #E8CDA8;
+    box-shadow: inset 0 0 0 .2em white, 0 0 0 .3em #E8CDA8;
+}
+.heap_checkbox:checked:hover {
+    background: #E8CDA8;
+    box-shadow: inset 0 0 0 .2em white, 0 0 0 .4em #E8CDA8;
+}
+.heap_checkbox:checked ~ span {
+    color: #E8CDA8;
+    font-weight: bolder;
+}
+.heap_checkbox:focus {
+    outline: 0;
+}
+
+
+
+.answer_checkbox {
+    appearance: none;           /* ignore platform settings */
+    width: 12px;
+    height: 12px;
+    /*margin-top: 10px;*/
+    background: #E6E8ED;
+    box-shadow: inset 0 0 0 .4em white, 0 0 0 .2em; /* inner, outer */
+    border-radius: 2%;
+    transition: .2s;
+    cursor: pointer;
+    color: #afafb0;
+}
+.answer_checkbox:hover {
+    background: #afafb0;
+    box-shadow: inset 0 0 0 .2em white, 0 0 0 .3em; /* inner, outer */
+}
+.answer_checkbox:checked {
+    background: #BC75A9;
+    box-shadow: inset 0 0 0 .2em white, 0 0 0 .3em #BC75A9;
+}
+.answer_checkbox:checked:hover {
+    background: #BC75A9;
+    box-shadow: inset 0 0 0 .2em white, 0 0 0 .4em #BC75A9;
+}
+.answer_checkbox:checked ~ span {
+    color: #BC75A9;
+    font-weight: bolder;
+}
+.answer_checkbox:focus {
+    outline: 0;
+}
+
+
+
+/* Add MCQ */
+.btn-outline-mcq {
+    color: #BC75A9;
+    background-color: #ffffff;
+    border-color: #BC75A9;
+}
+
+.btn-outline-mcq:hover {
+    color: #fff;
+    background-color: #BC75A9;
+    border-color: #BC75A9;
+}
+
+.btn-outline-mcq:focus, .btn-outline-mcq.focus {
+    box-shadow: 0 0 0 0.2rem rgba(52, 58, 64, 0.5);
+}
+
+.btn-outline-mcq.disabled, .btn-outline-mcq:disabled {
+    color: #BC75A9;
+    background-color: transparent;
+}
+
+.btn-outline-mcq:not(:disabled):not(.disabled):active, .btn-outline-mcq:not(:disabled):not(.disabled).active,
+.show > .btn-outline-mcq.dropdown-toggle {
+    color: #fff;
+    background-color: #BC75A9;
+    border-color: #BC75A9;
+}
+
+.btn-outline-mcq:not(:disabled):not(.disabled):active:focus, .btn-outline-mcq:not(:disabled):not(.disabled).active:focus,
+.show > .btn-outline-mcq.dropdown-toggle:focus {
+    box-shadow: 0 0 0 0.2rem rgba(52, 58, 64, 0.5);
+}
+
+/* Heap Test Buttons */
+.btn-outline-heap {
+    color: #C2A782;
+    background-color: #ffffff;
+    border-color: #C2A782;
+}
+
+.btn-outline-heap:hover {
+    color: #fff;
+    background-color: #C2A782;
+    border-color: #C2A782;
+}
+
+.btn-outline-heap:focus, .btn-outline-heap.focus {
+    box-shadow: 0 0 0 0.2rem rgba(52, 58, 64, 0.5);
+}
+
+.btn-outline-heap.disabled, .btn-outline-heap:disabled {
+    color: #C2A782;
+    background-color: transparent;
+}
+
+.btn-outline-heap:not(:disabled):not(.disabled):active, .btn-outline-heap:not(:disabled):not(.disabled).active,
+.show > .btn-outline-heap.dropdown-toggle {
+    color: #fff;
+    background-color: #C2A782;
+    border-color: #C2A782;
+}
+
+.btn-outline-heap:not(:disabled):not(.disabled):active:focus, .btn-outline-heap:not(:disabled):not(.disabled).active:focus,
+.show > .btn-outline-heap.dropdown-toggle:focus {
+    box-shadow: 0 0 0 0.2rem rgba(52, 58, 64, 0.5);
+}
+
+
+
+/* Add Test to the Schedule */
+/*.btn-outline-schedule {*/
+/*    color: #4fbfa8;*/
+/*    background-color: #ffffff;*/
+/*    border-color: #4fbfa8;*/
+/*}*/
+
+/*.btn-outline-schedule:hover {*/
+/*    color: #fff;*/
+/*    background-color: #4fbfa8;*/
+/*    border-color: #4fbfa8;*/
+/*}*/
+
+/*.btn-outline-schedule:focus, .btn-outline-schedule.focus {*/
+/*    box-shadow: 0 0 0 0.2rem rgba(52, 58, 64, 0.5);*/
+/*}*/
+
+/*.btn-outline-schedule.disabled, .btn-outline-schedule:disabled {*/
+/*    color: #4fbfa8;*/
+/*    background-color: transparent;*/
+/*}*/
+
+/*.btn-outline-schedule:not(:disabled):not(.disabled):active, .btn-outline-schedule:not(:disabled):not(.disabled).active,*/
+/*.show > .btn-outline-schedule.dropdown-toggle {*/
+/*    color: #fff;*/
+/*    background-color: #4fbfa8;*/
+/*    border-color: #4fbfa8;*/
+/*}*/
+
+/*.btn-outline-schedule:not(:disabled):not(.disabled):active:focus, .btn-outline-schedule:not(:disabled):not(.disabled).active:focus,*/
+/*.show > .btn-outline-schedule.dropdown-toggle:focus {*/
+/*    box-shadow: 0 0 0 0.2rem rgba(52, 58, 64, 0.5);*/
+/*}*/
+
+
+/* MCQ Tests */
+.radio_mcq {
+    appearance: none;           /* ignore platform settings */
+    width: 14px;
+    height: 14px;
+    /*margin-top: 10px;*/
+    background: #E6E8ED;
+    box-shadow: inset 0 0 0 .4em white, 0 0 0 .2em; /* inner, outer */
+    border-radius: 50%;
+    transition: .2s;
+    cursor: pointer;
+    color: #afafb0;
+}
+.radio_mcq:hover {
+    background: #afafb0;
+    box-shadow: inset 0 0 0 .3em white, 0 0 0 .3em; /* inner, outer */
+}
+.radio_mcq:checked {
+    background: #BC75A9;
+    box-shadow: inset 0 0 0 .4em white, 0 0 0 .3em #BC75A9;
+}
+.radio_mcq:checked:hover {
+    background: #BC75A9;
+    box-shadow: inset 0 0 0 .4em white, 0 0 0 .4em #BC75A9;
+}
+.radio_mcq:checked ~ span {
+    color: #BC75A9;
+    font-weight: bolder;
+}
+.radio_mcq:focus {
+    outline: 0;
+}
+
+
+/* Schedule Test Type: Input / Choose - depends on test type: MCQ or QA */
+.radio_qa {
+    appearance: none;           /* ignore platform settings */
+    width: 14px;
+    height: 14px;
+    /*margin-top: 10px;*/
+    background: #30619F;
+    box-shadow: inset 0 0 0 .4em white, 0 0 0 .2em; /* inner, outer */
+    border-radius: 50%;
+    transition: .2s;
+    cursor: pointer;
+    color: #afafb0;
+}
+.radio_qa:hover {
+    background: #afafb0;
+    box-shadow: inset 0 0 0 .3em white, 0 0 0 .3em; /* inner, outer */
+}
+.radio_qa:checked {
+    background: #30619F;
+    box-shadow: inset 0 0 0 .4em white, 0 0 0 .3em #30619F;
+}
+.radio_qa:checked:hover {
+    background: #30619F;
+    box-shadow: inset 0 0 0 .4em white, 0 0 0 .4em #30619F;
+}
+.radio_qa:checked ~ span {
+    color: #30619F;
+    font-weight: bolder;
+}
+.radio_qa:focus {
+    outline: 0;
+}
+
+/* Schedule Test Type: Input / Choose */
+.radio_heap {
+    appearance: none;           /* ignore platform settings */
+    width: 14px;
+    height: 14px;
+    /*margin-top: 10px;*/
+    background: #c89365;
+    box-shadow: inset 0 0 0 .4em white, 0 0 0 .2em; /* inner, outer */
+    border-radius: 50%;
+    transition: .2s;
+    cursor: pointer;
+    color: #afafb0;
+}
+.radio_heap:hover {
+    background: #afafb0;
+    box-shadow: inset 0 0 0 .3em white, 0 0 0 .3em; /* inner, outer */
+}
+.radio_heap:checked {
+    background: #c89365;
+    box-shadow: inset 0 0 0 .4em white, 0 0 0 .3em #c89365;
+}
+.radio_heap:checked:hover {
+    background: #c89365;
+    box-shadow: inset 0 0 0 .4em white, 0 0 0 .4em #c89365;
+}
+.radio_heap:checked ~ span {
+    color: #c89365;
+    font-weight: bolder;
+}
+.radio_heap:focus {
+    outline: 0;
+}

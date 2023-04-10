@@ -1,0 +1,23 @@
+.btn-reset {
+    padding: 0 2px;
+    font-size: inherit;
+    line-height: inherit;
+    color: inherit;
+    background-color: transparent;
+    border: 0;
+    cursor: pointer
+}
+.btn-reset.btn, .btn-group-sm > .btn-reset.btn, .btn-reset.btn, .btn-reset.btn-lg, .btn-reset.btn-sm {
+    height: auto
+}
+.btn-reset:focus, .btn-reset:hover {
+    color: inherit;
+    text-decoration: inherit;
+    box-shadow: none
+}
+.btn-reset.text-muted.active, .btn-reset.text-muted.focus, .btn-reset.text-muted.show, .btn-reset.text-muted:focus, .btn-reset.text-muted:hover {
+    color: #363642 !important
+}
+
+
+

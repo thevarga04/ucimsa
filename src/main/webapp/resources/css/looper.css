@@ -1,0 +1,40 @@
+
+
+
+.collapse-indicator {
+    text-align: left;
+    color: #888c9b
+}
+
+[data-toggle=collapse] .collapse-indicator > .fa, [data-toggle=collapse] .collapse-indicator > .oi {
+    transform: rotate(0deg);
+    transition: transform .2s
+}
+
+[data-toggle=collapse][aria-expanded=true] .collapse-indicator > .fa-plus:before {
+    content: "\f068"
+}
+
+[data-toggle=collapse][aria-expanded=true] .collapse-indicator > .oi-plus:before {
+    content: "\e09d"
+}
+
+[data-toggle=collapse][aria-expanded=true] .collapse-indicator > .fa-angle-down, [data-toggle=collapse][aria-expanded=true] .collapse-indicator > .fa-caret-down, [data-toggle=collapse][aria-expanded=true] .collapse-indicator > .fa-chevron-down, [data-toggle=collapse][aria-expanded=true] .collapse-indicator > .oi-caret-down, [data-toggle=collapse][aria-expanded=true] .collapse-indicator > .oi-chevron-down {
+    transform: rotate(-180deg)
+}
+
+[data-toggle=collapse][aria-expanded=true] .collapse-indicator > .fa-angle-left, [data-toggle=collapse][aria-expanded=true] .collapse-indicator > .fa-caret-left, [data-toggle=collapse][aria-expanded=true] .collapse-indicator > .fa-chevron-left, [data-toggle=collapse][aria-expanded=true] .collapse-indicator > .oi-caret-left, [data-toggle=collapse][aria-expanded=true] .collapse-indicator > .oi-chevron-left {
+    transform: rotate(-90deg)
+}
+
+[data-toggle=collapse][aria-expanded=true] .collapse-indicator > .fa-angle-right, [data-toggle=collapse][aria-expanded=true] .collapse-indicator > .fa-caret-right, [data-toggle=collapse][aria-expanded=true] .collapse-indicator > .fa-chevron-right, [data-toggle=collapse][aria-expanded=true] .collapse-indicator > .oi-caret-right, [data-toggle=collapse][aria-expanded=true] .collapse-indicator > .oi-chevron-right {
+    transform: rotate(90deg)
+}
+
+[data-toggle=collapse][aria-expanded=true] .collapse-indicator > .fa-circle, [data-toggle=collapse][aria-expanded=true] .collapse-indicator > .fa-dot-circle {
+    color: #346cb0
+}
+
+[data-toggle=collapse][aria-expanded=true] .collapse-indicator > .fa-circle:before, [data-toggle=collapse][aria-expanded=true] .collapse-indicator > .fa-dot-circle:before {
+    content: "\f192"
+}

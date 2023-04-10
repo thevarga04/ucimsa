@@ -1,0 +1,80 @@
+.color-red {
+    color: #e66a5e;
+}
+.color-maroon, .color-mcq, .color-MCQ {
+    color: #BC75A9;
+}
+
+
+.color-purple {
+    color: #614092;
+}
+.color-blue-dark, .color-qa, .color-QA {
+    color: #30619F;
+}
+.color-blue {
+    color: #346CB0;
+}
+.color-blue-light {
+    color: #A6BFDC;
+}
+
+.color-schedule {
+    color: #4fbfa8;
+}
+
+.color-green {
+    color: #15AA94;
+}
+.color-green-light {
+    color: #A2DDD4;
+}
+
+/* replace 41B3A3 with 30619F */
+/*.color-qa {*/
+/*    color: #30619F;*/
+/*}*/
+.color-qa-light {
+    color: #7CC1AD;
+}
+
+/* 6e4c1d */
+.color-heap, .color-HEAP {
+    color: #c89365;
+}
+.color-heap-light {
+    color: #E8CDA8;
+}
+
+.color-yellow {
+    color: #F7C46C;
+}
+.color-sand {
+    color: #e4a06a;
+}
+.color-brown {
+    color: #c89365;
+}
+
+
+.color-grey0 {
+    color: #f7f7f7;
+}
+.color-grey1 {
+    color: #E6E8ED;
+}
+.color-grey2 {
+    color: #afafb0;
+}
+.color-grey3 {
+    color: #a7a8aa;
+}
+.color-grey4 {
+    color: #818284;
+}
+.color-dark {
+    color: #4d4543;
+}
+.color-black {
+    color: #464250;
+}
