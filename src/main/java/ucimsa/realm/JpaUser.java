@@ -4,6 +4,7 @@ import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
 import jakarta.persistence.JoinTable;
 import jakarta.persistence.ManyToMany;
 import jakarta.persistence.Table;
@@ -32,7 +33,10 @@ public class JpaUser {
   private boolean activated;
 
   @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
-  @JoinTable(name = "users_roles")
+  @JoinTable(name = "users_roles"
+      , joinColumns = @JoinColumn(name = "users_username", referencedColumnName = "username")
+      , inverseJoinColumns = @JoinColumn(name = "roles_name", referencedColumnName = "name")
+  )
   private Set<JpaRole> roles;
 
 

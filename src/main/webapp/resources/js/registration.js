@@ -8,6 +8,8 @@ $(document).ready(function () {
   assemblyContextAndUrls();
   generateHeader();
   generateUI();
+  // TODO: Enable submit button after checking if user is available,
+  //  and use the optimistic locking with some timeout ...
 });
 
 function generateUI() {

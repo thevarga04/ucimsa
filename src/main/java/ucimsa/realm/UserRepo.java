@@ -12,7 +12,7 @@ public interface UserRepo extends JpaRepository<JpaUser, Integer> {
    * jakarta.persistence.Column(columnDefinition = "serial")
    * @GeneratedValue(strategy = GenerationType.SEQUENCE)
    */
-  @Query(value = "Select nextval( pg_get_serial_sequence('users', 'id') ) as id", nativeQuery = true)
+  @Query(value = "Select nextval(pg_get_serial_sequence('users', 'id')) as id", nativeQuery = true)
   int nextID();
 
   JpaUser findByUsername(String username);

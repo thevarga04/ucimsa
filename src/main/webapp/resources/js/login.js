@@ -6,6 +6,8 @@ $(document).ready(function () {
   assemblyContextAndUrls();
   generateHeader();
   generateUI();
+
+  // TODO: Handle invalid login attempt ...
 });
 
 function generateUI() {

@@ -115,15 +115,4 @@ public class WebSecurityConfig {
         .build();
   }
 
-//  /**
-//   * Support auto-login in Spring 6
-//   */
-//  @Bean
-//  public SecurityContextRepository securityContextRepository() {
-//    return new DelegatingSecurityContextRepository(
-//        new RequestAttributeSecurityContextRepository(), new HttpSessionSecurityContextRepository()
-//    );
-//  }
-
-
 }

@@ -1,5 +1,6 @@
 package ucimsa.realm;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -15,6 +16,7 @@ public class User {
   private String username;
   private String firstname;
   private String lastname;
+  @JsonIgnore
   private String password;
   private boolean activated;
 

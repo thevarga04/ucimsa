@@ -7,6 +7,7 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import ucimsa.util.StreamUtil;
 
 @Service
 public class UserDetailsServiceImpl implements UserDetailsService {
@@ -30,7 +31,10 @@ public class UserDetailsServiceImpl implements UserDetailsService {
     return User.builder()
         .username(jpaUser.getUsername())
         .password(jpaUser.getPassword())
-        .authorities(jpaUser.getRoles().stream().map(role -> new SimpleGrantedAuthority(role.getName())).toList())
+        .authorities(StreamUtil.ofNullable(jpaUser.getRoles())
+            .map(role -> new SimpleGrantedAuthority(role.getName()))
+            .toList()
+        )
         .build();
   }
 

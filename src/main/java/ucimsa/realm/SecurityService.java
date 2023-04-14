@@ -1,22 +1,29 @@
 package ucimsa.realm;
 
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import java.util.Optional;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.context.SecurityContextHolderStrategy;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.web.context.SecurityContextRepository;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 
 @Component
 public class SecurityService {
 
+  private final UserDetailsServiceImpl userDetailsService;
+  private final SecurityContextHolderStrategy securityContextHolderStrategy = SecurityContextHolder.getContextHolderStrategy();
 
-//  private final UserDetailsServiceImpl userDetailsService;
-//  private final SecurityContextRepository securityContextRepository;
-//
-//
-//  public SecurityService(UserDetailsServiceImpl userDetailsService, SecurityContextRepository securityContextRepository) {
-//    this.userDetailsService = userDetailsService;
-//    this.securityContextRepository = securityContextRepository;
-//  }
+
+  @Autowired
+  public SecurityService(UserDetailsServiceImpl userDetailsService) {
+    this.userDetailsService = userDetailsService;
+  }
 
 
   /**
@@ -43,17 +50,20 @@ public class SecurityService {
   }
 
 
-//  @Transactional
-//  public void autoLogin(String username, String password, HttpServletRequest request, HttpServletResponse response) {
-//    final var userDetails = userDetailsService.loadUserByUsername(username);
-//    final var authentication = new UsernamePasswordAuthenticationToken(userDetails, password, userDetails.getAuthorities());
-//    final var securityContextHolderStrategy = SecurityContextHolder.getContextHolderStrategy();
-//    final var securityContext = securityContextHolderStrategy.createEmptyContext();
-//    securityContext.setAuthentication(authentication);
-//    securityContextHolderStrategy.setContext(securityContext);
-//
-//    securityContextRepository.saveContext(securityContext, request, response);
-//  }
-
+  @Transactional
+  public void login(
+      User user
+      , HttpServletRequest request
+      , HttpServletResponse response
+      , AuthenticationManager authenticationManager
+      , SecurityContextRepository securityContextRepository
+  ) {
+    final var token = UsernamePasswordAuthenticationToken.unauthenticated(user.getUsername(), user.getPassword());
+    final var authentication = authenticationManager.authenticate(token);
+    final var context = securityContextHolderStrategy.createEmptyContext();
+    context.setAuthentication(authentication);
+    securityContextHolderStrategy.setContext(context);
+    securityContextRepository.saveContext(context, request, response);
+  }
 
 }

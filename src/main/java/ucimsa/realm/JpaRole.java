@@ -2,9 +2,7 @@ package ucimsa.realm;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
-import jakarta.persistence.ManyToMany;
 import jakarta.persistence.Table;
-import java.util.Set;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -22,8 +20,6 @@ public class JpaRole {
 
   @Id
   private String name;
-  @ManyToMany(mappedBy = "roles")
-  private Set<JpaUser> users;
 
 
   @Override

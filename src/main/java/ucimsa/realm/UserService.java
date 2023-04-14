@@ -1,6 +1,6 @@
 package ucimsa.realm;
 
-import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -10,13 +10,12 @@ public class UserService {
 
   private final UserMapper userMapper;
   private final UserRepo userRepo;
-  private final PasswordEncoder passwordEncoder;
 
 
-  public UserService(UserMapper userMapper, UserRepo userRepo, PasswordEncoder passwordEncoder) {
+  @Autowired
+  public UserService(UserMapper userMapper, UserRepo userRepo) {
     this.userMapper = userMapper;
     this.userRepo = userRepo;
-    this.passwordEncoder = passwordEncoder;
   }
 
 
@@ -26,11 +25,6 @@ public class UserService {
 
   public void save(User user) {
     final var jpa = userMapper.toJpaUser(user);
-    jpa.setId(userRepo.nextID());
-    jpa.setPassword(passwordEncoder.encode(user.getPassword()));
-
-    // roles ...
-
     userRepo.save(jpa);
   }
 
