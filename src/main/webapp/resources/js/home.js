@@ -1,4 +1,4 @@
-import {assemblyContextAndUrls, generateHeader, getCsrfToken} from "./header.js";
+import {assemblyContextAndUrls, generateHeader, getCsrfToken} from "./common.js";
 
 // Generate the UI after page load is complete
 $(document).ready(function () {

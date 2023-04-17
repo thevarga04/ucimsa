@@ -1,4 +1,4 @@
-import {assemblyContextAndUrls, csrf, generateHeader, getCsrfToken, urls} from "./header.js";
+import {assemblyContextAndUrls, csrf, displayWarning, generateHeader, getCsrfToken, urls} from "./common.js";
 
 let containerUI;
 
@@ -22,7 +22,6 @@ function generateUI() {
   let formFrame = document.createElement("form");
   formFrame.id = "form";
   formFrame.setAttribute("method", "POST");
-  formFrame.setAttribute("action", urls.registrationUrl);
   formFrame.setAttribute("class", "form-signin");
 
   let header = document.createElement("h2");
@@ -97,7 +96,7 @@ function generateUI() {
   confirm.setAttribute("class", "form-control");
 
   let csrfInput = document.createElement("input");
-  csrfInput.id = "csrf";
+  csrfInput.id = "csrfRegistration";
   csrfInput.type = "hidden";
   csrfInput.name = "_csrf";
   csrfInput.value = csrf.token;
@@ -120,48 +119,27 @@ function generateUI() {
   containerUI.append(formFrame);
 }
 
-// function register() {
-//   let form = document.getElementById("form");
-//   let formData = new FormData(form);
-//   formData.set("id", "0");
-//   formData.set("activated", "false");
-//   formData.delete("roles");
-//   formData.delete("inputConfirm");
-//   formData.append("MyKey", "MyValue");
-//
-//   const xhttp = new XMLHttpRequest();
-//   xhttp.open('POST', urls.registrationUrl);
-//   xhttp.setRequestHeader('x-csrf-token', csrf.token);
-//   xhttp.send(formData);
-//
-//   xhttp.onreadystatechange = function () {
-//     if (this.readyState === 4) {
-//       if (this.status === 200) {
-//         console.log(this.responseText);
-//         location.href = "/";
-//       } else {
-//         console.log(`Registration has failed. ${this.responseText} Response code: ${this.status}`);
-//         displayWarning(this.responseText);
-//       }
-//     }
-//   }
-// }
-//
-// function displayWarning(responseText) {
-//   let warning = document.getElementById("warning");
-//   if (warning == null) {
-//     warning = document.createElement("div");
-//     warning.id = "warning";
-//     warning.setAttribute("class", "container");
-//   }
-//
-//   while (warning.firstChild) {
-//     warning.removeChild(warning.lastChild);
-//   }
-//
-//   let note = document.createElement("div");
-//   note.setAttribute("class", "text-danger mt-2");
-//   note.innerHTML = `Registration has failed due: <br />${responseText}`;
-//   warning.append(note);
-//   containerUI.append(warning);
-// }
+function submitRegister() {
+  let form = document.getElementById("form");
+  let formData = new FormData(form);
+  formData.set("id", "0");
+  formData.set("activated", "false");
+  formData.delete("roles");
+  formData.delete("inputConfirm");
+
+  const xhttp = new XMLHttpRequest();
+  xhttp.open('POST', urls.registrationUrlPost);
+  xhttp.send(formData);
+
+  xhttp.onreadystatechange = function () {
+    if (this.readyState === 4) {
+      if (this.status === 200) {
+        console.log(this.responseText);
+        location.href = "/";
+      } else {
+        console.log(`Registration has failed. ${this.responseText} Response code: ${this.status}`);
+        displayWarning(this.responseText);
+      }
+    }
+  }
+}

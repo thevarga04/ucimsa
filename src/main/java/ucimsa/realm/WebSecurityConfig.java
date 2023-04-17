@@ -9,8 +9,10 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
 
@@ -18,12 +20,16 @@ import org.springframework.web.servlet.config.annotation.CorsRegistry;
 @EnableWebSecurity
 public class WebSecurityConfig {
 
-  private final UserDetailsServiceImpl userDetailsService;
+  private static final String[] ALLOWED_URLS = new String[]{"/", "/home", "/login", "/login/**", "/logout", "/logout/**"};
+
+  private final UserDetailsService userDetailsService;
+  private final AuthenticationEntryPoint authenticationEntryPoint;
 
 
   @Autowired
-  public WebSecurityConfig(UserDetailsServiceImpl userDetailsService) {
+  public WebSecurityConfig(UserDetailsService userDetailsService, AuthenticationEntryPoint authenticationEntryPoint) {
     this.userDetailsService = userDetailsService;
+    this.authenticationEntryPoint = authenticationEntryPoint;
   }
 
   @Bean
@@ -52,7 +58,7 @@ public class WebSecurityConfig {
    */
   @Bean
   @Order(1)
-  public SecurityFilterChain filterChainApi(HttpSecurity http) throws Exception {
+  public SecurityFilterChain filterChainAuth(HttpSecurity http) throws Exception {
     return http
         .csrf()
 
@@ -68,12 +74,35 @@ public class WebSecurityConfig {
         .build();
   }
 
+  @Bean
+  @Order(2)
+  public SecurityFilterChain filterChainPub(HttpSecurity http) throws Exception {
+    return http
+        .csrf()
+
+        .and()
+        .cors()
+
+        .and()
+        .securityMatcher("/pub/**")
+        .authorizeHttpRequests(auth -> auth
+            .anyRequest().permitAll()
+        )
+
+        .exceptionHandling(exception -> exception
+            .authenticationEntryPoint(authenticationEntryPoint)
+        )
+
+        .build();
+  }
+
+
   /**
    * .loginPage define custom login page otherwise spring offer its default one,
    * no redirection is needed, because client's side (javascript) do that
    */
   @Bean
-  @Order(2)
+  @Order(3)
   public SecurityFilterChain filterChainMvc(HttpSecurity http) throws Exception {
     return http
         .csrf()
@@ -82,18 +111,15 @@ public class WebSecurityConfig {
         .cors()
 
         .and()
-        .authorizeHttpRequests(authorize -> authorize
-            .requestMatchers(HttpMethod.GET, "/", "/home/**", "/resources/**", "/registration/**")
+        .securityMatcher(ALLOWED_URLS)
+        .authorizeHttpRequests(auth -> auth
+            .requestMatchers(HttpMethod.GET, ALLOWED_URLS)
             .permitAll()
-            .requestMatchers(HttpMethod.POST, "/login", "/registration/**")
-            .permitAll()
-            .anyRequest().permitAll()
+            .anyRequest().denyAll()
         )
 
         .formLogin(form -> form
             .loginPage("/login")
-            .defaultSuccessUrl("/home", true)
-            .permitAll()
         )
 
         .logout(logout -> logout
@@ -104,7 +130,7 @@ public class WebSecurityConfig {
         )
 
         .rememberMe(me -> me
-            .key("rememberMeKey")
+            .key("RememberMeKey")
             .tokenValiditySeconds(86400)
         )
 

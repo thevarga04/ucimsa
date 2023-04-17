@@ -1,4 +1,6 @@
-import {assemblyContextAndUrls, csrf, generateHeader, getCsrfToken, urls} from "./header.js";
+import {assemblyContextAndUrls, csrf, displayWarning, generateHeader, getCsrfToken, urls} from "./common.js";
+
+let containerUI;
 
 // Generate the UI after page load is complete
 $(document).ready(function () {
@@ -6,12 +8,10 @@ $(document).ready(function () {
   assemblyContextAndUrls();
   generateHeader();
   generateUI();
-
-  // TODO: Handle invalid login attempt ...
 });
 
 function generateUI() {
-  let containerUI = document.createElement("div");
+  containerUI = document.createElement("div");
   containerUI.id = "containerUI";
   containerUI.setAttribute("class", "container");
   document.body.append(containerUI);
@@ -20,7 +20,6 @@ function generateUI() {
   let formFrame = document.createElement("form");
   formFrame.id = "form";
   formFrame.setAttribute("method", "POST");
-  formFrame.setAttribute("action", urls.loginUrl);
   formFrame.setAttribute("class", "form-signin");
 
   let formGroup = document.createElement("div");
@@ -52,7 +51,7 @@ function generateUI() {
   password.setAttribute("class", "form-control");
 
   let csrfInput = document.createElement("input");
-  csrfInput.id = "csrf";
+  csrfInput.id = "csrfLogin";
   csrfInput.type = "hidden";
   csrfInput.name = "_csrf";
   csrfInput.value = csrf.token;
@@ -68,9 +67,32 @@ function generateUI() {
   submit.title = "Log in";
   submit.append("Log In");
   submit.setAttribute("class", "btn btn-lg btn-primary");
+  submit.onclick = function () { submitLogin() };
 
 
   formGroup.append(formHeading, message, username, password, csrfInput, error, submit);
   formFrame.append(formGroup);
   containerUI.append(formFrame);
+}
+
+function submitLogin() {
+  let form = document.getElementById("form");
+  let formData = new FormData(form);
+
+  const xhttp = new XMLHttpRequest();
+  xhttp.open("POST", urls.loginUrlPost);
+  xhttp.send(formData);
+
+  xhttp.onreadystatechange = function () {
+    if (this.readyState === 4) {
+      if (this.status === 200) {
+        console.log(this.responseText);
+        location.href = "/";
+      } else {
+        console.log(`Login failed. ${this.responseText} Response code: ${this.status}`);
+        let warning = displayWarning(this.responseText);
+        containerUI.append(warning);
+      }
+    }
+  }
 }

@@ -15,13 +15,13 @@ import ucimsa.realm.User;
 @RestController
 @RequestMapping("/auth")
 @Slf4j
-public class WhoAmIRest {
+public class AuthRest {
 
   private final SecurityService securityService;
 
 
   @Autowired
-  public WhoAmIRest(SecurityService securityService) {
+  public AuthRest(SecurityService securityService) {
     this.securityService = securityService;
   }
 

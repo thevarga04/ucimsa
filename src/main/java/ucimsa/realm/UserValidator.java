@@ -4,7 +4,6 @@ import static org.springframework.util.ObjectUtils.isEmpty;
 
 import java.util.List;
 import java.util.regex.Pattern;
-import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -20,7 +19,11 @@ public class UserValidator {
     this.userService = userService;
   }
 
-  public void validate(@NonNull User user) throws UserValidatorException {
+  public void validate(User user) throws UserValidatorException {
+    if (user == null) {
+      throw new UserValidatorException("Provided null user.");
+    }
+
     for (final var field : List.of(
         user.getFirstname()
         , user.getLastname()

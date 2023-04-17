@@ -9,6 +9,7 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.context.SecurityContextHolderStrategy;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.web.context.HttpSessionSecurityContextRepository;
 import org.springframework.security.web.context.SecurityContextRepository;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
@@ -16,13 +17,14 @@ import org.springframework.transaction.annotation.Transactional;
 @Component
 public class SecurityService {
 
-  private final UserDetailsServiceImpl userDetailsService;
+  private final AuthenticationManager authenticationManager;
   private final SecurityContextHolderStrategy securityContextHolderStrategy = SecurityContextHolder.getContextHolderStrategy();
+  private final SecurityContextRepository securityContextRepository = new HttpSessionSecurityContextRepository();
 
 
   @Autowired
-  public SecurityService(UserDetailsServiceImpl userDetailsService) {
-    this.userDetailsService = userDetailsService;
+  public SecurityService(AuthenticationManager authenticationManager) {
+    this.authenticationManager = authenticationManager;
   }
 
 
@@ -55,8 +57,6 @@ public class SecurityService {
       User user
       , HttpServletRequest request
       , HttpServletResponse response
-      , AuthenticationManager authenticationManager
-      , SecurityContextRepository securityContextRepository
   ) {
     final var token = UsernamePasswordAuthenticationToken.unauthenticated(user.getUsername(), user.getPassword());
     final var authentication = authenticationManager.authenticate(token);

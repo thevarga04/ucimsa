@@ -3,20 +3,27 @@ export let csrf = {
 }
 
 export function getCsrfToken() {
-  csrf.token = document.getElementsByName("_csrf")[0].value;
+  const csrfNodes = document.getElementsByName("_csrf");
+  if (csrfNodes != null && csrfNodes[0] != null) {
+    csrf.token = csrfNodes[0].value;
+  }
 }
 
 export let urls = {
   contextPath: '',
-  registrationUrl: "/registration",
-  loginUrl: "/login",
+  registrationUrlGet: "/registration",
+  registrationUrlPost: "/pub/registration",
+  loginUrlGet: "/login",
+  loginUrlPost: "/pub/login",
   logoutUrl: "/logout"
 };
 
 export function assemblyContextAndUrls() {
   urls.contextPath = window.location.pathname.substring(0, window.location.pathname.indexOf("/", 2));
-  urls.registrationUrl = urls.contextPath + urls.registrationUrl;
-  urls.loginUrl = urls.contextPath + urls.loginUrl;
+  urls.registrationUrlGet = urls.contextPath + urls.registrationUrlGet;
+  urls.registrationUrlPost = urls.contextPath + urls.registrationUrlPost;
+  urls.loginUrlGet = urls.contextPath + urls.loginUrlGet;
+  urls.loginUrlPost = urls.contextPath + urls.loginUrlPost;
   urls.logoutUrl = urls.contextPath + urls.logoutUrl;
 }
 
@@ -39,7 +46,7 @@ export function generateHeader() {
   formLogout.action = urls.logoutUrl;
 
   let csrfInput = document.createElement("input");
-  csrfInput.id = "csrf";
+  csrfInput.id = "csrfLogout";
   csrfInput.type = "hidden";
   csrfInput.name = "_csrf";
   csrfInput.value = csrf.token;
@@ -73,7 +80,7 @@ export function generateHeader() {
   let aLogin = document.createElement("a");
   aLogin.id = "aLogin";
   aLogin.setAttribute( "class", "h6 text-primary" );
-  aLogin.href = urls.loginUrl;
+  aLogin.href = urls.loginUrlGet;
   aLogin.title = "Home";
   let aLoginText = document.createTextNode("Login");
   aLogin.append(aLoginText);
@@ -81,7 +88,7 @@ export function generateHeader() {
   let aRegistration = document.createElement("a");
   aRegistration.id = "aRegistration";
   aRegistration.setAttribute( "class", "h6 color-register" );
-  aRegistration.href = urls.registrationUrl;
+  aRegistration.href = urls.registrationUrlGet;
   aRegistration.title = "Registration";
   let aRegistrationText = document.createTextNode("Registration");
   aRegistration.append(aRegistrationText);
@@ -95,4 +102,23 @@ export function generateHeader() {
 
 function logout() {
   document.forms["formLogout"].submit();
+}
+
+export function displayWarning(responseText) {
+  let warning = document.getElementById("warning");
+  if (warning == null) {
+    warning = document.createElement("div");
+    warning.id = "warning";
+    warning.setAttribute("class", "container");
+  }
+
+  while (warning.firstChild) {
+    warning.removeChild(warning.lastChild);
+  }
+
+  let note = document.createElement("div");
+  note.setAttribute("class", "text-danger mt-2");
+  note.innerHTML = `Registration has failed due: <br />${responseText}`;
+  warning.append(note);
+  return warning;
 }
