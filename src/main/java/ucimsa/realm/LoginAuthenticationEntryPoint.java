@@ -9,13 +9,13 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.HandlerExceptionResolver;
 
 @Component
-public class AuthenticationEntryPointLogin implements AuthenticationEntryPoint {
+public class LoginAuthenticationEntryPoint implements AuthenticationEntryPoint {
 
   private final HandlerExceptionResolver handlerExceptionResolver;
 
 
   @Autowired
-  public AuthenticationEntryPointLogin(HandlerExceptionResolver handlerExceptionResolver) {
+  public LoginAuthenticationEntryPoint(HandlerExceptionResolver handlerExceptionResolver) {
     this.handlerExceptionResolver = handlerExceptionResolver;
   }
 

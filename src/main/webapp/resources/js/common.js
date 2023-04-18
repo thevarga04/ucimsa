@@ -104,7 +104,7 @@ function logout() {
   document.forms["formLogout"].submit();
 }
 
-export function displayWarning(responseText) {
+export function displayWarning(action, responseText) {
   let warning = document.getElementById("warning");
   if (warning == null) {
     warning = document.createElement("div");
@@ -118,7 +118,7 @@ export function displayWarning(responseText) {
 
   let note = document.createElement("div");
   note.setAttribute("class", "text-danger mt-2");
-  note.innerHTML = `Registration has failed due: <br />${responseText}`;
+  note.innerHTML = `${action} has failed due: ${responseText}`;
   warning.append(note);
   return warning;
 }

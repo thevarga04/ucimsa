@@ -63,7 +63,7 @@ function generateUI() {
   let submit = document.createElement("button");
   submit.id = "submit";
   submit.name = "submit";
-  submit.type = "submit";
+  submit.type = "button";
   submit.title = "Log in";
   submit.append("Log In");
   submit.setAttribute("class", "btn btn-lg btn-primary");
@@ -90,7 +90,7 @@ function submitLogin() {
         location.href = "/";
       } else {
         console.log(`Login failed. ${this.responseText} Response code: ${this.status}`);
-        let warning = displayWarning(this.responseText);
+        let warning = displayWarning("Login", this.responseText);
         containerUI.append(warning);
       }
     }

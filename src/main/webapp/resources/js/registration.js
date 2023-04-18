@@ -104,10 +104,11 @@ function generateUI() {
   let submit = document.createElement("button");
   submit.id = "submit";
   submit.name = "submit";
-  submit.type = "submit";
+  submit.type = "button";
   submit.title = "Submit";
   submit.append("Submit");
   submit.setAttribute("class", "btn btn-lg btn-primary col-12");
+  submit.onclick = function () { submitRegister() };
 
   divFirstname.append(firstname);
   divLastname.append(lastname);
@@ -125,10 +126,10 @@ function submitRegister() {
   formData.set("id", "0");
   formData.set("activated", "false");
   formData.delete("roles");
-  formData.delete("inputConfirm");
+  formData.delete("confirm");
 
   const xhttp = new XMLHttpRequest();
-  xhttp.open('POST', urls.registrationUrlPost);
+  xhttp.open("POST", urls.registrationUrlPost);
   xhttp.send(formData);
 
   xhttp.onreadystatechange = function () {
@@ -138,7 +139,8 @@ function submitRegister() {
         location.href = "/";
       } else {
         console.log(`Registration has failed. ${this.responseText} Response code: ${this.status}`);
-        displayWarning(this.responseText);
+        let warning = displayWarning("Registration", this.responseText);
+        containerUI.append(warning);
       }
     }
   }

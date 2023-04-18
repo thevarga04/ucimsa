@@ -1,5 +1,7 @@
 package ucimsa.realm;
 
+import static org.springframework.security.web.util.matcher.AntPathRequestMatcher.antMatcher;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -20,7 +22,8 @@ import org.springframework.web.servlet.config.annotation.CorsRegistry;
 @EnableWebSecurity
 public class WebSecurityConfig {
 
-  private static final String[] ALLOWED_URLS = new String[]{"/", "/home", "/login", "/login/**", "/logout", "/logout/**"};
+  private static final String[] ALLOWED_REALM_URLS = new String[]{"/", "/home", "/registration", "/login", "/logout"};
+  private static final String[] ALLOWED_PUB_URLS = new String[]{"/pub/registration", "/pub/login"};
 
   private final UserDetailsService userDetailsService;
   private final AuthenticationEntryPoint authenticationEntryPoint;
@@ -66,7 +69,7 @@ public class WebSecurityConfig {
         .cors()
 
         .and()
-        .securityMatcher("/auth/**")
+        .securityMatcher(antMatcher("/auth/**"))
         .authorizeHttpRequests(auth -> auth
             .anyRequest().authenticated()
         )
@@ -84,9 +87,10 @@ public class WebSecurityConfig {
         .cors()
 
         .and()
-        .securityMatcher("/pub/**")
+        .securityMatcher(antMatcher("/pub/**"))
         .authorizeHttpRequests(auth -> auth
-            .anyRequest().permitAll()
+            .requestMatchers(HttpMethod.POST, ALLOWED_PUB_URLS).permitAll()
+            .anyRequest().denyAll()
         )
 
         .exceptionHandling(exception -> exception
@@ -97,10 +101,6 @@ public class WebSecurityConfig {
   }
 
 
-  /**
-   * .loginPage define custom login page otherwise spring offer its default one,
-   * no redirection is needed, because client's side (javascript) do that
-   */
   @Bean
   @Order(3)
   public SecurityFilterChain filterChainMvc(HttpSecurity http) throws Exception {
@@ -111,10 +111,9 @@ public class WebSecurityConfig {
         .cors()
 
         .and()
-        .securityMatcher(ALLOWED_URLS)
+        .securityMatcher(ALLOWED_REALM_URLS)
         .authorizeHttpRequests(auth -> auth
-            .requestMatchers(HttpMethod.GET, ALLOWED_URLS)
-            .permitAll()
+            .requestMatchers(HttpMethod.GET, ALLOWED_REALM_URLS).permitAll()
             .anyRequest().denyAll()
         )
 
