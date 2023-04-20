@@ -17,7 +17,8 @@ export let urls = {
   loginUrlPost: "/pub/login",
   logoutUrl: "/logout",
   textsUrl: "/texts",
-  heapTextUrl: "/api/texts/heap"
+  heapTextUrl: "/api/texts/heap",
+  profileUrl: "/profile"
 };
 
 export function assemblyContextAndUrls() {
@@ -31,13 +32,15 @@ export function assemblyContextAndUrls() {
   urls.heapTextUrl = urls.contextPath + urls.heapTextUrl;
 }
 
-  export let links = {
+export let links = {
   home: "Home",
   login: "Login",
   registration: "Registration",
   profile: "Profile",
   texts: "Texts"
 }
+
+let signOn = false;
 
 export function generateHeader() {
   let containerHeader = document.createElement("div");
@@ -69,6 +72,7 @@ export function generateHeader() {
   if (userPrincipalName == null || !userPrincipalName.value) {
     aLogout.style.display = "none";
   } else {
+    signOn = true;
     aLogout.id = "aLogout";
     aLogout.title = "Logout";
     aLogout.setAttribute("class", "h6 text-warning");
@@ -78,9 +82,36 @@ export function generateHeader() {
     aLogout.append(aLogoutText);
   }
 
+  formLogout.append(csrfInput);
+  divLogout.append(formLogout, aLogout);
+
+
   let divLinks = document.createElement("div");
   divLinks.setAttribute("class", "d-flex col-auto gap-5");
 
+  if (signOn) {
+    signOnLinks(divLinks);
+  } else {
+    signOffLinks(divLinks);
+  }
+
+  divHeader.append(divLogout, divLinks);
+  containerHeader.append(divHeader);
+}
+
+function signOnLinks(divLinks) {
+  addLinkHome(divLinks);
+  addLinkTexts(divLinks);
+  addLinkProfile(divLinks);
+}
+
+function signOffLinks(divLinks) {
+  addLinkHome(divLinks);
+  addLinkRegistration(divLinks);
+  addLinkLogin(divLinks);
+}
+
+function addLinkHome(divLinks) {
   let aHome = document.createElement("a");
   aHome.id = "aHome";
   aHome.setAttribute( "class", "h6 text-secondary" );
@@ -89,14 +120,10 @@ export function generateHeader() {
   let aHomeText = document.createTextNode("Home");
   aHome.append(aHomeText);
 
-  let aLogin = document.createElement("a");
-  aLogin.id = "aLogin";
-  aLogin.setAttribute( "class", "h6 text-primary" );
-  aLogin.href = urls.loginUrlGet;
-  aLogin.title = "Home";
-  let aLoginText = document.createTextNode("Login");
-  aLogin.append(aLoginText);
+  divLinks.append(aHome);
+}
 
+function addLinkRegistration(divLinks) {
   let aRegistration = document.createElement("a");
   aRegistration.id = "aRegistration";
   aRegistration.setAttribute( "class", "h6 color-register" );
@@ -105,11 +132,43 @@ export function generateHeader() {
   let aRegistrationText = document.createTextNode("Registration");
   aRegistration.append(aRegistrationText);
 
-  formLogout.append(csrfInput);
-  divLogout.append(formLogout, aLogout);
-  divLinks.append(aHome, aRegistration, aLogin);
-  divHeader.append(divLogout, divLinks);
-  containerHeader.append(divHeader);
+  divLinks.append(aRegistration);
+}
+
+function addLinkLogin(divLinks) {
+  let aLogin = document.createElement("a");
+  aLogin.id = "aLogin";
+  aLogin.setAttribute( "class", "h6 text-primary" );
+  aLogin.href = urls.loginUrlGet;
+  aLogin.title = "Home";
+  let aLoginText = document.createTextNode("Login");
+  aLogin.append(aLoginText);
+
+  divLinks.append(aLogin);
+}
+
+function addLinkTexts(divLinks) {
+  let aTexts = document.createElement("a");
+  aTexts.id = "aTexts";
+  aTexts.setAttribute( "class", "h6 text-info" );
+  aTexts.href = urls.textsUrl;
+  aTexts.title = "Texts";
+  let aTextsText = document.createTextNode("Texts");
+  aTexts.append(aTextsText);
+
+  divLinks.append(aTexts);
+}
+
+function addLinkProfile(divLinks) {
+  let aProfile = document.createElement("a");
+  aProfile.id = "aProfile";
+  aProfile.setAttribute( "class", "h6 color-register" );
+  aProfile.href = urls.profileUrl;
+  aProfile.title = "Profile";
+  let aProfileText = document.createTextNode("Profile");
+  aProfile.append(aProfileText);
+
+  divLinks.append(aProfile);
 }
 
 function logout() {
