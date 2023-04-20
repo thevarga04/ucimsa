@@ -1,4 +1,4 @@
-package ucimsa.realm;
+package ucimsa.config;
 
 import static org.springframework.security.web.util.matcher.AntPathRequestMatcher.antMatcher;
 
@@ -21,9 +21,6 @@ import org.springframework.web.servlet.config.annotation.CorsRegistry;
 @Configuration
 @EnableWebSecurity
 public class WebSecurityConfig {
-
-  private static final String[] ALLOWED_REALM_URLS = new String[]{"/", "/home", "/registration", "/login", "/logout"};
-  private static final String[] ALLOWED_PUB_URLS = new String[]{"/pub/registration", "/pub/login"};
 
   private final UserDetailsService userDetailsService;
   private final AuthenticationEntryPoint authenticationEntryPoint;
@@ -55,13 +52,10 @@ public class WebSecurityConfig {
     return corsRegistry;
   }
 
-  /**
-   * Rest API under /auth requires authentication (/pub does not),
-   * because authentication is required only for endpoints covered by .securityMatcher
-   */
+
   @Bean
   @Order(1)
-  public SecurityFilterChain filterChainAuth(HttpSecurity http) throws Exception {
+  public SecurityFilterChain filterChainApi(HttpSecurity http) throws Exception {
     return http
         .csrf()
 
@@ -69,7 +63,7 @@ public class WebSecurityConfig {
         .cors()
 
         .and()
-        .securityMatcher(antMatcher("/auth/**"))
+        .securityMatcher(antMatcher("/api/**"))
         .authorizeHttpRequests(auth -> auth
             .anyRequest().authenticated()
         )
@@ -89,7 +83,7 @@ public class WebSecurityConfig {
         .and()
         .securityMatcher(antMatcher("/pub/**"))
         .authorizeHttpRequests(auth -> auth
-            .requestMatchers(HttpMethod.POST, ALLOWED_PUB_URLS).permitAll()
+            .requestMatchers(HttpMethod.POST, "/pub/registration", "/pub/login").permitAll()
             .anyRequest().denyAll()
         )
 
@@ -99,7 +93,6 @@ public class WebSecurityConfig {
 
         .build();
   }
-
 
   @Bean
   @Order(3)
@@ -111,10 +104,14 @@ public class WebSecurityConfig {
         .cors()
 
         .and()
-        .securityMatcher(ALLOWED_REALM_URLS)
+        .securityMatcher("/", "/home", "/registration", "/login", "/logout", "/texts/**")
         .authorizeHttpRequests(auth -> auth
-            .requestMatchers(HttpMethod.GET, ALLOWED_REALM_URLS).permitAll()
-            .anyRequest().denyAll()
+            .requestMatchers(HttpMethod.GET, "/", "/home", "/registration", "/login", "/logout")
+            .permitAll()
+            .requestMatchers(HttpMethod.GET, "/texts/**")
+            .authenticated()
+            .anyRequest()
+            .denyAll()
         )
 
         .formLogin(form -> form

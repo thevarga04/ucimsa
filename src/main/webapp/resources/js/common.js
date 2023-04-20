@@ -15,16 +15,28 @@ export let urls = {
   registrationUrlPost: "/pub/registration",
   loginUrlGet: "/login",
   loginUrlPost: "/pub/login",
-  logoutUrl: "/logout"
+  logoutUrl: "/logout",
+  textsUrl: "/texts",
+  heapTextUrl: "/api/texts/heap"
 };
 
 export function assemblyContextAndUrls() {
-  urls.contextPath = window.location.pathname.substring(0, window.location.pathname.indexOf("/", 2));
+  urls.contextPath = document.getElementById("contextPath").value;
   urls.registrationUrlGet = urls.contextPath + urls.registrationUrlGet;
   urls.registrationUrlPost = urls.contextPath + urls.registrationUrlPost;
   urls.loginUrlGet = urls.contextPath + urls.loginUrlGet;
   urls.loginUrlPost = urls.contextPath + urls.loginUrlPost;
   urls.logoutUrl = urls.contextPath + urls.logoutUrl;
+  urls.textsUrl = urls.contextPath + urls.textsUrl;
+  urls.heapTextUrl = urls.contextPath + urls.heapTextUrl;
+}
+
+  export let links = {
+  home: "Home",
+  login: "Login",
+  registration: "Registration",
+  profile: "Profile",
+  texts: "Texts"
 }
 
 export function generateHeader() {
@@ -95,13 +107,21 @@ export function generateHeader() {
 
   formLogout.append(csrfInput);
   divLogout.append(formLogout, aLogout);
-  divLinks.append(aHome, aLogin, aRegistration);
+  divLinks.append(aHome, aRegistration, aLogin);
   divHeader.append(divLogout, divLinks);
   containerHeader.append(divHeader);
 }
 
 function logout() {
   document.forms["formLogout"].submit();
+}
+
+export function createContainerUI() {
+  let containerUI = document.createElement("div");
+  containerUI.id = "containerUI";
+  containerUI.setAttribute("class", "container");
+  document.body.append(containerUI);
+  return containerUI;
 }
 
 export function displayWarning(action, responseText) {

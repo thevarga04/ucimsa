@@ -17,29 +17,29 @@ public class RealmRest {
 
   private final UserValidator userValidator;
   private final UserService userService;
-  private final SecurityService securityService;
+  private final LoginService loginService;
 
 
   @Autowired
-  public RealmRest(UserValidator userValidator, UserService userService, SecurityService securityService) {
+  public RealmRest(UserValidator userValidator, UserService userService, LoginService loginService) {
     this.userValidator = userValidator;
     this.userService = userService;
-    this.securityService = securityService;
+    this.loginService = loginService;
   }
 
 
   @PostMapping(value = "/registration")
   public ResponseEntity<HttpStatus> postRegistration(User user, HttpServletRequest request, HttpServletResponse response
   ) throws UserValidatorException {
-    userValidator.validate(user);
+    userValidator.validateUnique(user);
     userService.save(user);
-    securityService.login(user, request, response);
+    loginService.login(user, request, response);
     return ResponseEntity.ok().build();
   }
 
   @PostMapping("/login")
   public ResponseEntity<HttpStatus> postLogin(User user, HttpServletRequest request, HttpServletResponse response) {
-    securityService.login(user, request, response);
+    loginService.login(user, request, response);
     return ResponseEntity.ok().build();
   }
 

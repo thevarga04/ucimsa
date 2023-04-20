@@ -10,17 +10,17 @@ public class RealmCtrl {
 
 
   @GetMapping({"/", "/home"})
-  public String getHome() {
+  public String home() {
     return "home";
   }
 
   @GetMapping("/registration")
-  public String getRegistration() {
+  public String registration() {
     return "registration";
   }
 
   @GetMapping("/login")
-  public String getLogin() {
+  public String login() {
     return "login";
   }
 

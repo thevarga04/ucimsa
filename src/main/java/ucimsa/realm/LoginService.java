@@ -15,7 +15,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
 @Component
-public class SecurityService {
+public class LoginService {
 
   private final AuthenticationManager authenticationManager;
   private final SecurityContextHolderStrategy securityContextHolderStrategy = SecurityContextHolder.getContextHolderStrategy();
@@ -23,7 +23,7 @@ public class SecurityService {
 
 
   @Autowired
-  public SecurityService(AuthenticationManager authenticationManager) {
+  public LoginService(AuthenticationManager authenticationManager) {
     this.authenticationManager = authenticationManager;
   }
 

@@ -19,5 +19,6 @@
     <script type="module" src="<c:url value="/resources/js/login.js" />"></script>
 </head>
 <body>
+<input id="contextPath" type="hidden" value="${pageContext.request.contextPath}" />
 </body>
 </html>

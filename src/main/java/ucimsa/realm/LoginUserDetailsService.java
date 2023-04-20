@@ -10,12 +10,12 @@ import org.springframework.transaction.annotation.Transactional;
 import ucimsa.util.StreamUtil;
 
 @Service
-public class UserDetailsServiceImpl implements UserDetailsService {
+public class LoginUserDetailsService implements UserDetailsService {
 
   private final UserRepo userRepo;
 
 
-  public UserDetailsServiceImpl(UserRepo userRepo) {
+  public LoginUserDetailsService(UserRepo userRepo) {
     this.userRepo = userRepo;
   }
 

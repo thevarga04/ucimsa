@@ -1,6 +1,6 @@
 -- DDL
 CREATE TABLE users (
-    id              serial,
+    id              serial              UNIQUE,
     username        varchar(32)         PRIMARY KEY,
     firstname       varchar(32)         NOT NULL,
     lastname        varchar(32)         NOT NULL,
@@ -18,15 +18,27 @@ CREATE TABLE users_roles (
     PRIMARY KEY (users_username, roles_name)
 );
 
-INSERT INTO roles (name) values ('ROLE_USER'); -- default for every successfully registered user
-
 -- Activation and password reset tokens
 CREATE TABLE registration_and_reset (
     id              serial              PRIMARY KEY,
     token           int                 NOT NULL,
     valid_until     bigint              NOT NULL,
-    username           varchar(32)         NOT NULL,
+    username        varchar(32)         NOT NULL,
     CONSTRAINT registration_and_reset_pk UNIQUE (username, token)
 );
+
+-- Texts
+-- All texts types uses the same sequence as a primary key
+CREATE SEQUENCE seq_texts start 1 increment 1;
+
+CREATE TABLE heap_texts(
+    id              int                 NOT NULL DEFAULT nextval('seq_texts') PRIMARY KEY,
+    user_id         int                 CONSTRAINT heap_texts_user_id REFERENCES users(id) ON DELETE CASCADE,
+    name            varchar(64)         NOT NULL,
+    sentences       varchar(4096)       NOT NULL,
+    CONSTRAINT heap_texts_user_id_name  UNIQUE (user_id, name)
+);
+
+drop table heap_texts;
 
 commit;

@@ -19,7 +19,7 @@ public class UserValidator {
     this.userService = userService;
   }
 
-  public void validate(User user) throws UserValidatorException {
+  public void validateUnique(User user) throws UserValidatorException {
     if (user == null) {
       throw new UserValidatorException("Provided null user.");
     }
@@ -48,4 +48,12 @@ public class UserValidator {
 
     }
   }
+
+  public void validateExists(JpaUser jpaUser, String username) throws UserValidatorException {
+    if (isEmpty(jpaUser)) {
+      throw new UserValidatorException("%s does not exists.".formatted(username));
+    }
+  }
+
+
 }

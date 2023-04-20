@@ -1,5 +1,5 @@
 ### whoami
-GET http://localhost:9191/auth/whoami
+GET http://localhost:9191/api/whoami
 
 ### home
 GET http://localhost:9191/

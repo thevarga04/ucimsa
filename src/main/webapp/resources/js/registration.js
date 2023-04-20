@@ -1,4 +1,12 @@
-import {assemblyContextAndUrls, csrf, displayWarning, generateHeader, getCsrfToken, urls} from "./common.js";
+import {
+  assemblyContextAndUrls,
+  createContainerUI,
+  csrf,
+  displayWarning,
+  generateHeader,
+  getCsrfToken,
+  urls
+} from "./common.js";
 
 let containerUI;
 
@@ -8,16 +16,10 @@ $(document).ready(function () {
   assemblyContextAndUrls();
   generateHeader();
   generateUI();
-  // TODO: Enable submit button after checking if user is available,
-  //  and use the optimistic locking with some timeout ...
 });
 
 function generateUI() {
-  containerUI = document.createElement("div");
-  containerUI.id = "containerUI";
-  containerUI.setAttribute("class", "container");
-  document.body.append(containerUI);
-
+  containerUI = createContainerUI();
 
   let formFrame = document.createElement("form");
   formFrame.id = "form";

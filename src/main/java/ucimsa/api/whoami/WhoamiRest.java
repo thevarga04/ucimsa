@@ -1,4 +1,4 @@
-package ucimsa.api;
+package ucimsa.api.whoami;
 
 import static org.springframework.http.HttpStatus.MOVED_PERMANENTLY;
 
@@ -9,33 +9,33 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import ucimsa.realm.SecurityService;
+import ucimsa.realm.LoginService;
 import ucimsa.realm.User;
 
 @RestController
-@RequestMapping("/auth")
+@RequestMapping("/api/whoami")
 @Slf4j
-public class AuthRest {
+public class WhoamiRest {
 
-  private final SecurityService securityService;
+  private final LoginService loginService;
 
 
   @Autowired
-  public AuthRest(SecurityService securityService) {
-    this.securityService = securityService;
+  public WhoamiRest(LoginService loginService) {
+    this.loginService = loginService;
   }
 
 
-  @GetMapping("/whoami")
+  @GetMapping()
   public ResponseEntity<String> getWhoAmI() {
-    return ResponseEntity.of(securityService.getCurrentUserLogin());
+    return ResponseEntity.of(loginService.getCurrentUserLogin());
   }
 
-  @GetMapping("/whoami/test")
+  @GetMapping("/test")
   public ResponseEntity<User> getWhoAmITest() {
     return ResponseEntity
         .status(MOVED_PERMANENTLY)
-        .location(URI.create("/auth/whoami"))
+        .location(URI.create("/api/whoami"))
         .build();
   }
 
