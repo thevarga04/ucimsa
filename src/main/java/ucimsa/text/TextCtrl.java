@@ -21,6 +21,12 @@ public class TextCtrl {
   }
 
 
+  @GetMapping
+  public String texts() {
+    return "texts";
+  }
+
+
   @GetMapping("/heap")
   public String heapText() {
     return "text/heap";

@@ -1,19 +1,10 @@
-import {
-  assemblyContextAndUrls,
-  createContainerUI,
-  csrf,
-  displayWarning,
-  generateHeader,
-  getCsrfToken,
-  urls
-} from "./common.js";
+import {createContainerUI, csrf, displayWarning, generateHeader, getCsrfToken, urls} from "./common.js";
 
 let containerUI;
 
 // Generate the UI after page load is complete
 $(document).ready(function () {
   getCsrfToken();
-  assemblyContextAndUrls();
   generateHeader();
   generateUI();
 });

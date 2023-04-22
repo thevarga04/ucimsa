@@ -11,6 +11,12 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.experimental.SuperBuilder;
 
+/**
+ * id <br>
+ * userId <br>
+ * name <br>
+ * sentences <br>
+ */
 @Entity
 @Table(name = "heap_texts")
 @Getter

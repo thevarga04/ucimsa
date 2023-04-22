@@ -1,34 +1,33 @@
 package ucimsa.api.text;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import java.util.List;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
-import ucimsa.realm.UserRepo;
-import ucimsa.realm.UserValidator;
-import ucimsa.realm.UserValidatorException;
 
 @Component
 @Transactional
 public class TextMapper {
 
-  private final UserRepo userRepo;
-  private final UserValidator userValidator;
+  public List<HeapText> toHeapTextList(List<JpaHeapText> jpaHeapTextList, String username) {
+    return jpaHeapTextList.stream()
+        .map(jpaHeapText -> toHeapText(jpaHeapText, username))
+        .toList();
+  }
 
-
-  @Autowired
-  public TextMapper(UserRepo userRepo, UserValidator userValidator) {
-    this.userRepo = userRepo;
-    this.userValidator = userValidator;
+  public HeapText toHeapText(JpaHeapText jpaHeapText, String username) {
+    return HeapText.builder()
+        .id(jpaHeapText.getId())
+        .username(username)
+        .textname(jpaHeapText.getName())
+        .sentences(jpaHeapText.getSentences())
+        .build();
   }
 
 
-  public JpaHeapText toJpaHeapText(HeapText heapText, String username) throws UserValidatorException {
-    final var jpaUser = userRepo.findByUsername(username);
-    userValidator.validateExists(jpaUser, username);
-
+  public JpaHeapText toJpaHeapText(HeapText heapText, int userId) {
     return JpaHeapText.builder()
         .id(heapText.getId())
-        .userId(jpaUser.getId())
+        .userId(userId)
         .name(heapText.getTextname())
         .sentences(heapText.getSentences())
         .build();

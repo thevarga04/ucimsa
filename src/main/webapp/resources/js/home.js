@@ -1,4 +1,4 @@
-import {assemblyContextAndUrls, generateHeader, getCsrfToken, links} from "./common.js";
+import {generateHeader, getCsrfToken} from "./common.js";
 
 let debug = true;
 let containerUI;
@@ -10,11 +10,12 @@ let cardBody = document.createElement("div");
 // Generate the UI after page load is complete
 $(document).ready(function () {
   getCsrfToken();
-  assemblyContextAndUrls();
-  generateHeader(links.home);
+  generateHeader();
   generateUI();
 });
 
 function generateUI() {
+  let x = "";
+
 
 }

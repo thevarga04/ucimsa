@@ -5,6 +5,12 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
 
+/**
+ * id <br>
+ * username <br>
+ * textname <br>
+ * sentences <br>
+ */
 @Data
 @NoArgsConstructor
 @AllArgsConstructor

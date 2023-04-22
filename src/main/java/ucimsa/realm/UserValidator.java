@@ -49,11 +49,5 @@ public class UserValidator {
     }
   }
 
-  public void validateExists(JpaUser jpaUser, String username) throws UserValidatorException {
-    if (isEmpty(jpaUser)) {
-      throw new UserValidatorException("%s does not exists.".formatted(username));
-    }
-  }
-
 
 }

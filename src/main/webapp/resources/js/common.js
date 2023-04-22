@@ -9,28 +9,19 @@ export function getCsrfToken() {
   }
 }
 
-export let urls = {
-  contextPath: '',
-  registrationUrlGet: "/registration",
-  registrationUrlPost: "/pub/registration",
-  loginUrlGet: "/login",
-  loginUrlPost: "/pub/login",
-  logoutUrl: "/logout",
-  textsUrl: "/texts",
-  heapTextUrl: "/api/texts/heap",
-  profileUrl: "/profile"
-};
+let contextPath = document.getElementById("contextPath").value;
 
-export function assemblyContextAndUrls() {
-  urls.contextPath = document.getElementById("contextPath").value;
-  urls.registrationUrlGet = urls.contextPath + urls.registrationUrlGet;
-  urls.registrationUrlPost = urls.contextPath + urls.registrationUrlPost;
-  urls.loginUrlGet = urls.contextPath + urls.loginUrlGet;
-  urls.loginUrlPost = urls.contextPath + urls.loginUrlPost;
-  urls.logoutUrl = urls.contextPath + urls.logoutUrl;
-  urls.textsUrl = urls.contextPath + urls.textsUrl;
-  urls.heapTextUrl = urls.contextPath + urls.heapTextUrl;
-}
+export let urls = {
+  registrationUrlGet: contextPath + "/registration",
+  registrationUrlPost: contextPath +  "/pub/registration",
+  loginUrlGet: contextPath +  "/login",
+  loginUrlPost: contextPath +  "/pub/login",
+  logoutUrl: contextPath +  "/logout",
+  textsUrl: contextPath +  "/texts",
+  getTextsUrl: contextPath +  "/api/texts",
+  heapTextUrl: contextPath +  "/api/texts/heap",
+  profileUrl: contextPath +  "/profile"
+};
 
 export let links = {
   home: "Home",
@@ -115,7 +106,7 @@ function addLinkHome(divLinks) {
   let aHome = document.createElement("a");
   aHome.id = "aHome";
   aHome.setAttribute( "class", "h6 text-secondary" );
-  aHome.href = urls.contextPath + "/";
+  aHome.href = contextPath + "/";
   aHome.title = "Home";
   let aHomeText = document.createTextNode("Home");
   aHome.append(aHomeText);
