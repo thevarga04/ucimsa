@@ -15,7 +15,7 @@ $(document).ready(function () {
 
 function getTexts() {
   let xhttp = new XMLHttpRequest();
-  xhttp.open("GET", urls.getTextsUrl)
+  xhttp.open("GET", urls.apiTextsUrl)
   xhttp.send();
 
   xhttp.onreadystatechange = function () {
@@ -44,10 +44,28 @@ function logResponseAndStatus() {
 
 function generateUI(texts) {
   initContainerCardFormBody();
+  newTexts();
   legend();
   textsAsCards(texts);
   footer();
   appendix();
+}
+
+function newTexts() {
+  let row = document.createElement("div");
+  row.setAttribute("class", "d-flex flex-row mt-4");
+
+  let linkNewHeapText = document.createElement("a");
+  linkNewHeapText.setAttribute("class", "btn btn-outline-heap me-4");
+  linkNewHeapText.setAttribute("style", "width: 160px;");
+  linkNewHeapText.title = "Create new Heap Text";
+  linkNewHeapText.href = "/texts/heap";
+  let linkNewHeapTextIcon = document.createElement("i");
+  linkNewHeapTextIcon.setAttribute("class", "fas fa-list-ul me-2");
+  let linkNewHeapTextText = document.createTextNode("New Heap Text");
+  linkNewHeapText.append(linkNewHeapTextIcon, linkNewHeapTextText);
+  row.append(linkNewHeapText);
+  containerUI.append(row);
 }
 
 function initContainerCardFormBody() {
@@ -105,7 +123,7 @@ function textNameElement(id, textname) {
   divColName.setAttribute("class", "col-auto flex-grow-1");
   let nameLink = document.createElement("a");
   nameLink.title = "View or Edit this Test";
-  nameLink.href = "/api/texts/" + id + "?type=HEAP";
+  nameLink.href = "/texts/heap?id=" + id;
   let nameIcon = document.createElement("i");
   nameIcon.setAttribute("class", "fas fa-edit me-2");
   let nameText = document.createTextNode(textname);

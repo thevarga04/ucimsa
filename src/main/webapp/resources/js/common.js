@@ -12,15 +12,16 @@ export function getCsrfToken() {
 let contextPath = document.getElementById("contextPath").value;
 
 export let urls = {
-  registrationUrlGet: contextPath + "/registration",
-  registrationUrlPost: contextPath +  "/pub/registration",
-  loginUrlGet: contextPath +  "/login",
-  loginUrlPost: contextPath +  "/pub/login",
-  logoutUrl: contextPath +  "/logout",
-  textsUrl: contextPath +  "/texts",
-  getTextsUrl: contextPath +  "/api/texts",
-  heapTextUrl: contextPath +  "/api/texts/heap",
-  profileUrl: contextPath +  "/profile"
+  registrationUrlGet: contextPath +  "/registration",
+  registrationUrlPost: contextPath + "/pub/registration",
+  loginUrlGet: contextPath +         "/login",
+  loginUrlPost: contextPath +        "/pub/login",
+  logoutUrl: contextPath +           "/logout",
+  textsUrl: contextPath +            "/texts",
+  apiTextsUrl: contextPath +         "/api/texts",
+  heapTextUrl: contextPath +         "/texts/heap",
+  apiHeapTextUrl: contextPath +      "/api/texts/heap",
+  profileUrl: contextPath +          "/profile"
 };
 
 export let links = {

@@ -212,7 +212,7 @@ function saveHeapText() {
   }
 
   const xhttp = new XMLHttpRequest();
-  xhttp.open("POST", urls.heapTextUrl);
+  xhttp.open("POST", urls.apiHeapTextUrl);
   xhttp.setRequestHeader('x-csrf-token', csrf.token);
   xhttp.send(formData);
 
