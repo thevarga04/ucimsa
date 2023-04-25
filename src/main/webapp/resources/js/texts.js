@@ -1,4 +1,4 @@
-import {createContainerUI, generateHeader, getCsrfToken, urls} from "./common.js";
+import {createContainerUI, csrfHeader, csrfToken, generateHeader, getCsrfToken, urls} from "./common.js";
 
 let debug = true;
 let containerUI;
@@ -10,34 +10,31 @@ let cardBody = document.createElement("div");
 $(document).ready(function () {
   getCsrfToken();
   generateHeader();
-  getTexts();
+  getTextsAndGenerateUI();
 });
 
-function getTexts() {
+function getTextsAndGenerateUI() {
   let xhttp = new XMLHttpRequest();
-  xhttp.open("GET", urls.apiTextsUrl)
+  xhttp.open("GET", urls.apiTextsUrl);
+  xhttp.setRequestHeader(csrfHeader, csrfToken);
   xhttp.send();
 
   xhttp.onreadystatechange = function () {
     if (this.readyState === 4) {
       if (this.status === 200) {
         let texts = JSON.parse(this.responseText);
-        if (texts.length > 0) {
-          generateUI(texts);
-        } else {
-          logResponseAndStatus();
-        }
+        generateUI(texts);
       } else {
-        logResponseAndStatus();
+        logResponseAndStatus(this.responseText, this.status);
       }
     }
   }
 }
 
-function logResponseAndStatus() {
+function logResponseAndStatus(responseText, status) {
   if (debug) {
-    console.log("ResponseText: " + this.responseText);
-    console.log("Status: " + this.status);
+    console.log("ResponseText: " + responseText);
+    console.log("Status: " + status);
   }
 }
 
@@ -45,10 +42,23 @@ function logResponseAndStatus() {
 function generateUI(texts) {
   initContainerCardFormBody();
   newTexts();
-  legend();
+  legend(texts);
   textsAsCards(texts);
   footer();
   appendix();
+}
+
+function initContainerCardFormBody() {
+  containerUI = createContainerUI();
+
+  card.id = "card";
+  card.setAttribute("class", "card mt-3");
+
+  form.id = "form";
+  form.setAttribute("method", "POST");
+
+  cardBody.id = "cardBody";
+  cardBody.setAttribute("class", "card-body");
 }
 
 function newTexts() {
@@ -68,24 +78,11 @@ function newTexts() {
   containerUI.append(row);
 }
 
-function initContainerCardFormBody() {
-  containerUI = createContainerUI();
-
-  card.id = "card";
-  card.setAttribute("class", "card mt-3");
-
-  form.id = "form";
-  form.setAttribute("method", "POST");
-
-  cardBody.id = "cardBody";
-  cardBody.setAttribute("class", "card-body");
-}
-
-function legend() {
+function legend(texts) {
   let legend = document.createElement("div");
   legend.id = "header";
   legend.setAttribute("class", "row myLegend mx-2");
-  legend.append("Your Texts");
+  legend.append(texts.length > 0 ? "Your Texts" : "");
 
   cardBody.append(legend);
 }
@@ -185,25 +182,6 @@ function textStatsElement(id) {
   return divColStats;
 }
 
-// Delete is irreversible operation, delete text when editing
-function textDeleteElement(id) {
-  let divDelete = document.createElement("div");
-  divDelete.setAttribute("class", "col-auto");
-  let delete_button = document.createElement("button");
-  delete_button.setAttribute("style", "width: 90px");
-  delete_button.setAttribute("class", "btn btn-outline-danger btn-sm");
-  delete_button.title = "Delete this text permanently.";
-  delete_button.onclick = function () { deleteText(id) };
-  let delete_icon = document.createElement("i");
-  delete_icon.setAttribute("class", "far fa-trash-alt me-2");
-  let delete_text = document.createTextNode("Delete");
-  delete_button.append(delete_icon, delete_text);
-  divDelete.append(delete_button);
-}
-
-function deleteText(id) {
-  console.log("Deleting text: " + id);
-}
 
 function footer() {
   let footer = document.createElement("div");

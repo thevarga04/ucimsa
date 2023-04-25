@@ -1,4 +1,14 @@
-import {createContainerUI, csrf, displayWarning, generateHeader, getCsrfToken, urls} from "../common.js";
+import {
+  createContainerUI,
+  csrfHeader,
+  csrfToken,
+  displayWarning,
+  generateHeader,
+  getCsrfToken,
+  httpHeaders,
+  methods,
+  urls
+} from "../common.js";
 
 let debug = true;
 let containerUI;
@@ -6,37 +16,79 @@ let card = document.createElement("div");
 let form = document.createElement("form");
 let cardBody = document.createElement("div");
 
+let id = 0;
+let dto;
+
 // Generate the UI after page load is complete
 $(document).ready(function () {
   getCsrfToken();
   generateHeader();
-  generateUI();
-  countCharsInTextarea();
+  generateUIorFirstGetText();
 });
+
+function generateUIorFirstGetText() {
+  let idValue = new URLSearchParams(window.location.search).get("id");
+  if (idValue != null) {
+    let idNumber = parseInt(idValue, 10);
+    if (!isNaN(idNumber)) {
+      id = idNumber;
+      getTextAndGenerateUI();
+      return;
+    }
+  }
+  generateUI();
+}
+
+function getTextAndGenerateUI() {
+  let xhttp = new XMLHttpRequest();
+  xhttp.open("GET", urls.apiHeapTextUrl + "/" + id);
+  xhttp.setRequestHeader(csrfHeader, csrfToken);
+  xhttp.send();
+
+  xhttp.onreadystatechange = function () {
+    if (this.readyState === 4) {
+      if (this.status === 200) {
+        dto = JSON.parse(this.responseText);
+        generateUI();
+      } else {
+        logResponseAndStatus(this.responseText, this.status);
+      }
+    }
+  }
+}
+
+
+function logResponseAndStatus(responseText, status) {
+  if (debug) {
+    console.log("ResponseText: " + responseText);
+    console.log("Status: " + status);
+  }
+}
 
 
 function generateUI() {
-  containerUI = createContainerUI();
+  initContainerCardFormBody();
   legendAndTitle();
   textName();
   textarea();
   pageButtons();
-
-  form.append(cardBody);
-  card.append(form);
-  containerUI.append(card);
+  appendix();
+  countCharsInTextarea();
 }
 
-function legendAndTitle() {
+function initContainerCardFormBody() {
+  containerUI = createContainerUI();
+
   card.id = "card";
   card.setAttribute("class", "card mt-3");
 
   form.id = "form";
-  form.setAttribute("method", "POST");
 
   cardBody.id = "cardBody";
   cardBody.setAttribute("class", "card-body");
+}
 
+function legendAndTitle() {
   let legend = document.createElement("div");
   legend.id = "header";
   legend.setAttribute("class", "row myLegend my-4");
@@ -72,6 +124,7 @@ function textName() {
   nameInput.autofocus = true;
   nameInput.maxLength = 64;
   nameInput.type = "text";
+  nameInput.value = dto == null ? null : dto.textname;
 
   nameLabel.append(nameSpan, nameInput);
   nameCol.append(nameLabel);
@@ -79,7 +132,7 @@ function textName() {
   cardBody.append(nameRow);
 }
 
-function textarea() {
+function textarea(sentences) {
   let div1 = document.createElement("div");
   div1.setAttribute("class", "my-3");
 
@@ -124,6 +177,7 @@ function textarea() {
   textarea.rows = 10;
   textarea.autofocus = true;
   textarea.placeholder = "Insert your text here.";
+  textarea.value = dto == null ? null : dto.sentences;
 
   div7.append(textarea);
   div6.append(div7);
@@ -141,7 +195,17 @@ function pageButtons() {
 
   let leftGroup = document.createElement("div");
   leftGroup.setAttribute("class", "flex-grow-1");
+  leftGroup.append(optimizeButton(), saveButton());
 
+  let rightGroup = document.createElement("div");
+  rightGroup.setAttribute("class", "me-0");
+  rightGroup.append(linkCancel(), deleteButton());
+
+  row.append(leftGroup, rightGroup);
+  cardBody.append(row);
+}
+
+function optimizeButton() {
   let optimizeButton = document.createElement("button");
   optimizeButton.id = "optimizeButton";
   optimizeButton.name = "Optimize";
@@ -155,7 +219,10 @@ function pageButtons() {
   optimizeButtonIcon.setAttribute("class", "fab fa-leanpub me-2");
   let optimizeButtonText = document.createTextNode("Optimize Text");
   optimizeButton.append(optimizeButtonIcon, optimizeButtonText);
+  return optimizeButton;
+}
 
+function saveButton() {
   let saveButton = document.createElement("button");
   saveButton.id = "saveButton";
   saveButton.name = "Save";
@@ -168,26 +235,42 @@ function pageButtons() {
   saveButtonIcon.setAttribute("class", "far fa-check-circle me-2");
   let saveButtonText = document.createTextNode("Save");
   saveButton.append(saveButtonIcon, saveButtonText);
-  leftGroup.append(optimizeButton, saveButton);
+  return saveButton;
+}
 
-  // Right Group (after 1st flex grow)
-  let rightGroup = document.createElement("div");
-  rightGroup.setAttribute("class", "me-0");
-
-  // Cancel
+function linkCancel() {
   let linkCancel = document.createElement("a");
   linkCancel.setAttribute("class", "btn btn-outline-warning me-4");
   linkCancel.setAttribute("style", "width: 100px;");
   linkCancel.title = "Cancel any changes";
-  linkCancel.href = "/"; // will be "my texts" ...
+  linkCancel.href = urls.textsUrl;
   let linkCancelIcon = document.createElement("i");
   linkCancelIcon.setAttribute("class", "far fa-window-close me-2");
   let linkCancelText = document.createTextNode("Cancel");
   linkCancel.append(linkCancelIcon, linkCancelText);
-  rightGroup.append(linkCancel);
+  return linkCancel;
+}
 
-  row.append(leftGroup, rightGroup);
-  cardBody.append(row);
+function deleteButton() {
+  let deleteButton = document.createElement("button");
+  if (id === 0) {
+    deleteButton.setAttribute("style", "display: none");
+    deleteButton.disabled = true;
+    return deleteButton;
+  }
+
+  deleteButton.setAttribute("class", "btn btn-outline-danger me-4");
+  deleteButton.setAttribute("style", "width: 100px");
+  deleteButton.id = "deleteButton";
+  deleteButton.title = "Delete this text permanently.";
+  deleteButton.onclick = function () {
+    deleteThisText()
+  };
+  let deleteIcon = document.createElement("i");
+  deleteIcon.setAttribute("class", "far fa-trash-alt me-2");
+  let deleteText = document.createTextNode("Delete");
+  deleteButton.append(deleteIcon, deleteText);
+  return deleteButton;
 }
 
 function optimizeHeapText() {
@@ -213,7 +296,7 @@ function saveHeapText() {
 
   const xhttp = new XMLHttpRequest();
   xhttp.open("POST", urls.apiHeapTextUrl);
-  xhttp.setRequestHeader('x-csrf-token', csrf.token);
+  xhttp.setRequestHeader(csrfHeader, csrfToken);
   xhttp.send(formData);
 
   xhttp.onreadystatechange = function () {
@@ -270,6 +353,12 @@ function removeWarning() {
   }
 }
 
+function appendix() {
+  form.append(cardBody);
+  card.append(form);
+  containerUI.append(card);
+}
+
 
 function countCharsInTextarea() {
   $("#sentences").keyup(function () {
@@ -279,3 +368,50 @@ function countCharsInTextarea() {
     document.getElementById("optimizeButton").disabled = chars === 0;
   });
 }
+
+// There is following message in console:
+// Fetch failed loading: DELETE "http://localhost:9191/api/texts/heap/72". :-(
+// But it works
+function deleteThisTextFetch() {
+  document.getElementById("deleteButton").disabled = true;
+  form = null;
+
+  fetch(urls.apiHeapTextUrl + "/" + id, {
+    method: methods.DELETE,
+    headers: httpHeaders()
+  })
+  .then(function (response) {
+    if (response.ok) {
+      window.location.assign(urls.textsUrl);
+    } else {
+      console.log(response.status);
+      console.log(response.json());
+    }
+  })
+  .catch(function (error) {
+    console.log(error);
+  });
+}
+
+
+function deleteThisText() {
+  document.getElementById("deleteButton").disabled = true;
+  form = null;
+
+  let xhttp = new XMLHttpRequest();
+  xhttp.open(methods.DELETE, urls.apiHeapTextUrl + "/" + id);
+  xhttp.setRequestHeader(csrfHeader, csrfToken);
+  xhttp.send();
+
+  xhttp.onreadystatechange = function () {
+    if (this.readyState === 4) {
+      if (this.status === 200) {
+        window.location.assign(urls.textsUrl);
+      } else {
+        console.log("Response status: " + this.status);
+        console.log(this.responseText);
+      }
+    }
+  }
+}
+

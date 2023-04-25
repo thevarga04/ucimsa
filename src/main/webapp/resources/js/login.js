@@ -1,4 +1,12 @@
-import {createContainerUI, csrf, displayWarning, generateHeader, getCsrfToken, urls} from "./common.js";
+import {
+  createContainerUI,
+  csrfHeader,
+  csrfToken,
+  displayWarning,
+  generateHeader,
+  getCsrfToken,
+  urls
+} from "./common.js";
 
 let containerUI;
 
@@ -49,7 +57,7 @@ function generateUI() {
   csrfInput.id = "csrfLogin";
   csrfInput.type = "hidden";
   csrfInput.name = "_csrf";
-  csrfInput.value = csrf.token;
+  csrfInput.value = csrfToken;
 
   let error = document.createElement("span");
   error.append("");
@@ -76,6 +84,7 @@ function submitLogin() {
 
   const xhttp = new XMLHttpRequest();
   xhttp.open("POST", urls.loginUrlPost);
+  xhttp.setRequestHeader(csrfHeader, csrfToken);
   xhttp.send(formData);
 
   xhttp.onreadystatechange = function () {

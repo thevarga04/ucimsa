@@ -10,7 +10,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import ucimsa.realm.LoginService;
-import ucimsa.realm.User;
 
 @RestController
 @RequestMapping("/api/whoami")
@@ -32,7 +31,7 @@ public class WhoamiRest {
   }
 
   @GetMapping("/test")
-  public ResponseEntity<User> getWhoAmITest() {
+  public ResponseEntity<String> getWhoAmITest() {
     return ResponseEntity
         .status(MOVED_PERMANENTLY)
         .location(URI.create("/api/whoami"))

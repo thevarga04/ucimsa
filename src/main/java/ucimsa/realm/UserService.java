@@ -32,7 +32,7 @@ public class UserService {
 
   public void save(User user) {
     final var jpa = userMapper.toJpaUser(user);
-    userRepo.save(jpa);
+    userRepo.saveAndFlush(jpa);
   }
 
 

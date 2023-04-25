@@ -1,12 +1,24 @@
-export let csrf = {
-  token: ""
-}
+export let csrfHeader = "X-CSRF-Token";
+export let csrfToken = "";
 
 export function getCsrfToken() {
   const csrfNodes = document.getElementsByName("_csrf");
   if (csrfNodes != null && csrfNodes[0] != null) {
-    csrf.token = csrfNodes[0].value;
+    csrfToken = csrfNodes[0].value;
   }
+}
+
+export let methods = {
+  GET: "GET",
+  POST: "POST",
+  PUT: "PUT",
+  DELETE: "DELETE"
+}
+
+export function httpHeaders() {
+  const headers = new Headers();
+  headers.append(csrfHeader, csrfToken);
+  return headers;
 }
 
 let contextPath = document.getElementById("contextPath").value;
@@ -56,7 +68,7 @@ export function generateHeader() {
   csrfInput.id = "csrfLogout";
   csrfInput.type = "hidden";
   csrfInput.name = "_csrf";
-  csrfInput.value = csrf.token;
+  csrfInput.value = csrfToken;
 
   let userPrincipalName = document.getElementById("userPrincipalName");
 
@@ -76,6 +88,7 @@ export function generateHeader() {
 
   formLogout.append(csrfInput);
   divLogout.append(formLogout, aLogout);
+  // divLogout.append(aLogout);
 
 
   let divLinks = document.createElement("div");

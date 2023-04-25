@@ -1,4 +1,4 @@
-import {createContainerUI, csrf, displayWarning, generateHeader, getCsrfToken, urls} from "./common.js";
+import {createContainerUI, csrfToken, displayWarning, generateHeader, getCsrfToken, urls} from "./common.js";
 
 let containerUI;
 
@@ -92,7 +92,7 @@ function generateUI() {
   csrfInput.id = "csrfRegistration";
   csrfInput.type = "hidden";
   csrfInput.name = "_csrf";
-  csrfInput.value = csrf.token;
+  csrfInput.value = csrfToken;
 
   let submit = document.createElement("button");
   submit.id = "submit";

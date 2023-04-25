@@ -60,9 +60,6 @@ public class WebSecurityConfig {
         .csrf()
 
         .and()
-        .cors()
-
-        .and()
         .securityMatcher(antMatcher("/api/**"))
         .authorizeHttpRequests(auth -> auth
             .anyRequest().authenticated()
@@ -106,12 +103,10 @@ public class WebSecurityConfig {
         .and()
         .securityMatcher("/", "/home", "/registration", "/login", "/logout", "/texts/**")
         .authorizeHttpRequests(auth -> auth
-            .requestMatchers(HttpMethod.GET, "/", "/home", "/registration", "/login", "/logout")
-            .permitAll()
-            .requestMatchers(HttpMethod.GET, "/texts/**")
-            .authenticated()
-            .anyRequest()
-            .denyAll()
+            .requestMatchers(HttpMethod.GET, "/", "/home", "/registration", "/login").permitAll()
+            .requestMatchers(HttpMethod.POST, "/logout").permitAll()
+            .requestMatchers(HttpMethod.GET, "/texts/**").authenticated()
+            .anyRequest().denyAll()
         )
 
         .formLogin(form -> form
@@ -119,6 +114,7 @@ public class WebSecurityConfig {
         )
 
         .logout(logout -> logout
+            .logoutUrl("/logout")
             .deleteCookies("JSESSIONID")
             .invalidateHttpSession(true)
             .logoutSuccessUrl("/")

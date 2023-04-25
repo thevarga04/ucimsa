@@ -9,6 +9,7 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.context.SecurityContextHolderStrategy;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler;
 import org.springframework.security.web.context.HttpSessionSecurityContextRepository;
 import org.springframework.security.web.context.SecurityContextRepository;
 import org.springframework.stereotype.Component;
@@ -65,5 +66,12 @@ public class LoginService {
     securityContextHolderStrategy.setContext(context);
     securityContextRepository.saveContext(context, request, response);
   }
+
+
+  public void logout(HttpServletRequest request, HttpServletResponse response) {
+    new SecurityContextLogoutHandler().logout(request, response, null);
+    SecurityContextHolder.getContext().setAuthentication(null);
+  }
+
 
 }
