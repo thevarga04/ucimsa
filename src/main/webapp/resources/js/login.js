@@ -8,7 +8,7 @@ import {
   urls
 } from "./common.js";
 
-let containerUI;
+let containerUI = document.createElement("div");
 
 // Generate the UI after page load is complete
 $(document).ready(function () {
@@ -18,7 +18,7 @@ $(document).ready(function () {
 });
 
 function generateUI() {
-  containerUI = createContainerUI();
+  createContainerUI(containerUI);
 
   let formFrame = document.createElement("form");
   formFrame.id = "form";

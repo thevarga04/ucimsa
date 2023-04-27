@@ -1,4 +1,4 @@
-package ucimsa.api.text;
+package ucimsa.text;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

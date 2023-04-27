@@ -3,7 +3,7 @@ package ucimsa.realm;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import ucimsa.util.ObjectUtil;
+import ucimsa.common.ObjectValidator;
 
 @Service
 @Transactional
@@ -11,12 +11,14 @@ public class UserService {
 
   private final UserRepo userRepo;
   private final UserMapper userMapper;
+  private final ObjectValidator objectValidator;
 
 
   @Autowired
-  public UserService(UserRepo userRepo, UserMapper userMapper) {
+  public UserService(UserRepo userRepo, UserMapper userMapper, ObjectValidator objectValidator) {
     this.userRepo = userRepo;
     this.userMapper = userMapper;
+    this.objectValidator = objectValidator;
   }
 
 
@@ -24,9 +26,9 @@ public class UserService {
     return userRepo.findByUsername(username);
   }
 
-  public JpaUser getByUsername(String username) throws UserValidatorException {
+  public JpaUser getByUsername(String username) throws UserRegistrationException {
     final var jpaUser = userRepo.findByUsername(username);
-    ObjectUtil.validateExists(jpaUser, username);
+    objectValidator.validateExists(jpaUser, username);
     return jpaUser;
   }
 

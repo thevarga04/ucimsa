@@ -180,12 +180,10 @@ function logout() {
   document.forms["formLogout"].submit();
 }
 
-export function createContainerUI() {
-  let containerUI = document.createElement("div");
+export function createContainerUI(containerUI) {
   containerUI.id = "containerUI";
   containerUI.setAttribute("class", "container");
   document.body.append(containerUI);
-  return containerUI;
 }
 
 export function displayWarning(action, responseText) {

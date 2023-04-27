@@ -15,14 +15,14 @@ import org.springframework.web.bind.annotation.RestController;
 @Slf4j
 public class RealmRest {
 
-  private final UserValidator userValidator;
+  private final UserRegistrationValidator userRegistrationValidator;
   private final UserService userService;
   private final LoginService loginService;
 
 
   @Autowired
-  public RealmRest(UserValidator userValidator, UserService userService, LoginService loginService) {
-    this.userValidator = userValidator;
+  public RealmRest(UserRegistrationValidator userRegistrationValidator, UserService userService, LoginService loginService) {
+    this.userRegistrationValidator = userRegistrationValidator;
     this.userService = userService;
     this.loginService = loginService;
   }
@@ -30,8 +30,8 @@ public class RealmRest {
 
   @PostMapping(value = "/registration")
   public ResponseEntity<HttpStatus> postRegistration(User user, HttpServletRequest request, HttpServletResponse response
-  ) throws UserValidatorException {
-    userValidator.validateUnique(user);
+  ) throws UserRegistrationException {
+    userRegistrationValidator.validateUnique(user);
     userService.save(user);
     loginService.login(user, request, response);
     return ResponseEntity.ok().build();

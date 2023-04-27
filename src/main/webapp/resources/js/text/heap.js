@@ -11,7 +11,7 @@ import {
 } from "../common.js";
 
 let debug = true;
-let containerUI;
+let containerUI = document.createElement("div");
 let card = document.createElement("div");
 let form = document.createElement("form");
 let cardBody = document.createElement("div");
@@ -77,7 +77,7 @@ function generateUI() {
 }
 
 function initContainerCardFormBody() {
-  containerUI = createContainerUI();
+  createContainerUI(containerUI);
 
   card.id = "card";
   card.setAttribute("class", "card mt-3");

@@ -1,7 +1,7 @@
 import {createContainerUI, csrfHeader, csrfToken, generateHeader, getCsrfToken, urls} from "./common.js";
 
 let debug = true;
-let containerUI;
+let containerUI = document.createElement("div");
 let card = document.createElement("div");
 let form = document.createElement("form");
 let cardBody = document.createElement("div");
@@ -49,7 +49,7 @@ function generateUI(texts) {
 }
 
 function initContainerCardFormBody() {
-  containerUI = createContainerUI();
+  createContainerUI(containerUI);
 
   card.id = "card";
   card.setAttribute("class", "card mt-3");
@@ -153,7 +153,7 @@ function textLearnElement(id) {
   learnLink.setAttribute("class", "btn btn-outline-schedule btn-sm");
   learnLink.setAttribute("style", "width: 90px;");
   learnLink.title = "Start a learning session with this text";
-  learnLink.href = "/api/learn/" + id;
+  learnLink.href = "/texts/learn?id=" + id;
   let learnIcon = document.createElement("i");
   learnIcon.setAttribute("class", "fa-solid fa-graduation-cap me-2");
   let learnText = document.createTextNode("Learn");
@@ -172,7 +172,7 @@ function textStatsElement(id) {
   statsLink.setAttribute("class", "btn btn-outline-test btn-sm");
   statsLink.setAttribute("style", "width: 90px;");
   statsLink.title = "Start a statsing session with this text";
-  statsLink.href = "/api/stats/" + id;
+  statsLink.href = "/texts/stats?id=" + id;
   let statsIcon = document.createElement("i");
   statsIcon.setAttribute("class", "fa-solid fa-chart-line me-2");
   let statsText = document.createTextNode("Stats");

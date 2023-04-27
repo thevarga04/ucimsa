@@ -1,4 +1,4 @@
-package ucimsa.api.text;
+package ucimsa.text;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;

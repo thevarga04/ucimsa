@@ -7,16 +7,18 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import ucimsa.util.StreamUtil;
+import ucimsa.common.ObjectMapper;
 
 @Service
 public class LoginUserDetailsService implements UserDetailsService {
 
   private final UserRepo userRepo;
+  private final ObjectMapper objectMapper;
 
 
-  public LoginUserDetailsService(UserRepo userRepo) {
+  public LoginUserDetailsService(UserRepo userRepo, ObjectMapper objectMapper) {
     this.userRepo = userRepo;
+    this.objectMapper = objectMapper;
   }
 
 
@@ -31,7 +33,7 @@ public class LoginUserDetailsService implements UserDetailsService {
     return User.builder()
         .username(jpaUser.getUsername())
         .password(jpaUser.getPassword())
-        .authorities(StreamUtil.ofNullable(jpaUser.getRoles())
+        .authorities(objectMapper.ofNullable(jpaUser.getRoles())
             .map(role -> new SimpleGrantedAuthority(role.getName()))
             .toList()
         )

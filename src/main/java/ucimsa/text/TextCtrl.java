@@ -22,4 +22,9 @@ public class TextCtrl {
   }
 
 
+  @GetMapping("/learn")
+  public String learnText() {
+    return "text/learn";
+  }
+
 }

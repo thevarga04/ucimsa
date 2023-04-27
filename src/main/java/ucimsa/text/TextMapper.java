@@ -1,4 +1,4 @@
-package ucimsa.api.text;
+package ucimsa.text;
 
 import java.util.List;
 import org.springframework.stereotype.Component;

@@ -1,4 +1,4 @@
-package ucimsa.api.whoami;
+package ucimsa.whoami;
 
 import static org.springframework.http.HttpStatus.MOVED_PERMANENTLY;
 
