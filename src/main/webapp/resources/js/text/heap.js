@@ -290,6 +290,8 @@ function saveHeapText() {
     return;
   }
 
+  formData.append("id", dto === null ? 0 : dto.id);
+
   if (debug) {
     console.log(JSON.stringify(Object.fromEntries(formData)));
   }

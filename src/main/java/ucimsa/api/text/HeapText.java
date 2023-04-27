@@ -18,15 +18,8 @@ import lombok.experimental.SuperBuilder;
 public class HeapText {
 
   private int id;
-  private String username;
   private String textname;
   private String sentences;
-
-
-  public HeapText(String textname, String sentences) {
-    this.textname = textname;
-    this.sentences = sentences;
-  }
 
 
 }

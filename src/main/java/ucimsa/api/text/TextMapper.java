@@ -8,16 +8,15 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional
 public class TextMapper {
 
-  public List<HeapText> toHeapTextList(List<JpaHeapText> jpaHeapTextList, String username) {
+  public List<HeapText> toHeapTextList(List<JpaHeapText> jpaHeapTextList) {
     return jpaHeapTextList.stream()
-        .map(jpaHeapText -> toHeapText(jpaHeapText, username))
+        .map(this::toHeapText)
         .toList();
   }
 
-  public HeapText toHeapText(JpaHeapText jpaHeapText, String username) {
+  public HeapText toHeapText(JpaHeapText jpaHeapText) {
     return HeapText.builder()
         .id(jpaHeapText.getId())
-        .username(username)
         .textname(jpaHeapText.getName())
         .sentences(jpaHeapText.getSentences())
         .build();

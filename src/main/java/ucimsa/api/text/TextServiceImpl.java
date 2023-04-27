@@ -29,14 +29,14 @@ public class TextServiceImpl implements TextService {
   public List<HeapText> getTexts(String username) throws UserValidatorException {
     final var jpaUser = userService.getByUsername(username);
     final var jpaHeapTextList = heapTextRepo.findByUserId(jpaUser.getId());
-    return textMapper.toHeapTextList(jpaHeapTextList, username);
+    return textMapper.toHeapTextList(jpaHeapTextList);
   }
 
   @Override
   public Optional<HeapText> getText(int id, String username) throws UserValidatorException {
     final var jpaUser = userService.getByUsername(username);
     final var jpaHeapText = heapTextRepo.findByIdAndUserId(id, jpaUser.getId());
-    return jpaHeapText.map(jpa -> textMapper.toHeapText(jpa, username));
+    return jpaHeapText.map(textMapper::toHeapText);
   }
 
   @Override
