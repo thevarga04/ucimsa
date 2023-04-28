@@ -80,14 +80,8 @@
     border-radius: 2rem;
 }
 
-/* Welcome Messages */
 .border-left-info {
     border-left: 0.25rem solid #36b9cc !important;
-}
-
-/* Heap Test */
-.border-left-heap {
-    border-left: 0.25rem solid #E8CDA8 !important;
 }
 
 

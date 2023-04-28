@@ -1,6 +1,16 @@
-import {createContainerUI, csrfHeader, csrfToken, generateHeader, getCsrfToken, urls} from "./common.js";
+import {
+  appendix,
+  createContainerUI,
+  csrfHeader,
+  csrfToken,
+  formCardAndCardBody,
+  generateHeader,
+  getCsrfToken,
+  logResponseAndStatus,
+  theTitle,
+  urls
+} from "./common.js";
 
-let debug = true;
 let containerUI = document.createElement("div");
 let card = document.createElement("div");
 let form = document.createElement("form");
@@ -31,37 +41,18 @@ function getTextsAndGenerateUI() {
   }
 }
 
-function logResponseAndStatus(responseText, status) {
-  if (debug) {
-    console.log("ResponseText: " + responseText);
-    console.log("Status: " + status);
-  }
-}
-
 
 function generateUI(texts) {
-  initContainerCardFormBody();
-  newTexts();
-  legend(texts);
+  createContainerUI(containerUI);
+  formCardAndCardBody(form, card, cardBody);
+  newTextsLinks();
+  theTitle(cardBody, texts.length > 0 ? "Your Texts" : "");
   textsAsCards(texts);
   footer();
-  appendix();
+  appendix(cardBody, form, card, containerUI);
 }
 
-function initContainerCardFormBody() {
-  createContainerUI(containerUI);
-
-  card.id = "card";
-  card.setAttribute("class", "card mt-3");
-
-  form.id = "form";
-  form.setAttribute("method", "POST");
-
-  cardBody.id = "cardBody";
-  cardBody.setAttribute("class", "card-body");
-}
-
-function newTexts() {
+function newTextsLinks() {
   let row = document.createElement("div");
   row.setAttribute("class", "d-flex flex-row mt-4");
 
@@ -76,15 +67,6 @@ function newTexts() {
   linkNewHeapText.append(linkNewHeapTextIcon, linkNewHeapTextText);
   row.append(linkNewHeapText);
   containerUI.append(row);
-}
-
-function legend(texts) {
-  let legend = document.createElement("div");
-  legend.id = "header";
-  legend.setAttribute("class", "row myLegend mx-2");
-  legend.append(texts.length > 0 ? "Your Texts" : "");
-
-  cardBody.append(legend);
 }
 
 function textsAsCards(texts) {
@@ -189,10 +171,4 @@ function footer() {
   footer.append("");
 
   cardBody.append(footer);
-}
-
-function appendix() {
-  form.append(cardBody);
-  card.append(form);
-  containerUI.append(card);
 }

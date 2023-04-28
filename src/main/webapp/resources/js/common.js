@@ -1,6 +1,8 @@
 export let csrfHeader = "X-CSRF-Token";
 export let csrfToken = "";
 
+export let debug = true;
+
 export function getCsrfToken() {
   const csrfNodes = document.getElementsByName("_csrf");
   if (csrfNodes != null && csrfNodes[0] != null) {
@@ -203,4 +205,37 @@ export function displayWarning(action, responseText) {
   note.innerHTML = `${action} has failed due: ${responseText}`;
   warning.append(note);
   return warning;
+}
+
+
+export function logResponseAndStatus(responseText, status) {
+  if (debug) {
+    console.log("ResponseText: " + responseText);
+    console.log("Status: " + status);
+  }
+}
+
+export function formCardAndCardBody(form, card, cardBody) {
+  card.id = "card";
+  card.setAttribute("class", "card mt-3");
+
+  form.id = "form";
+
+  cardBody.id = "cardBody";
+  cardBody.setAttribute("class", "card-body");
+}
+
+export function theTitle(cardBody, titleWording) {
+  let legend = document.createElement("div");
+  legend.id = "header";
+  legend.setAttribute("class", "row myLegend mx-2 mb-3");
+  legend.append(titleWording);
+
+  cardBody.append(legend);
+}
+
+export function appendix(cardBody, form, card, containerUI) {
+  form.append(cardBody);
+  card.append(form);
+  containerUI.append(card);
 }

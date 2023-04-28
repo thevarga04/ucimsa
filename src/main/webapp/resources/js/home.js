@@ -1,6 +1,5 @@
 import {generateHeader, getCsrfToken} from "./common.js";
 
-let debug = true;
 let containerUI = document.createElement("div");
 let card = document.createElement("div");
 let form = document.createElement("form");

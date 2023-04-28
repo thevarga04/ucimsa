@@ -1,16 +1,20 @@
 import {
+  appendix,
   createContainerUI,
   csrfHeader,
   csrfToken,
+  debug,
   displayWarning,
+  formCardAndCardBody,
   generateHeader,
   getCsrfToken,
   httpHeaders,
+  logResponseAndStatus,
   methods,
+  theTitle,
   urls
 } from "../common.js";
 
-let debug = true;
 let containerUI = document.createElement("div");
 let card = document.createElement("div");
 let form = document.createElement("form");
@@ -58,49 +62,18 @@ function getTextAndGenerateUI() {
 }
 
 
-function logResponseAndStatus(responseText, status) {
-  if (debug) {
-    console.log("ResponseText: " + responseText);
-    console.log("Status: " + status);
-  }
-}
-
-
 function generateUI() {
-  initContainerCardFormBody();
-  legendAndTitle();
+  createContainerUI(containerUI);
+  formCardAndCardBody(form, card, cardBody);
+  theTitle(cardBody, "Your new text");
   textName();
   textarea();
   pageButtons();
-  appendix();
+  appendix(cardBody, form, card, containerUI);
   countCharsInTextarea();
 }
 
-function initContainerCardFormBody() {
-  createContainerUI(containerUI);
 
-  card.id = "card";
-  card.setAttribute("class", "card mt-3");
-
-  form.id = "form";
-
-  cardBody.id = "cardBody";
-  cardBody.setAttribute("class", "card-body");
-}
-
-function legendAndTitle() {
-  let legend = document.createElement("div");
-  legend.id = "header";
-  legend.setAttribute("class", "row myLegend my-4");
-
-  let title = document.createElement("div");
-  title.id = "title";
-  title.setAttribute("class", "col");
-  title.append("Your new text");
-
-  legend.append(title);
-  cardBody.append(legend);
-}
 
 function textName() {
   let nameRow = document.createElement("div");
@@ -290,7 +263,7 @@ function saveHeapText() {
     return;
   }
 
-  formData.append("id", dto === null ? 0 : dto.id);
+  formData.append("id", dto ? dto.id : "0");
 
   if (debug) {
     console.log(JSON.stringify(Object.fromEntries(formData)));
@@ -354,13 +327,6 @@ function removeWarning() {
     warning.remove();
   }
 }
-
-function appendix() {
-  form.append(cardBody);
-  card.append(form);
-  containerUI.append(card);
-}
-
 
 function countCharsInTextarea() {
   $("#sentences").keyup(function () {

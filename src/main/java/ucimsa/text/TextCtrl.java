@@ -12,19 +12,20 @@ public class TextCtrl {
 
 
   @GetMapping
-  public String texts() {
+  public String getTexts() {
     return "texts";
   }
 
   @GetMapping("/heap")
-  public String heapText() {
+  public String getTextsHeap() {
     return "text/heap";
   }
 
 
   @GetMapping("/learn")
-  public String learnText() {
+  public String getTextsLearn() {
     return "text/learn";
   }
+
 
 }
