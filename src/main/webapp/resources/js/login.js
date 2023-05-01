@@ -5,7 +5,7 @@ import {
   displayWarning,
   generateHeader,
   getCsrfToken,
-  urls
+  paths
 } from "./common.js";
 
 let containerUI = document.createElement("div");
@@ -83,7 +83,7 @@ function submitLogin() {
   let formData = new FormData(form);
 
   const xhttp = new XMLHttpRequest();
-  xhttp.open("POST", urls.loginUrlPost);
+  xhttp.open("POST", paths.loginUrlPost);
   xhttp.setRequestHeader(csrfHeader, csrfToken);
   xhttp.send(formData);
 

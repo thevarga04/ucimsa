@@ -1,4 +1,4 @@
-import {createContainerUI, csrfToken, displayWarning, generateHeader, getCsrfToken, urls} from "./common.js";
+import {createContainerUI, csrfToken, displayWarning, generateHeader, getCsrfToken, paths} from "./common.js";
 
 let containerUI = document.createElement("div");
 
@@ -122,7 +122,7 @@ function submitRegister() {
   formData.delete("confirm");
 
   const xhttp = new XMLHttpRequest();
-  xhttp.open("POST", urls.registrationUrlPost);
+  xhttp.open("POST", paths.registrationUrlPost);
   xhttp.send(formData);
 
   xhttp.onreadystatechange = function () {

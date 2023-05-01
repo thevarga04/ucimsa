@@ -1,4 +1,6 @@
 import {
+  aDiv,
+  anUrl,
   appendix,
   createContainerUI,
   csrfHeader,
@@ -7,8 +9,9 @@ import {
   generateHeader,
   getCsrfToken,
   logResponseAndStatus,
-  theTitle,
-  urls
+  params,
+  paths,
+  theTitle
 } from "./common.js";
 
 let containerUI = document.createElement("div");
@@ -25,7 +28,7 @@ $(document).ready(function () {
 
 function getTextsAndGenerateUI() {
   let xhttp = new XMLHttpRequest();
-  xhttp.open("GET", urls.apiTextsUrl);
+  xhttp.open("GET", paths.apiTextsUrl);
   xhttp.setRequestHeader(csrfHeader, csrfToken);
   xhttp.send();
 
@@ -53,20 +56,23 @@ function generateUI(texts) {
 }
 
 function newTextsLinks() {
-  let row = document.createElement("div");
-  row.setAttribute("class", "d-flex flex-row mt-4");
+  let aRow = aDiv("d-flex flex-row mt-4");
 
   let linkNewHeapText = document.createElement("a");
   linkNewHeapText.setAttribute("class", "btn btn-outline-heap me-4");
   linkNewHeapText.setAttribute("style", "width: 160px;");
   linkNewHeapText.title = "Create new Heap Text";
-  linkNewHeapText.href = "/texts/heap";
+  linkNewHeapText.href = paths.heapTextUrl;
   let linkNewHeapTextIcon = document.createElement("i");
   linkNewHeapTextIcon.setAttribute("class", "fas fa-list-ul me-2");
   let linkNewHeapTextText = document.createTextNode("New Heap Text");
   linkNewHeapText.append(linkNewHeapTextIcon, linkNewHeapTextText);
-  row.append(linkNewHeapText);
-  containerUI.append(row);
+
+  // Other text types goes here ...
+  // ...
+
+  aRow.append(linkNewHeapText);
+  containerUI.append(aRow);
 }
 
 function textsAsCards(texts) {
@@ -76,92 +82,84 @@ function textsAsCards(texts) {
 }
 
 // Textname :: Sentences/Entries :: Learn :: Stats :: Share/Private (Delete text when editing it)
-function textCard(id, textname, entries) {
-  let divCard = document.createElement("div");
-  divCard.setAttribute("class", "d-flex card shadow border-left-heap");
+function textCard(textId, textname, entries) {
+  let aTextCard = aDiv("d-flex card shadow border-left-heap");
+  let aTextCardBody = aDiv("row card-body-list");
 
-  let divRow = document.createElement("div");
-  divRow.setAttribute("class", "row card-body-list");
+  let colName = nameElement(textId, textname);
+  let colEntries = entriesElement(entries);
+  let colLinkLearn = linkLearnElement(textId);
+  let colLinkStats = linkStatsElement(textId);
 
-  let divColName = textNameElement(id, textname);
-  let divColEntries = entriesElement(entries);
-  let divColLearn = textLearnElement(id);
-  let divColStats = textStatsElement(id);
-
-  divRow.append(divColName, divColEntries, divColLearn, divColStats);
-  divCard.append(divRow);
-  cardBody.append(divCard);
+  aTextCardBody.append(colName, colEntries, colLinkLearn, colLinkStats);
+  aTextCard.append(aTextCardBody);
+  cardBody.append(aTextCard);
 }
 
 function entries(sentences) {
   return sentences.split(/\r?\n/).length;
 }
 
-function textNameElement(id, textname) {
-  let divColName = document.createElement("div");
-  divColName.setAttribute("class", "col-auto flex-grow-1");
-  let nameLink = document.createElement("a");
-  nameLink.title = "View or Edit this Test";
-  nameLink.href = "/texts/heap?id=" + id;
+function nameElement(textId, textname) {
+  let aCol = aDiv("col-auto flex-grow-1");
+
+  let linkTextName = document.createElement("a");
+  linkTextName.title = "View or Edit this Test";
+  linkTextName.href = anUrl(paths.heapTextUrl, new Map([[params.TEXT_ID, textId]]));
   let nameIcon = document.createElement("i");
   nameIcon.setAttribute("class", "fas fa-edit me-2");
   let nameText = document.createTextNode(textname);
-  nameLink.append(nameIcon, nameText);
-  divColName.append(nameLink);
-  return divColName;
+  linkTextName.append(nameIcon, nameText);
+
+  aCol.append(linkTextName);
+  return aCol;
 }
 
 function entriesElement(entries) {
-  let divColEntries = document.createElement("div");
-  divColEntries.setAttribute("class", "col-auto");
-  let divEntries = document.createElement("div");
-  divEntries.setAttribute("class", "col-auto");
-  let divSpan = document.createElement("span");
-  divSpan.setAttribute("class", "badge badge-secondary badge-pill");
-  divSpan.title = "Sentences";
-  divSpan.setAttribute("style", "cursor: pointer; font-size: 1rem; color: #E8CDA8");
-  divSpan.append(entries);
-  divEntries.append(divSpan);
-  divColEntries.append(divEntries);
-  return divColEntries;
+  let aCol = aDiv("col-auto");
+
+  let spanEntries = document.createElement("span");
+  spanEntries.setAttribute("class", "badge badge-secondary badge-pill");
+  spanEntries.title = "Sentences";
+  spanEntries.setAttribute("style", "cursor: pointer; font-size: 1rem; color: #E8CDA8");
+  spanEntries.append(entries);
+
+  aCol.append(spanEntries);
+  return aCol;
 }
 
-function textLearnElement(id) {
-  let divColLearn = document.createElement("div");
-  divColLearn.setAttribute("class", "col-auto");
-  let divLearn = document.createElement("div");
-  divLearn.setAttribute("class", "col-auto");
-  let learnLink = document.createElement("a");
-  learnLink.setAttribute("class", "btn btn-outline-schedule btn-sm");
-  learnLink.setAttribute("style", "width: 90px;");
-  learnLink.title = "Start a learning session with this text";
-  learnLink.href = "/texts/learn?id=" + id;
+function linkLearnElement(textId) {
+  let aCol = aDiv("col-auto");
+
+  let linkLearn = document.createElement("a");
+  linkLearn.setAttribute("class", "btn btn-outline-schedule btn-sm");
+  linkLearn.setAttribute("style", "width: 90px;");
+  linkLearn.title = "Start a learning session with this text";
+  linkLearn.href = anUrl(paths.chooseLessonTypeUrl, new Map([[params.TEXT_ID, textId]]));
   let learnIcon = document.createElement("i");
   learnIcon.setAttribute("class", "fa-solid fa-graduation-cap me-2");
   let learnText = document.createTextNode("Learn");
-  learnLink.append(learnIcon, learnText);
-  divLearn.append(learnLink);
-  divColLearn.append(divLearn);
-  return divColLearn;
+  linkLearn.append(learnIcon, learnText);
+
+  aCol.append(linkLearn);
+  return aCol;
 }
 
-function textStatsElement(id) {
-  let divColStats = document.createElement("div");
-  divColStats.setAttribute("class", "col-auto");
-  let divStats = document.createElement("div");
-  divStats.setAttribute("class", "col-auto");
-  let statsLink = document.createElement("a");
-  statsLink.setAttribute("class", "btn btn-outline-test btn-sm");
-  statsLink.setAttribute("style", "width: 90px;");
-  statsLink.title = "Start a statsing session with this text";
-  statsLink.href = "/texts/stats?id=" + id;
+function linkStatsElement(textId) {
+  let aCol = aDiv("col-auto");
+
+  let linkStats = document.createElement("a");
+  linkStats.setAttribute("class", "btn btn-outline-test btn-sm");
+  linkStats.setAttribute("style", "width: 90px;");
+  linkStats.title = "Start a statsing session with this text";
+  linkStats.href = anUrl(paths.statsUrl, new Map([[params.TEXT_ID, textId]]));
   let statsIcon = document.createElement("i");
   statsIcon.setAttribute("class", "fa-solid fa-chart-line me-2");
   let statsText = document.createTextNode("Stats");
-  statsLink.append(statsIcon, statsText);
-  divStats.append(statsLink);
-  divColStats.append(divStats);
-  return divColStats;
+  linkStats.append(statsIcon, statsText);
+
+  aCol.append(linkStats);
+  return aCol;
 }
 
 

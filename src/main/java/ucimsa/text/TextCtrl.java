@@ -16,15 +16,9 @@ public class TextCtrl {
     return "texts";
   }
 
-  @GetMapping("/heap")
+  @GetMapping("/heapText")
   public String getTextsHeap() {
-    return "text/heap";
-  }
-
-
-  @GetMapping("/learn")
-  public String getTextsLearn() {
-    return "text/learn";
+    return "text/heapText";
   }
 
 

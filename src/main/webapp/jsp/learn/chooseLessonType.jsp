@@ -9,7 +9,7 @@
 <html lang="en">
 <head>
   <meta charset="utf-8">
-  <title>Your Text To Learn</title>
+  <title>Choose Lesson Type</title>
   <security:csrfInput/>
 
   <%-- CDN resources, jQuery must be included before Bootstrap's js --%>
@@ -27,7 +27,7 @@
   <link href="<c:url value="/resources/css/schedules.css" />" rel="stylesheet">
   <link href="<c:url value="/resources/css/texts.css" />" rel="stylesheet">
 
-  <script type="module" src="<c:url value="/resources/js/text/heap.js" />"></script>
+  <script type="module" src="<c:url value="/resources/js/learn/chooseLessonType.js" />"></script>
 </head>
 <body>
 <input id="userPrincipalName" type="hidden" value="${pageContext.request.userPrincipal.name}" />

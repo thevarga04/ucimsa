@@ -1,5 +1,8 @@
 import {
+  aDiv,
+  aLabel,
   appendix,
+  aSpan,
   createContainerUI,
   csrfHeader,
   csrfToken,
@@ -8,11 +11,13 @@ import {
   formCardAndCardBody,
   generateHeader,
   getCsrfToken,
+  getParamNumberValueFromUrl,
   httpHeaders,
   logResponseAndStatus,
   methods,
-  theTitle,
-  urls
+  params,
+  paths,
+  theTitle
 } from "../common.js";
 
 let containerUI = document.createElement("div");
@@ -20,7 +25,7 @@ let card = document.createElement("div");
 let form = document.createElement("form");
 let cardBody = document.createElement("div");
 
-let id = 0;
+let textId = 0;
 let dto;
 
 // Generate the UI after page load is complete
@@ -31,21 +36,17 @@ $(document).ready(function () {
 });
 
 function generateUIorFirstGetText() {
-  let idValue = new URLSearchParams(window.location.search).get("id");
-  if (idValue != null) {
-    let idNumber = parseInt(idValue, 10);
-    if (!isNaN(idNumber)) {
-      id = idNumber;
-      getTextAndGenerateUI();
-      return;
-    }
+  textId = getParamNumberValueFromUrl(params.TEXT_ID);
+  if (textId) {
+    getTextAndGenerateUI();
+  } else {
+    generateUI();
   }
-  generateUI();
 }
 
 function getTextAndGenerateUI() {
   let xhttp = new XMLHttpRequest();
-  xhttp.open("GET", urls.apiHeapTextUrl + "/" + id);
+  xhttp.open("GET", paths.apiHeapTextUrl + "/" + textId);
   xhttp.setRequestHeader(csrfHeader, csrfToken);
   xhttp.send();
 
@@ -61,7 +62,6 @@ function getTextAndGenerateUI() {
   }
 }
 
-
 function generateUI() {
   createContainerUI(containerUI);
   formCardAndCardBody(form, card, cardBody);
@@ -73,21 +73,11 @@ function generateUI() {
   countCharsInTextarea();
 }
 
-
-
 function textName() {
-  let nameRow = document.createElement("div");
-  nameRow.setAttribute("class", "row");
-
-  let nameCol = document.createElement("div");
-  nameCol.setAttribute("class", "col");
-
-  let nameLabel = document.createElement("label");
-  nameLabel.setAttribute("style", "width: 100%");
-
-  let nameSpan = document.createElement("span");
-  nameSpan.setAttribute("class", "h6 ml-2");
-  nameSpan.append("Name");
+  let nameRow = aDiv("row");
+  let nameCol = aDiv("col");
+  let nameLabel = aLabel("mx-2", "width: 100%");
+  let nameSpan = aSpan("h6 mx-2", "Name");
 
   let nameInput = document.createElement("input");
   nameInput.setAttribute("class", "form-control input-heap mt-2");
@@ -105,42 +95,24 @@ function textName() {
   cardBody.append(nameRow);
 }
 
-function textarea(sentences) {
-  let div1 = document.createElement("div");
-  div1.setAttribute("class", "my-3");
+function textarea() {
+  let div1 = aDiv("my-3");
 
-  let label = document.createElement("label");
-  label.setAttribute("class", "d-flex justify-content-between");
+  let label = aLabel("d-flex justify-content-between");
   label.setAttribute("for", "sentences");
 
-  let span1 = document.createElement("span");
-  span1.setAttribute("class", "text-muted");
-  span1.append('');
-  label.append(span1);
+  let span1 = aSpan("text-muted", "");
 
-  let span2 = document.createElement("span");
+  let span2 = aSpan("text-muted", "4096 characters remaining");
   span2.id = "count";
-  span2.append("4096 characters remaining");
-  span2.setAttribute("class", "text-muted");
-  label.append(span2);
+  label.append(span1, span2);
 
-  let div2 = document.createElement("div");
-  div2.setAttribute("class", "card border-left-heap shadow");
-
-  let div3 = document.createElement("div");
-  div3.setAttribute("class", "card-body");
-
-  let div4 = document.createElement("div");
-  div4.setAttribute("class", "row align-items-center");
-
-  let div5 = document.createElement("div");
-  div5.setAttribute("class", "col mr-2");
-
-  let div6 = document.createElement("div");
-  div6.setAttribute("class", "row align-items-center");
-
-  let div7 = document.createElement("div");
-  div7.setAttribute("class", "col");
+  let div2 = aDiv("card border-left-heap shadow");
+  let div3 = aDiv("card-body");
+  let div4 = aDiv("row align-items-center");
+  let div5 = aDiv("col mr-2");
+  let div6 = aDiv("row align-items-center");
+  let div7 = aDiv("col");
 
   let textarea = document.createElement("textarea");
   textarea.id = "sentences";
@@ -163,15 +135,12 @@ function textarea(sentences) {
 }
 
 function pageButtons() {
-  let row = document.createElement("div");
-  row.setAttribute("class", "d-flex mt-4");
+  let row = aDiv("d-flex mt-4");
 
-  let leftGroup = document.createElement("div");
-  leftGroup.setAttribute("class", "flex-grow-1");
+  let leftGroup = aDiv("flex-grow-1");
   leftGroup.append(optimizeButton(), saveButton());
 
-  let rightGroup = document.createElement("div");
-  rightGroup.setAttribute("class", "me-0");
+  let rightGroup = aDiv("me-0");
   rightGroup.append(linkCancel(), deleteButton());
 
   row.append(leftGroup, rightGroup);
@@ -184,8 +153,8 @@ function optimizeButton() {
   optimizeButton.name = "Optimize";
   optimizeButton.title = "Optimize text - one sentence per line";
   optimizeButton.type = "button";
-  optimizeButton.setAttribute("style", "width: 160px");
   optimizeButton.setAttribute("class", "btn btn-outline-heap mx-4");
+  optimizeButton.setAttribute("style", "width: 160px");
   optimizeButton.onclick = function () { optimizeHeapText() };
   optimizeButton.disabled = true;
   let optimizeButtonIcon = document.createElement("i");
@@ -200,9 +169,9 @@ function saveButton() {
   saveButton.id = "saveButton";
   saveButton.name = "Save";
   saveButton.title = "Save this text";
-  saveButton.setAttribute("type", "button");
-  saveButton.setAttribute("style", "width: 100px");
+  saveButton.type = "button";
   saveButton.setAttribute("class", "btn btn-primary mx-4");
+  saveButton.setAttribute("style", "width: 100px");
   saveButton.onclick = function () { saveHeapText() };
   let saveButtonIcon = document.createElement("i");
   saveButtonIcon.setAttribute("class", "far fa-check-circle me-2");
@@ -216,7 +185,7 @@ function linkCancel() {
   linkCancel.setAttribute("class", "btn btn-outline-warning me-4");
   linkCancel.setAttribute("style", "width: 100px;");
   linkCancel.title = "Cancel any changes";
-  linkCancel.href = urls.textsUrl;
+  linkCancel.href = paths.textsUrl;
   let linkCancelIcon = document.createElement("i");
   linkCancelIcon.setAttribute("class", "far fa-window-close me-2");
   let linkCancelText = document.createTextNode("Cancel");
@@ -226,7 +195,7 @@ function linkCancel() {
 
 function deleteButton() {
   let deleteButton = document.createElement("button");
-  if (id === 0) {
+  if (textId === 0) {
     deleteButton.setAttribute("style", "display: none");
     deleteButton.disabled = true;
     return deleteButton;
@@ -270,7 +239,7 @@ function saveHeapText() {
   }
 
   const xhttp = new XMLHttpRequest();
-  xhttp.open("POST", urls.apiHeapTextUrl);
+  xhttp.open("POST", paths.apiHeapTextUrl);
   xhttp.setRequestHeader(csrfHeader, csrfToken);
   xhttp.send(formData);
 
@@ -281,7 +250,7 @@ function saveHeapText() {
         if (savedText) {
           console.log("Text saved as: " + savedText.id);
         }
-        location.href = urls.textsUrl;
+        location.href = paths.textsUrl;
       } else {
         console.log(`Failed to save this text. ${this.responseText} Response code: ${this.status}`);
         showWarning(this.responseText);
@@ -344,13 +313,13 @@ function deleteThisTextFetch() {
   document.getElementById("deleteButton").disabled = true;
   form = null;
 
-  fetch(urls.apiHeapTextUrl + "/" + id, {
+  fetch(paths.apiHeapTextUrl + "/" + textId, {
     method: methods.DELETE,
     headers: httpHeaders()
   })
   .then(function (response) {
     if (response.ok) {
-      window.location.assign(urls.textsUrl);
+      window.location.assign(paths.textsUrl);
     } else {
       console.log(response.status);
       console.log(response.json());
@@ -367,14 +336,14 @@ function deleteThisText() {
   form = null;
 
   let xhttp = new XMLHttpRequest();
-  xhttp.open(methods.DELETE, urls.apiHeapTextUrl + "/" + id);
+  xhttp.open(methods.DELETE, paths.apiHeapTextUrl + "/" + textId);
   xhttp.setRequestHeader(csrfHeader, csrfToken);
   xhttp.send();
 
   xhttp.onreadystatechange = function () {
     if (this.readyState === 4) {
       if (this.status === 200) {
-        window.location.assign(urls.textsUrl);
+        window.location.assign(paths.textsUrl);
       } else {
         console.log("Response status: " + this.status);
         console.log(this.responseText);

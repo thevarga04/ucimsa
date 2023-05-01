@@ -25,17 +25,22 @@ export function httpHeaders() {
 
 let contextPath = document.getElementById("contextPath").value;
 
-export let urls = {
-  registrationUrlGet: contextPath +  "/registration",
-  registrationUrlPost: contextPath + "/pub/registration",
-  loginUrlGet: contextPath +         "/login",
-  loginUrlPost: contextPath +        "/pub/login",
-  logoutUrl: contextPath +           "/logout",
-  textsUrl: contextPath +            "/texts",
-  apiTextsUrl: contextPath +         "/api/texts",
-  heapTextUrl: contextPath +         "/texts/heap",
-  apiHeapTextUrl: contextPath +      "/api/texts/heap",
-  profileUrl: contextPath +          "/profile"
+export let paths = {
+  registrationUrlGet: contextPath +             "/registration",
+  registrationUrlPost: contextPath +            "/pub/registration",
+  loginUrlGet: contextPath +                    "/login",
+  loginUrlPost: contextPath +                   "/pub/login",
+  logoutUrl: contextPath +                      "/logout",
+  profileUrl: contextPath +                     "/profile",
+  textsUrl: contextPath +                       "/texts",
+  apiTextsUrl: contextPath +                    "/api/texts",
+  heapTextUrl: contextPath +                    "/texts/heapText",
+  apiHeapTextUrl: contextPath +                 "/api/texts/heapText",
+  chooseLessonTypeUrl: contextPath +            "/learn/chooseLessonType",
+  statsUrl: contextPath +                       "/texts/stats",
+  learnSplitSentencesOptionsUrl: contextPath +  "/learn/splitSentencesOptions",
+  apiLearnUrl: contextPath +                    "/api/learn", // start new session, textId & lessonType
+  learnUrl: contextPath +                       "/learn",
 };
 
 export let links = {
@@ -44,6 +49,29 @@ export let links = {
   registration: "Registration",
   profile: "Profile",
   texts: "Texts"
+}
+
+export let params = {
+  TEXT_ID: "textId",
+  TYPE: "type",
+  SESSION_ID: "sessionId",
+}
+
+export let baseUrl = `${window.location.protocol}//${window.location.host}`;
+
+export function anUrl(aPath, mapOfSearchParams) {
+  let url = new URL(baseUrl + aPath);
+  for (let [key, value] of mapOfSearchParams) {
+    url.searchParams.set(key, value);
+  }
+  return url.href;
+}
+
+export let lessons = {
+  SPLIT: "splitSentences",                  // into multiple pairs, triplets or 1/4 parts
+  FIND_MISTAKE: "findMistake",              // identify wrong words and choose correct ones from given list
+  ASSEMBLY_SENTENCE: "assemblySentence",    // shuffled words
+  FILL_BLANKS: "fillBlanks"                 // from shuffled letters
 }
 
 let signOn = false;
@@ -64,7 +92,7 @@ export function generateHeader() {
   let formLogout = document.createElement("form");
   formLogout.id = "formLogout";
   formLogout.method = "POST";
-  formLogout.action = urls.logoutUrl;
+  formLogout.action = paths.logoutUrl;
 
   let csrfInput = document.createElement("input");
   csrfInput.id = "csrfLogout";
@@ -134,7 +162,7 @@ function addLinkRegistration(divLinks) {
   let aRegistration = document.createElement("a");
   aRegistration.id = "aRegistration";
   aRegistration.setAttribute( "class", "h6 color-register" );
-  aRegistration.href = urls.registrationUrlGet;
+  aRegistration.href = paths.registrationUrlGet;
   aRegistration.title = "Registration";
   let aRegistrationText = document.createTextNode("Registration");
   aRegistration.append(aRegistrationText);
@@ -146,7 +174,7 @@ function addLinkLogin(divLinks) {
   let aLogin = document.createElement("a");
   aLogin.id = "aLogin";
   aLogin.setAttribute( "class", "h6 text-primary" );
-  aLogin.href = urls.loginUrlGet;
+  aLogin.href = paths.loginUrlGet;
   aLogin.title = "Home";
   let aLoginText = document.createTextNode("Login");
   aLogin.append(aLoginText);
@@ -158,7 +186,7 @@ function addLinkTexts(divLinks) {
   let aTexts = document.createElement("a");
   aTexts.id = "aTexts";
   aTexts.setAttribute( "class", "h6 text-info" );
-  aTexts.href = urls.textsUrl;
+  aTexts.href = paths.textsUrl;
   aTexts.title = "Texts";
   let aTextsText = document.createTextNode("Texts");
   aTexts.append(aTextsText);
@@ -170,7 +198,7 @@ function addLinkProfile(divLinks) {
   let aProfile = document.createElement("a");
   aProfile.id = "aProfile";
   aProfile.setAttribute( "class", "h6 color-register" );
-  aProfile.href = urls.profileUrl;
+  aProfile.href = paths.profileUrl;
   aProfile.title = "Profile";
   let aProfileText = document.createTextNode("Profile");
   aProfile.append(aProfileText);
@@ -224,6 +252,43 @@ export function formCardAndCardBody(form, card, cardBody) {
   cardBody.id = "cardBody";
   cardBody.setAttribute("class", "card-body");
 }
+
+export function getParamNumberValueFromUrl(id) {
+  let aValue = new URLSearchParams(window.location.search).get(id);
+  if (aValue != null) {
+    let aNumber = parseInt(aValue, 10);
+    if (!isNaN(aNumber)) {
+      return aNumber;
+    }
+  }
+  return null;
+}
+
+export function aDiv(aClass, aStyle) {
+  let aDiv = document.createElement("div");
+  aDiv.setAttribute("class", aClass);
+  if (aStyle) {
+    aDiv.setAttribute("style", aStyle);
+  }
+  return aDiv;
+}
+
+export function aLabel(aClass, aStyle) {
+  let aLabel = document.createElement("label");
+  aLabel.setAttribute("class", aClass);
+  if (aStyle) {
+    aLabel.setAttribute("style", aStyle);
+  }
+  return aLabel;
+}
+
+export function aSpan(aClass, aText) {
+  let aSpan = document.createElement("span");
+  aSpan.setAttribute("class", aClass);
+  aSpan.append(aText);
+  return aSpan;
+}
+
 
 export function theTitle(cardBody, titleWording) {
   let legend = document.createElement("div");

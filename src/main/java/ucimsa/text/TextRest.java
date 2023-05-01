@@ -35,20 +35,20 @@ public class TextRest {
   }
 
 
-  @GetMapping("/heap/{id}")
-  public ResponseEntity<Optional<HeapText>> getHeapText(@PathVariable("id") int id, Principal principal) throws UserRegistrationException {
-    final var text = textService.getText(id, principal.getName());
+  @GetMapping("/heapText/{textId}")
+  public ResponseEntity<Optional<HeapText>> getHeapText(@PathVariable("textId") int textId, Principal principal) throws UserRegistrationException {
+    final var text = textService.getText(textId, principal.getName());
     return ResponseEntity.ok(text);
   }
 
-  @DeleteMapping("/heap/{id}")
-  public ResponseEntity<Integer> deleteHeapText(@PathVariable("id") int id, Principal principal) throws UserRegistrationException {
-    final var deleted = textService.deleteText(id, principal.getName());
+  @DeleteMapping("/heapText/{textId}")
+  public ResponseEntity<Integer> deleteHeapText(@PathVariable("textId") int textId, Principal principal) throws UserRegistrationException {
+    final var deleted = textService.deleteText(textId, principal.getName());
     return ResponseEntity.ok(deleted);
   }
 
 
-  @PostMapping("/heap")
+  @PostMapping("/heapText")
   public ResponseEntity<HeapText> postHeapText(HeapText heapText, Principal principal) throws UserRegistrationException {
     final var savedText = textService.save(heapText, principal.getName());
     return ResponseEntity.ok(savedText);

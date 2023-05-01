@@ -27,7 +27,7 @@
   <link href="<c:url value="/resources/css/schedules.css" />" rel="stylesheet">
   <link href="<c:url value="/resources/css/texts.css" />" rel="stylesheet">
 
-  <script type="module" src="<c:url value="/resources/js/lesson/splitSentences.js" />"></script>
+  <script type="module" src="<c:url value="/resources/js/learn/splitSentencesSession.js" />"></script>
 </head>
 <body>
 <input id="userPrincipalName" type="hidden" value="${pageContext.request.userPrincipal.name}" />

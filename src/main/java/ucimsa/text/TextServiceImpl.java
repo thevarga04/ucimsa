@@ -33,16 +33,16 @@ public class TextServiceImpl implements TextService {
   }
 
   @Override
-  public Optional<HeapText> getText(int id, String username) throws UserRegistrationException {
+  public Optional<HeapText> getText(int textId, String username) throws UserRegistrationException {
     final var jpaUser = userService.getByUsername(username);
-    final var jpaHeapText = heapTextRepo.findByIdAndUserId(id, jpaUser.getId());
+    final var jpaHeapText = heapTextRepo.findByIdAndUserId(textId, jpaUser.getId());
     return jpaHeapText.map(textMapper::toHeapText);
   }
 
   @Override
-  public Integer deleteText(int id, String username) throws UserRegistrationException {
+  public Integer deleteText(int textId, String username) throws UserRegistrationException {
     final var jpaUser = userService.getByUsername(username);
-    return heapTextRepo.deleteByIdAndUserId(id, jpaUser.getId());
+    return heapTextRepo.deleteByIdAndUserId(textId, jpaUser.getId());
   }
 
 
