@@ -10,6 +10,8 @@ public interface TextService {
 
   Optional<HeapText> getText(int textId, String username) throws UserRegistrationException;
 
+  Optional<JpaHeapText> getJpaText(int textId, String username) throws UserRegistrationException;
+
   Integer deleteText(int textId, String username) throws UserRegistrationException;
 
   HeapText save(HeapText heapText, String username) throws UserRegistrationException;

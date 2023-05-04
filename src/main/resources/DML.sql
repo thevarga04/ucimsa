@@ -13,3 +13,6 @@ delete from heap_texts;
 
 -- Features
 select * from heap_texts;
+
+SELECT nextval('seq_sessions');
+

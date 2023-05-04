@@ -39,6 +39,7 @@ CREATE TABLE heap_texts(
     CONSTRAINT heap_texts_user_id_name  UNIQUE (user_id, name)
 );
 
-drop table heap_texts;
+-- Learning Sessions
+CREATE SEQUENCE seq_sessions start 1 increment 1;
 
 commit;

@@ -25,6 +25,13 @@ export function httpHeaders() {
 
 let contextPath = document.getElementById("contextPath").value;
 
+export let lessons = {
+  SPLIT: "splitSentences",                  // into multiple pairs, triplets or 1/4 parts
+  FIND_MISTAKE: "findMistake",              // identify wrong words and choose correct ones from given list
+  ASSEMBLY_SENTENCE: "assemblySentence",    // shuffled words
+  FILL_BLANKS: "fillBlanks"                 // from shuffled letters
+}
+
 export let paths = {
   registrationUrlGet: contextPath +             "/registration",
   registrationUrlPost: contextPath +            "/pub/registration",
@@ -39,7 +46,8 @@ export let paths = {
   chooseLessonTypeUrl: contextPath +            "/learn/chooseLessonType",
   statsUrl: contextPath +                       "/texts/stats",
   learnSplitSentencesOptionsUrl: contextPath +  "/learn/splitSentencesOptions",
-  apiLearnUrl: contextPath +                    "/api/learn", // start new session, textId & lessonType
+  apiLearnUrl: contextPath +                    "/api/learn",
+  apiLearnOptionsSplitSentences: contextPath +  "/api/learn/options/splitSentences",
   learnUrl: contextPath +                       "/learn",
 };
 
@@ -65,13 +73,6 @@ export function anUrl(aPath, mapOfSearchParams) {
     url.searchParams.set(key, value);
   }
   return url.href;
-}
-
-export let lessons = {
-  SPLIT: "splitSentences",                  // into multiple pairs, triplets or 1/4 parts
-  FIND_MISTAKE: "findMistake",              // identify wrong words and choose correct ones from given list
-  ASSEMBLY_SENTENCE: "assemblySentence",    // shuffled words
-  FILL_BLANKS: "fillBlanks"                 // from shuffled letters
 }
 
 let signOn = false;

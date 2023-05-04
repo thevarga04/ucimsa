@@ -10,7 +10,6 @@ import {
   generateHeader,
   getCsrfToken,
   getParamNumberValueFromUrl,
-  lessons,
   methods,
   params,
   paths,
@@ -188,8 +187,7 @@ function startLesson() {
 
   let searchOptions = new Map();
   searchOptions.set(params.TEXT_ID, textId);
-  searchOptions.set(params.TYPE, lessons.SPLIT);
-  let url = anUrl(paths.apiLearnUrl, searchOptions);
+  let url = anUrl(paths.apiLearnOptionsSplitSentences, searchOptions);
 
   let xhttp = new XMLHttpRequest();
   xhttp.open(methods.POST, url);
