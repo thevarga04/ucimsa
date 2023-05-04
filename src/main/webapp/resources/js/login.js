@@ -1,5 +1,6 @@
 import {
-  createContainerUI,
+  aDiv,
+  appendContainerUI,
   csrfHeader,
   csrfToken,
   displayWarning,
@@ -8,7 +9,7 @@ import {
   paths
 } from "./common.js";
 
-let containerUI = document.createElement("div");
+let containerUI = aDiv("container");
 
 // Generate the UI after page load is complete
 $(document).ready(function () {
@@ -18,7 +19,7 @@ $(document).ready(function () {
 });
 
 function generateUI() {
-  createContainerUI(containerUI);
+  appendContainerUI(containerUI);
 
   let formFrame = document.createElement("form");
   formFrame.id = "form";

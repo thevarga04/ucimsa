@@ -45,10 +45,10 @@ export let paths = {
   apiHeapTextUrl: contextPath +                 "/api/texts/heapText",
   chooseLessonTypeUrl: contextPath +            "/learn/chooseLessonType",
   statsUrl: contextPath +                       "/texts/stats",
-  learnSplitSentencesOptionsUrl: contextPath +  "/learn/splitSentencesOptions",
-  apiLearnUrl: contextPath +                    "/api/learn",
+  learnOptionsSplitSentencesUrl: contextPath +  "/learn/optionsSplitSentences",
   apiLearnOptionsSplitSentences: contextPath +  "/api/learn/options/splitSentences",
-  learnUrl: contextPath +                       "/learn",
+  learnLessonSplitSentencesUrl: contextPath +   "/learn/lessonSplitSentences",
+  apiLearnInquirySplitSentences: contextPath +  "/api/learn/inquiry/splitSentences",
 };
 
 export let links = {
@@ -211,9 +211,8 @@ function logout() {
   document.forms["formLogout"].submit();
 }
 
-export function createContainerUI(containerUI) {
+export function appendContainerUI(containerUI) {
   containerUI.id = "containerUI";
-  containerUI.setAttribute("class", "container");
   document.body.append(containerUI);
 }
 
@@ -244,16 +243,6 @@ export function logResponseAndStatus(responseText, status) {
   }
 }
 
-export function formCardAndCardBody(form, card, cardBody) {
-  card.id = "card";
-  card.setAttribute("class", "card mt-3");
-
-  form.id = "form";
-
-  cardBody.id = "cardBody";
-  cardBody.setAttribute("class", "card-body");
-}
-
 export function getParamNumberValueFromUrl(id) {
   let aValue = new URLSearchParams(window.location.search).get(id);
   if (aValue != null) {
@@ -272,6 +261,18 @@ export function aDiv(aClass, aStyle) {
     aDiv.setAttribute("style", aStyle);
   }
   return aDiv;
+}
+
+export function aForm(anId, aClass, aStyle) {
+  let aForm = document.createElement("form");
+  aForm.id = anId;
+  if (aClass) {
+    aForm.setAttribute("class", aClass);
+  }
+  if (aStyle) {
+    aForm.setAttribute("style", aStyle);
+  }
+  return aForm;
 }
 
 export function aLabel(aClass, aStyle) {

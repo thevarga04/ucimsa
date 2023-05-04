@@ -11,7 +11,7 @@ import lombok.NoArgsConstructor;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class SplitSentencesOptions implements LearningOptions {
+public class OptionsSplitSentences implements LearningOptions {
 
   @Min(10)
   @Max(100)

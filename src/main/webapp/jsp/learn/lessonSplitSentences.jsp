@@ -9,7 +9,7 @@
 <html lang="en">
 <head>
   <meta charset="utf-8">
-  <title>Split Sentences Lesson Options</title>
+  <title>Lesson Split Sentences</title>
   <security:csrfInput/>
 
   <%-- CDN resources, jQuery must be included before Bootstrap's js --%>
@@ -27,7 +27,7 @@
   <link href="<c:url value="/resources/css/schedules.css" />" rel="stylesheet">
   <link href="<c:url value="/resources/css/texts.css" />" rel="stylesheet">
 
-  <script type="module" src="<c:url value="/resources/js/learn/splitSentencesSession.js" />"></script>
+  <script type="module" src="<c:url value="/resources/js/learn/lessonSplitSentences.js" />"></script>
 </head>
 <body>
 <input id="userPrincipalName" type="hidden" value="${pageContext.request.userPrincipal.name}" />

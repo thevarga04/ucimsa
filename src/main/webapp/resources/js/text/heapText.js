@@ -1,14 +1,14 @@
 import {
   aDiv,
+  aForm,
   aLabel,
+  appendContainerUI,
   appendix,
   aSpan,
-  createContainerUI,
   csrfHeader,
   csrfToken,
   debug,
   displayWarning,
-  formCardAndCardBody,
   generateHeader,
   getCsrfToken,
   getParamNumberValueFromUrl,
@@ -20,10 +20,10 @@ import {
   theTitle
 } from "../common.js";
 
-let containerUI = document.createElement("div");
-let card = document.createElement("div");
-let form = document.createElement("form");
-let cardBody = document.createElement("div");
+let containerUI = aDiv("container");
+let card = aDiv("card mt-3");
+let form = aForm("form");
+let cardBody = aDiv("card-body");
 
 let textId = 0;
 let dto;
@@ -63,8 +63,7 @@ function getTextAndGenerateUI() {
 }
 
 function generateUI() {
-  createContainerUI(containerUI);
-  formCardAndCardBody(form, card, cardBody);
+  appendContainerUI(containerUI);
   theTitle(cardBody, "Your new text");
   textName();
   textarea();

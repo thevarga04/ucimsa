@@ -10,29 +10,20 @@ import org.springframework.web.bind.annotation.RequestMapping;
 @Slf4j
 public class LearnCtrl {
 
+
   @GetMapping("/chooseLessonType")
   public String getTextsLearn() {
     return "learn/chooseLessonType";
   }
 
-  /**
-   * @return A brand-new learning session based on given textId and lessonType and its options
-   */
-  @GetMapping()
-  public String getLearn() {
-    return "learn/splitSentencesSession";
+  @GetMapping("/optionsSplitSentences")
+  public String getOptionsSplitSentences() {
+    return "learn/optionsSplitSentences";
   }
 
-
-
-  @GetMapping("/splitSentencesOptions")
-  public String getSplitSentencesOptions() {
-    return "learn/splitSentencesOptions";
-  }
-
-  @GetMapping("/splitSentencesSession")
-  public String getSplitSentencesSession() {
-    return "learn/splitSentencesSession";
+  @GetMapping("/lessonSplitSentences")
+  public String getLessonSplitSentences() {
+    return "learn/lessonSplitSentences";
   }
 
 

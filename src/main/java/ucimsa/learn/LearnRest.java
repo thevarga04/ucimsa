@@ -8,6 +8,7 @@ import java.security.Principal;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -46,7 +47,7 @@ public class LearnRest {
   @PostMapping("/options/splitSentences")
   public ResponseEntity<Long> postLearn(
       @RequestParam(name = "textId") int textId
-      , @Valid SplitSentencesOptions options
+      , @Valid OptionsSplitSentences options
       , Principal principal
       , HttpSession httpSession
   ) throws UserRegistrationException {
@@ -56,13 +57,12 @@ public class LearnRest {
     return ResponseEntity.ok(sessionId);
   }
 
+  @GetMapping("/inquiry/splitSentences")
+  public ResponseEntity<OptionsSplitSentences> getInquirySplitSentences() {
 
-  // Redirect to LearnCtrl.getLearn() which inject HttpSession, validate learningSessionId
-  // and return specific LearningSession.jsp based on httpSession.lessonType
 
-  // Then splitSentencesSession.js (or other LearningSession type)
-  // will generate the LS UI and as the 1st inquiry
-  // as well as all the subsequent queries:
-  // POST /api/learn/inquiry?sessionId=xyz (returning next Inquiry or NO_CONTENT if done)
+    return ResponseEntity.ok(OptionsSplitSentences.builder().build());
+  }
+
 
 }

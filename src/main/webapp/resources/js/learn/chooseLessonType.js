@@ -1,9 +1,9 @@
 import {
   aDiv,
+  aForm,
   anUrl,
+  appendContainerUI,
   appendix,
-  createContainerUI,
-  formCardAndCardBody,
   generateHeader,
   getCsrfToken,
   getParamNumberValueFromUrl,
@@ -12,10 +12,10 @@ import {
   theTitle
 } from "../common.js";
 
-let containerUI = document.createElement("div");
-let card = document.createElement("div");
-let form = document.createElement("form");
-let cardBody = document.createElement("div");
+let containerUI = aDiv("container");
+let card = aDiv("card mt-3");
+let form = aForm("form");
+let cardBody = aDiv("card-body");
 
 let textId = 0;
 
@@ -27,8 +27,7 @@ $(document).ready(function () {
 });
 
 function generateUI() {
-  createContainerUI(containerUI);
-  formCardAndCardBody(form, card, cardBody);
+  appendContainerUI(containerUI);
   getId();
   theTitle(cardBody, "Choose Lesson Type");
   lessonTypesAsCards();
@@ -47,7 +46,7 @@ function lessonTypesAsCards() {
 
   let textSplit = "Sentence splitting or sentence simplification is the task of taking a sentence that is usually too long and breaking it up into two or more simpler sentences.";
   let linkSplit = "Split sentences";
-  let hrefSplit = anUrl(paths.learnSplitSentencesOptionsUrl, new Map([[params.TEXT_ID, textId]]));
+  let hrefSplit = anUrl(paths.learnOptionsSplitSentencesUrl, new Map([[params.TEXT_ID, textId]]));
   let cardSplit = cardLesson("heap", textSplit, linkSplit, hrefSplit, 147, 147);
 
   // Find Mistake | Assembly Sentence | Fill Blanks (from shuffled letters)

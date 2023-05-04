@@ -1,9 +1,9 @@
-import {generateHeader, getCsrfToken} from "./common.js";
+import {aDiv, aForm, generateHeader, getCsrfToken} from "./common.js";
 
-let containerUI = document.createElement("div");
-let card = document.createElement("div");
-let form = document.createElement("form");
-let cardBody = document.createElement("div");
+let containerUI = aDiv("container");
+let card = aDiv("card mt-3");
+let form = aForm("form");
+let cardBody = aDiv("card-body");
 
 // Generate the UI after page load is complete
 // Generate the UI after page load is complete

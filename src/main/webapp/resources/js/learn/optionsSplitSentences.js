@@ -1,12 +1,12 @@
 import {
   aDiv,
+  aForm,
   anUrl,
+  appendContainerUI,
   appendix,
-  createContainerUI,
   csrfHeader,
   csrfToken,
   debug,
-  formCardAndCardBody,
   generateHeader,
   getCsrfToken,
   getParamNumberValueFromUrl,
@@ -16,10 +16,10 @@ import {
   theTitle
 } from "../common.js";
 
-let containerUI = document.createElement("div");
-let card = document.createElement("div");
-let form = document.createElement("form");
-let cardBody = document.createElement("div");
+let containerUI = aDiv("container");
+let card = aDiv("card mt-3");
+let form = aForm("form");
+let cardBody = aDiv("card-body");
 
 let textId = 0;
 
@@ -31,17 +31,16 @@ $(document).ready(function () {
 });
 
 function generateUI() {
-  createContainerUI(containerUI);
-  formCardAndCardBody(form, card, cardBody);
-  getId();
+  appendContainerUI(containerUI);
+  getTextId();
   theTitle(cardBody, "Choose Split Sentences Options");
-  splitSentencesOptions();
+  optionsSplitSentences();
   pageButtons();
   appendix(cardBody, form, card, containerUI);
   updateProgressBarValues();
 }
 
-function getId() {
+function getTextId() {
   textId = getParamNumberValueFromUrl(params.TEXT_ID);
   if (!textId) {
     console.log("Failed to determinate the ID, Don't Rattle My Cage. ;-)");
@@ -70,7 +69,7 @@ let options = {
   SECTIONS: "sections"
 }
 
-function splitSentencesOptions() {
+function optionsSplitSentences() {
   let rowCoverage = aDiv(classes.OPTION);
   let titleCoverage = "How many sentences to go through";
   let colTextingCoverage = aColumn("Coverage");
@@ -203,7 +202,7 @@ function startLesson() {
           console.log("sessionId: " + sessionId);
         }
 
-        window.location.assign(anUrl(paths.learnUrl, new Map([[params.SESSION_ID, sessionId]])));
+        window.location.assign(anUrl(paths.learnLessonSplitSentencesUrl, new Map([[params.SESSION_ID, sessionId]])));
       } else {
         console.log("Response status: " + this.status);
         console.log(this.responseText);
