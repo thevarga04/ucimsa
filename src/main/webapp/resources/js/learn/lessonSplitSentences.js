@@ -1,11 +1,3 @@
-// REST
-// Get sessionId and other details from HttpSession
-
-// JS:
-// generate the LS UI and as the 1st inquiry
-// as well as all the subsequent queries:
-// POST /api/learn/inquiry?sessionId=xyz (returning next Inquiry or NO_CONTENT if done)
-
 import {
   aDiv,
   aForm,
@@ -15,7 +7,6 @@ import {
   csrfHeader,
   csrfToken,
   getCsrfToken,
-  getParamNumberValueFromUrl,
   logResponseAndStatus,
   methods,
   params,
@@ -27,31 +18,38 @@ let card = aDiv("card mt-3");
 let form = aForm("form");
 let cardBody = aDiv("card-body");
 
-let sessionId = 0;
-let dto; // .. TODO: with the details ...
+let dto = {
+  options: {
+    lessonId: 0,
+    textId: 0,
+    coverage: 100,
+    splits: 3,
+    matching: 100,
+    sections: 2
+  },
+  heapText: {
+    id: 0,
+    textname: "",
+    sentences: [
+      {
+        id: 0,
+        line: ""
+      }
+    ]
+  }
+}
 
 // Generate the UI after page load is complete
 $(document).ready(function () {
   getCsrfToken();
-  getSessionId();
   appendContainerUI(containerUI);
   getInquiryAndGenerateUI();
 });
 
-function getSessionId() {
-  sessionId = getParamNumberValueFromUrl(params.SESSION_ID);
-  if (!sessionId) {
-    console.log("Failed to determinate SessionID, Don't Rattle My Cage. ;-)");
-  }
-}
 
 function getInquiryAndGenerateUI() {
-  let searchOptions = new Map();
-  searchOptions.set(params.SESSION_ID, sessionId);
-  let url = anUrl(paths.apiLearnInquirySplitSentences, searchOptions);
-
   let xhttp = new XMLHttpRequest();
-  xhttp.open(methods.GET, url);
+  xhttp.open(methods.GET, paths.apiLearnInquirySplitSentences);
   xhttp.setRequestHeader(csrfHeader, csrfToken);
   xhttp.send();
 
@@ -83,48 +81,30 @@ function splitSentencesUI() {
 }
 
 function pageButtons() {
-  let row = aDiv("row mt-5");
-  let col1 = aDiv("col");
-  let col2 = aDiv("col-auto");
-  let col3 = aDiv("col");
-  col1.append(cancelLessonButton());
-  col2.append(nextInquiryButton());
-  col3.append("");
-
-  row.append(col1, col2, col3);
+  let row = aDiv("row justify-content-start mt-5");
+  row.append(cancelLessonButton());
   cardBody.append(row);
 }
 
 function cancelLessonButton() {
+  let searchOptions = new Map();
+  searchOptions.set(params.LESSON_ID, dto.options.lessonId);
+  let url = anUrl(paths.statsUrl, searchOptions);
+
   let linkCancel = document.createElement("a");
-  linkCancel.setAttribute("class", "btn btn-outline-warning");
-  linkCancel.setAttribute("style", "width: 100px;");
+  linkCancel.setAttribute("class", "btn btn-sm btn-outline-secondary mx-3");
+  linkCancel.setAttribute("style", "width: 180px;");
   linkCancel.title = "Cancel Lesson";
-  linkCancel.href = paths.statsUrl; // TODO: + sessionId
+  linkCancel.href = url;
   let linkCancelIcon = document.createElement("i");
   linkCancelIcon.setAttribute("class", "far fa-window-close me-2");
-  let linkCancelText = document.createTextNode("Cancel");
+  let linkCancelText = document.createTextNode("Cancel Lesson");
   linkCancel.append(linkCancelIcon, linkCancelText);
   return linkCancel;
 }
 
-function nextInquiryButton() {
-  let nextInquiry = document.createElement("button");
-  nextInquiry.id = "nextInquiry";
-  nextInquiry.name = "Next";
-  nextInquiry.title = "Next";
-  nextInquiry.type = "button";
-  nextInquiry.setAttribute("class", "btn btn-outline-success mx-3");
-  nextInquiry.setAttribute("style", "width: 140px");
-  nextInquiry.onclick = function () { getNextInquiry() };
-  let nextInquiryIcon = document.createElement("i");
-  nextInquiryIcon.setAttribute("class", "far fa-check-circle me-2"); // TODO: disabled while not solved
-  let nextInquiryText = document.createTextNode("Next");
-  nextInquiry.append(nextInquiryIcon, nextInquiryText);
-  return nextInquiry;
-}
 
-function getNextInquiry() {
+function getNextSentence() {
 
 }
 

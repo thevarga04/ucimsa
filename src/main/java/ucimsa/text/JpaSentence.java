@@ -1,54 +1,45 @@
 package ucimsa.text;
 
-import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
-import jakarta.persistence.OneToMany;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
-import java.util.ArrayList;
-import java.util.List;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import lombok.experimental.SuperBuilder;
 
-/**
- * id <br>
- * userId <br>
- * name <br>
- * sentences <br>
- */
 @Entity
-@Table(name = "heap_texts")
+@Table(name = "sentences")
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-@SuperBuilder
-public class JpaHeapText {
+@Builder
+public class JpaSentence {
 
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private int id;
-  private int userId;
-  private String name;
 
-  @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
+  @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(name = "text_id")
-  private List<JpaSentence> sentences = new ArrayList<>();
+  private JpaHeapText jpaHeapText;
+
+  private String line;
 
 
   @Override
   public String toString() {
-    return "JpaHeapText{" +
+    return "JpaSentence{" +
         "id=" + id +
-        ", userId=" + userId +
-        ", name='" + name + '\'' +
+        ", textId=" + jpaHeapText.getId() +
+        ", line='" + line + '\'' +
         '}';
   }
 

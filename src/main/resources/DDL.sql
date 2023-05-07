@@ -32,14 +32,36 @@ CREATE TABLE registration_and_reset (
 CREATE SEQUENCE seq_texts start 1 increment 1;
 
 CREATE TABLE heap_texts(
-    id              int                 NOT NULL DEFAULT nextval('seq_texts') PRIMARY KEY,
-    user_id         int                 CONSTRAINT heap_texts_user_id REFERENCES users(id) ON DELETE CASCADE,
-    name            varchar(64)         NOT NULL,
-    sentences       varchar(4096)       NOT NULL,
-    CONSTRAINT heap_texts_user_id_name  UNIQUE (user_id, name)
+    id                      int                 NOT NULL DEFAULT nextval('seq_texts') PRIMARY KEY,
+    user_id                 int                 CONSTRAINT heap_texts_user_id REFERENCES users(id) ON DELETE CASCADE,
+    name                    varchar(64)         NOT NULL,
+    CONSTRAINT heap_texts_user_id_name          UNIQUE (user_id, name)
 );
 
--- Learning Sessions
-CREATE SEQUENCE seq_sessions start 1 increment 1;
+CREATE TABLE sentences(
+    id                      serial              PRIMARY KEY,
+    text_id                 int                 CONSTRAINT sentences_text_id REFERENCES heap_texts(id) ON DELETE CASCADE,
+    line                    varchar(4096)       NOT NULL
+);
+
+-- Learning
+CREATE SEQUENCE seq_lessons start 1 increment 1;
+
+CREATE TABLE lesson_split_sentences(
+    id              int                 PRIMARY KEY,
+    user_id         int                 CONSTRAINT lesson_split_sentences_user_id REFERENCES users(id) ON DELETE CASCADE,
+    text_id         int                 NOT NULL,
+    coverage        int                 NOT NULL,
+    splits          int                 NOT NULL,
+    matching        int                 NOT NULL,
+    sections        int                 NOT NULL
+);
+
+CREATE TABLE stats_split_sentences(
+    id              serial              PRIMARY KEY,
+    lesson_id       int                 CONSTRAINT stats_split_sentences_lesson_id REFERENCES lesson_split_sentences(id) ON DELETE CASCADE,
+    hit             boolean             DEFAULT FALSE
+
+);
 
 commit;

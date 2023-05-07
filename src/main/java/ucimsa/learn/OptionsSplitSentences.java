@@ -3,15 +3,27 @@ package ucimsa.learn;
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
 import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
-@Data
-@Builder
+/**
+ * textId <br>
+ * coverage <br>
+ * splits <br>
+ * matching <br>
+ * sections <br>
+ */
+@Getter
+@Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class OptionsSplitSentences implements LearningOptions {
+@EqualsAndHashCode(callSuper = true)
+public class OptionsSplitSentences extends AbstractOptions {
+
+  @Min(1)
+  private int textId;
 
   @Min(10)
   @Max(100)

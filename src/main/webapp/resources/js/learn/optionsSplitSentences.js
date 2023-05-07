@@ -179,6 +179,7 @@ function addSpinner(button) {
 
 function startLesson() {
   let formData = new FormData(form);
+  formData.set("textId", textId);
 
   if (debug) {
     console.log(JSON.stringify(Object.fromEntries(formData)));
@@ -196,13 +197,7 @@ function startLesson() {
   xhttp.onreadystatechange = function () {
     if (this.readyState === 4) {
       if (this.status === 200) {
-        let sessionId = JSON.parse(this.responseText);
-
-        if (debug) {
-          console.log("sessionId: " + sessionId);
-        }
-
-        window.location.assign(anUrl(paths.learnLessonSplitSentencesUrl, new Map([[params.SESSION_ID, sessionId]])));
+        window.location.assign(paths.learnLessonSplitSentencesUrl);
       } else {
         console.log("Response status: " + this.status);
         console.log(this.responseText);

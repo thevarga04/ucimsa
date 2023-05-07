@@ -62,7 +62,7 @@ export let links = {
 export let params = {
   TEXT_ID: "textId",
   TYPE: "type",
-  SESSION_ID: "sessionId",
+  LESSON_ID: "lessonId",
 }
 
 export let baseUrl = `${window.location.protocol}//${window.location.host}`;

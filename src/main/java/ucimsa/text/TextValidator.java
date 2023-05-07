@@ -2,7 +2,6 @@ package ucimsa.text;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import ucimsa.realm.UserRegistrationException;
 
 @Component
 public class TextValidator {
@@ -16,7 +15,7 @@ public class TextValidator {
   }
 
 
-  public void validateIfExistsAndIsAccessible(int textId, String username) throws UserRegistrationException {
+  public void validateIfExistsAndIsAccessible(int textId, String username) {
     final var optionalJpaHeapText = textService.getJpaText(textId, username);
     if (optionalJpaHeapText.isEmpty()) {
       throw new IllegalArgumentException(

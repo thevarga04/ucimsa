@@ -26,7 +26,11 @@ let form = aForm("form");
 let cardBody = aDiv("card-body");
 
 let textId = 0;
-let dto;
+let dto = {
+  id: 0,
+  textname: "",
+  lines: []
+}
 
 // Generate the UI after page load is complete
 $(document).ready(function () {
@@ -121,7 +125,7 @@ function textarea() {
   textarea.rows = 10;
   textarea.autofocus = true;
   textarea.placeholder = "Insert your text here.";
-  textarea.value = dto == null ? null : dto.sentences;
+  textarea.value = dto == null ? null : dto.lines.join('\r\n');
 
   div7.append(textarea);
   div6.append(div7);
@@ -232,6 +236,12 @@ function saveHeapText() {
   }
 
   formData.append("id", dto ? dto.id : "0");
+  let lines = formData.get("sentences").split(/\r?\n/);
+  formData.delete("sentences");
+  let lineId = 0;
+  for (let line of lines) {
+    formData.append(`lines[${lineId++}]`, line);
+  }
 
   if (debug) {
     console.log(JSON.stringify(Object.fromEntries(formData)));

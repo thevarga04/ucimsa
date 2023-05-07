@@ -76,7 +76,7 @@ function newTextsLinks() {
 
 function textsAsCards(texts) {
   for (let text of texts) {
-    textCard(text.id, text.textname, entries(text.sentences));
+    textCard(text.id, text.textname, text.numberOfSentences);
   }
 }
 
@@ -93,10 +93,6 @@ function textCard(textId, textname, entries) {
   aTextCardBody.append(colName, colEntries, colLinkLearn, colLinkStats);
   aTextCard.append(aTextCardBody);
   cardBody.append(aTextCard);
-}
-
-function entries(sentences) {
-  return sentences.split(/\r?\n/).length;
 }
 
 function nameElement(textId, textname) {

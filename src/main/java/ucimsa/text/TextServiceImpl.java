@@ -5,7 +5,6 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import ucimsa.realm.UserRegistrationException;
 import ucimsa.realm.UserService;
 
 @Service
@@ -26,34 +25,41 @@ public class TextServiceImpl implements TextService {
 
 
   @Override
-  public List<HeapText> getTexts(String username) throws UserRegistrationException {
+  public List<HeapText> getTextsList(String username) {
     final var jpaUser = userService.getByUsername(username);
     final var jpaHeapTextList = heapTextRepo.findByUserId(jpaUser.getId());
     return textMapper.toHeapTextList(jpaHeapTextList);
   }
 
+
   @Override
-  public Optional<HeapText> getText(int textId, String username) throws UserRegistrationException {
-    return getJpaText(textId, username).map(textMapper::toHeapText);
+  public HeapText getText(int textId, String username, boolean asLines) throws TextNotFoundException {
+    final var optionalJpaHeapText = getJpaText(textId, username);
+    return optionalJpaHeapText
+        .map(jpa -> textMapper.toHeapText(jpa, asLines))
+        .orElseThrow(() -> new TextNotFoundException(
+            "TextId " + textId + " either does not exists or is for user " + username + " inaccessible."
+        ));
   }
 
   @Override
-  public Optional<JpaHeapText> getJpaText(int textId, String username) throws UserRegistrationException {
+  public Optional<JpaHeapText> getJpaText(int textId, String username) {
     final var jpaUser = userService.getByUsername(username);
     return heapTextRepo.findByIdAndUserId(textId, jpaUser.getId());
   }
 
+
   @Override
-  public Integer deleteText(int textId, String username) throws UserRegistrationException {
+  public Integer deleteText(int textId, String username) {
     final var jpaUser = userService.getByUsername(username);
     return heapTextRepo.deleteByIdAndUserId(textId, jpaUser.getId());
   }
 
 
   @Override
-  public HeapText save(HeapText heapText, String username) throws UserRegistrationException {
+  public HeapText save(HeapText heapText, String username) {
     final var jpaUser = userService.getByUsername(username);
-    final var jpaHeapText = textMapper.toJpaHeapText(heapText, jpaUser.getId());
+    final var jpaHeapText = textMapper.toJpaHeapTextAsLines(heapText, jpaUser.getId());
     final var saved = heapTextRepo.saveAndFlush(jpaHeapText);
     return HeapText.builder()
         .id(saved.getId())

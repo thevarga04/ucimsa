@@ -1,26 +1,26 @@
-package ucimsa.learn.session;
+package ucimsa.learn;
 
 import jakarta.persistence.EntityManager;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public class SessionRepo {
+public class LessonRepo {
 
   private final EntityManager entityManager;
 
 
   @Autowired
-  public SessionRepo(EntityManager entityManager) {
+  public LessonRepo(EntityManager entityManager) {
     this.entityManager = entityManager;
   }
 
 
-  public long getNextSessionId() {
-    final var nextSessionId = entityManager.createNativeQuery("SELECT nextval('seq_sessions')")
+  public int nextLessonId() {
+    final var lessonId = entityManager.createNativeQuery("SELECT nextval('seq_lessons')")
         .getSingleResult()
         .toString();
-    return Long.parseLong(nextSessionId);
+    return Integer.parseInt(lessonId);
   }
 
 

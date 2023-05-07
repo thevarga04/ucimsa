@@ -26,7 +26,7 @@ public class UserService {
     return userRepo.findByUsername(username);
   }
 
-  public JpaUser getByUsername(String username) throws UserRegistrationException {
+  public JpaUser getByUsername(String username) {
     final var jpaUser = userRepo.findByUsername(username);
     objectValidator.validateExists(jpaUser, username);
     return jpaUser;
