@@ -194,6 +194,12 @@
     border-color: #C2A782;
 }
 
+.btn-outline-heap-selected {
+    color: #fff;
+    background-color: #C2A782;
+    border-color: #C2A782;
+}
+
 .btn-outline-heap:hover {
     color: #fff;
     background-color: #C2A782;

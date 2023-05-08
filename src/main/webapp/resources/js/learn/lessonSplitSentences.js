@@ -72,29 +72,17 @@ function getInquiryAndGenerateUI() {
 }
 
 function assemblyDataModelAndGenerateSplitSentencesUI() {
-  theTitle(cardBody, dto.heapText.textname);
   sliceSentencesByWordsIfPossible();
   divideSlicesToSections();
   constructSectionsToDisplay();
-
-  if (dto.options.coverage === 100) {
-    popAndPush(dto.options.splits);
-  } else {
-    let rest = popAndPushMatchingOnes();
-    shuffleArrayOfSections(availableSections);
-    popAndPush(rest);
-  }
-  shuffleArrayOfSections(sectionsToDisplay);
+  popAvailableAndPushInquiries();
 
   generateUI();
-
-  pageButtons();
-  appendix(cardBody, form, card, containerUI);
 }
 
 let gridOfSlices = [];
 let availableSections = [];
-let sectionsToDisplay = [];
+let inquiries = [];
 function sliceSentencesByWordsIfPossible() {
   for (let sentence of dto.heapText.sentences) {
     let row = [];
@@ -160,21 +148,26 @@ function divideSlicesToSections() {
 function constructSectionsToDisplay() {
   let sections = dto.options.sections;
   while (sections-- > 0) {
-    sectionsToDisplay.push([]);
+    inquiries.push([]);
   }
 }
 
-function popAndPushMatchingOnes() {
-  let matching = Math.floor(Math.max(1, dto.options.matching / 100 * dto.options.splits));
-  let rest = dto.options.splits - matching;
-  popAndPush(matching);
-  return rest;
+function popAvailableAndPushInquiries() {
+  if (dto.options.coverage === 100) {
+    popAndPush(dto.options.splits);
+  } else {
+    let matching = Math.floor(Math.max(1, dto.options.matching / 100 * dto.options.splits));
+    popAndPush(matching);
+    shuffleArrayOfSections(availableSections);
+    popAndPush(dto.options.splits - matching);
+  }
+  shuffleArrayOfSections(inquiries);
 }
 
 function popAndPush(splits) {
   while (splits-- > 0) {
     for (let [i, section] of availableSections.entries()) {
-      sectionsToDisplay[i].push(section.pop());
+      inquiries[i].push(section.pop());
     }
   }
 }
@@ -185,12 +178,104 @@ function shuffleArrayOfSections(arrayOfSections) {
   }
 }
 
+function generateUI() {
+  theTitle(cardBody, dto.heapText.textname);
+  inquiriesAsCards();
+  pageButtons();
+  appendix(cardBody, form, card, containerUI);
+}
+
+function inquiriesAsCards() {
+  let row = 0;
+  while (row < dto.options.splits) {
+    let aRow = aDiv("row card-group");
+    for (let i = 0; i < inquiries.length; i++){
+      let inquiry = inquiries[i];
+      aRow.append(cardSlice(i, inquiry[row]));
+    }
+    row++;
+    cardBody.append(aRow);
+  }
+}
+
+function cardSlice(col, cell) {
+  let aCard = aDiv("card card-body border-left-heap btn-outline-heap mx-1 my-1", "border-radius: 0.5rem");
+  aCard.id = `slice_${col}_${cell.id}`;
+  aCard.onclick = function () { selectOrSolve(this, col, cell.id) };
+  aCard.append(cell.id + " " + cell.slice);
+  return aCard;
+}
+
+function selectOrSolve(aCard, col, id) {
+  // TODO: Disable this card ...
+  deselectAllCardsInThisCol(col);
+  selectThisCard(aCard);
+  solveIfRight(id);
+}
+
+function deselectAllCardsInThisCol(col) {
+  let pattern = `slice_${col}`;
+  let cardsInThisCol = document.querySelectorAll(`[id^=${CSS.escape(pattern)}]`);
+  for (let aCard of cardsInThisCol) {
+    aCard.classList.remove("btn-outline-heap-selected");
+    aCard.classList.add("btn-outline-heap");
+  }
+}
+
+function selectThisCard(aCard) {
+  aCard.classList.remove("btn-outline-heap");
+  aCard.classList.add("btn-outline-heap-selected");
+}
+
+function solveIfRight(id) {
+  let selectedSlices = document.getElementsByClassName("btn-outline-heap-selected");
+  if (selectedSlices.length < dto.options.sections) {
+    return;
+  }
+
+  let wrongPick = false;
+  let setOfPickedIds = new Set();
+  for (let selectedSlice of selectedSlices) {
+    let selectedId = parseInt(selectedSlice.id.split('_').pop(), 10);
+    setOfPickedIds.add(selectedId);
+    if (selectedId !== id) {
+      wrongPick = true;
+    }
+  }
+
+  if (wrongPick) {
+    recordWrongPick(setOfPickedIds);
+    // TODO: enable this card ...
+  } else {
+    displayWholeSentence(id);
+    recordGoodPick(id);
+    nextInquiry(selectedSlices);
+  }
+}
+
+function recordWrongPick(setOfPickedIds) {
+  console.log("Wrong pick on IDs: " + JSON.stringify(Array.from(setOfPickedIds.values())));
+  // ...
+
+}
+
+function displayWholeSentence(id) {
+  // from gridOfSlices ...
+
+}
+
+function recordGoodPick(id) {
+  console.log("Good pick on ID: " + id);
+  // ...
+
+}
+
 // If matching === 100%
-// Shuffle sectionsToDisplay after every pick (positive hit)
+// Shuffle inquiries after every pick (positive hit)
 // else
 // After every pick (positive hit) poll availableSections and check if there will be
-// at least 1 matching, and if not poll matching one and shuffle sectionsToDisplay.
-function generateUI() {
+// at least 1 matching, and if not poll matching one and shuffle inquiries.
+function nextInquiry(selectedSlices) {
 
 }
 
