@@ -25,18 +25,30 @@ public class OptionsSplitSentences extends AbstractOptions {
   @Min(1)
   private int textId;
 
+  /**
+   * Percentage of sentences a lesson is build from
+   */
   @Min(10)
   @Max(100)
   private int coverage;
 
+  /**
+   * Number of picks to choose from
+   */
   @Min(3)
   @Max(10)
   private int splits;
 
+  /**
+   * Initial percentage of matching slices
+   */
   @Min(10)
   @Max(100)
   private int matching;
 
+  /**
+   * Number of columns sentences are sliced into
+   */
   @Min(2)
   @Max(4)
   private int sections;
