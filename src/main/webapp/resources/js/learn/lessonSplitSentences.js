@@ -153,7 +153,7 @@ function constructSectionsToDisplay() {
 }
 
 function popAvailableAndPushInquiries() {
-  if (dto.options.coverage === 100) {
+  if (dto.options.matching === 100) {
     popAndPush(dto.options.splits);
   } else {
     let matching = Math.floor(Math.max(1, dto.options.matching / 100 * dto.options.splits));
@@ -166,8 +166,8 @@ function popAvailableAndPushInquiries() {
 
 function popAndPush(splits) {
   while (splits-- > 0) {
-    for (let [i, section] of availableSections.entries()) {
-      inquiries[i].push(section.pop());
+    for (let [col, section] of availableSections.entries()) {
+      inquiries[col].push(section.pop());
     }
   }
 }
@@ -180,21 +180,27 @@ function shuffleArrayOfSections(arrayOfSections) {
 
 function generateUI() {
   theTitle(cardBody, dto.heapText.textname);
-  inquiriesAsCards();
+
+  let inquiriesDiv = aDiv("row");
+  inquiriesDiv.id = "inquiriesDiv";
+  addInquiriesAsCards(inquiriesDiv);
+  cardBody.append(inquiriesDiv);
+
+  messageRow();
   pageButtons();
   appendix(cardBody, form, card, containerUI);
 }
 
-function inquiriesAsCards() {
+function addInquiriesAsCards(inquiriesDiv) {
   let row = 0;
-  while (row < dto.options.splits) {
+  while (row < Math.min(dto.options.splits, inquiries[0].length)) {
     let aRow = aDiv("row card-group");
     for (let i = 0; i < inquiries.length; i++){
-      let inquiry = inquiries[i];
-      aRow.append(cardSlice(i, inquiry[row]));
+      let section = inquiries[i];
+      aRow.append(cardSlice(i, section[row]));
     }
     row++;
-    cardBody.append(aRow);
+    inquiriesDiv.append(aRow);
   }
 }
 
@@ -207,7 +213,7 @@ function cardSlice(col, cell) {
 }
 
 function selectOrSolve(aCard, col, id) {
-  // TODO: Disable this card ...
+  // TODO: Disable this card until ...
   deselectAllCardsInThisCol(col);
   selectThisCard(aCard);
   solveIfRight(id);
@@ -244,13 +250,29 @@ function solveIfRight(id) {
   }
 
   if (wrongPick) {
+    notRightMessage();
     recordWrongPick(setOfPickedIds);
     // TODO: enable this card ...
   } else {
     displayWholeSentence(id);
     recordGoodPick(id);
-    nextInquiry(selectedSlices);
+    nextInquiry(id, selectedSlices);
   }
+}
+
+function messageRow() {
+  let message = aDiv("row d-flex justify-content-center fs-5 mt-4");
+  message.setAttribute("style", "min-height: 30px");
+  message.id = "message";
+  cardBody.append(message);
+}
+
+function notRightMessage() {
+  let aMessage = document.getElementById("message");
+  while (aMessage.firstChild) {
+    aMessage.removeChild(aMessage.lastChild);
+  }
+  aMessage.innerHTML = "That is not right.";
 }
 
 function recordWrongPick(setOfPickedIds) {
@@ -260,8 +282,16 @@ function recordWrongPick(setOfPickedIds) {
 }
 
 function displayWholeSentence(id) {
-  // from gridOfSlices ...
-
+  let aMessage = document.getElementById("message");
+  while (aMessage.firstChild) {
+    aMessage.removeChild(aMessage.lastChild);
+  }
+  for (let sentence of dto.heapText.sentences) {
+    if (sentence.id === id) {
+      aMessage.innerHTML = sentence.line;
+      break;
+    }
+  }
 }
 
 function recordGoodPick(id) {
@@ -270,19 +300,73 @@ function recordGoodPick(id) {
 
 }
 
-// If matching === 100%
-// Shuffle inquiries after every pick (positive hit)
-// else
-// After every pick (positive hit) poll availableSections and check if there will be
-// at least 1 matching, and if not poll matching one and shuffle inquiries.
-function nextInquiry(selectedSlices) {
+function nextInquiry(id, selectedSlices) {
+  if (!availableSections || availableSections.length === 0 || availableSections[0].length === 0) {
+    removeSelected(id, selectedSlices);
+  } else if (needToSelectMatching(id, selectedSlices)) {
+    replaceSelectedSlicesWithMatching(id, selectedSlices);
+    shuffleInquiries();
+  } else {
+    replaceSelectedWithAny(id);
+  }
+  let inquiriesDiv = removeInquiriesAsCards();
+
+  if (!inquiries || inquiries.length === 0 || inquiries[0].length === 0) {
+    youCanConcludeThisLesson(inquiriesDiv);
+  } else {
+    addInquiriesAsCards(inquiriesDiv);
+  }
+}
+
+function removeSelected(id) {
+  for (let [col, section] of inquiries.entries()) {
+    for (let [row, cell] of section.entries()) {
+      if (cell.id === id) {
+        section.splice(row, 1);
+      }
+    }
+  }
+}
+
+function needToSelectMatching(id, selectedSlices) {
+
+}
+
+function replaceSelectedSlicesWithMatching(id, selectedSlices){
+
+}
+
+function replaceSelectedWithAny(id) {
+  for (let [col, section] of inquiries.entries()) {
+    for (let cell of section) {
+      if (cell.id === id) {
+        let nextCell = availableSections[col].pop();
+        cell.id = nextCell.id;
+        cell.slice = nextCell.slice;
+      }
+    }
+  }
+}
+
+function removeInquiriesAsCards() {
+  let inquiriesDiv = document.getElementById("inquiriesDiv");
+  while (inquiriesDiv.firstChild) {
+    inquiriesDiv.removeChild(inquiriesDiv.lastChild);
+  }
+  return inquiriesDiv;
+}
+
+function shuffleInquiries() {
 
 }
 
 
 
+
+
 function pageButtons() {
   let row = aDiv("row justify-content-start mt-5");
+  row.id = "rowPageButtons";
   row.append(cancelLessonButton());
   cardBody.append(row);
 }
@@ -293,6 +377,7 @@ function cancelLessonButton() {
   let url = anUrl(paths.statsUrl, searchOptions);
 
   let linkCancel = document.createElement("a");
+  linkCancel.id = "linkCancel";
   linkCancel.setAttribute("class", "btn btn-sm btn-outline-secondary mx-3");
   linkCancel.setAttribute("style", "width: 180px;");
   linkCancel.title = "Cancel Lesson";
@@ -302,6 +387,37 @@ function cancelLessonButton() {
   let linkCancelText = document.createTextNode("Cancel Lesson");
   linkCancel.append(linkCancelIcon, linkCancelText);
   return linkCancel;
+}
+
+function youCanConcludeThisLesson(inquiriesDiv) {
+  inquiriesDiv.classList.add("justify-content-center");
+  inquiriesDiv.append("You Can Conclude This Lesson");
+
+  let rowPageButtons = document.getElementById("rowPageButtons");
+  rowPageButtons.classList.remove("justify-content-start");
+  rowPageButtons.classList.add("justify-content-center");
+  while (rowPageButtons.firstChild) {
+    rowPageButtons.removeChild(rowPageButtons.lastChild);
+  }
+  rowPageButtons.append(concludeLessonButton());
+}
+
+function concludeLessonButton() {
+  let searchOptions = new Map();
+  searchOptions.set(params.LESSON_ID, dto.options.lessonId);
+  let url = anUrl(paths.statsUrl, searchOptions);
+
+  let linkConclude = document.createElement("a");
+  linkConclude.id = "linkConclude";
+  linkConclude.setAttribute("class", "btn btn-outline-success mx-3");
+  linkConclude.setAttribute("style", "width: 180px;");
+  linkConclude.title = "Conclude Lesson";
+  linkConclude.href = url;
+  let linkConcludeIcon = document.createElement("i");
+  linkConcludeIcon.setAttribute("class", "fa-regular fa-circle-check me-2");
+  let linkConcludeText = document.createTextNode("Conclude Lesson");
+  linkConclude.append(linkConcludeIcon, linkConcludeText);
+  return linkConclude;
 }
 
 function concludeLesson() {
