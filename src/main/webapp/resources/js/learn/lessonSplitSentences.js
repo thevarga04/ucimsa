@@ -213,7 +213,6 @@ function cardSlice(col, cell) {
 }
 
 function selectOrSolve(aCard, col, id) {
-  // TODO: Disable this card until ...
   deselectAllCardsInThisCol(col);
   selectThisCard(aCard);
   solveIfRight(id);
@@ -252,11 +251,10 @@ function solveIfRight(id) {
   if (wrongPick) {
     notRightMessage();
     recordWrongPick(setOfPickedIds);
-    // TODO: enable this card ...
   } else {
     displayWholeSentence(id);
     recordGoodPick(id);
-    nextInquiry(id, selectedSlices);
+    nextInquiry(id);
   }
 }
 
@@ -300,12 +298,14 @@ function recordGoodPick(id) {
 
 }
 
-function nextInquiry(id, selectedSlices) {
+function nextInquiry(id) {
   if (!availableSections || availableSections.length === 0 || availableSections[0].length === 0) {
-    removeSelected(id, selectedSlices);
-  } else if (needToSelectMatching(id, selectedSlices)) {
-    replaceSelectedSlicesWithMatching(id, selectedSlices);
-    shuffleInquiries();
+    removeSelectedFromInquiries(id);
+  } else if (needToSelectMatching(id)) {
+    if (replaceSelectedWithMatching(id)) {
+      shuffleArrayOfSections(inquiries);
+      console.log("Shuffled, because selected ones were replaced by a matching ones.");
+    }
   } else {
     replaceSelectedWithAny(id);
   }
@@ -318,22 +318,90 @@ function nextInquiry(id, selectedSlices) {
   }
 }
 
-function removeSelected(id) {
-  for (let [col, section] of inquiries.entries()) {
-    for (let [row, cell] of section.entries()) {
+function removeSelectedFromInquiries(id) {
+  for (const section of inquiries) {
+    let indexToRemove = 0;
+    for (const [row, cell] of section.entries()) {
       if (cell.id === id) {
-        section.splice(row, 1);
+        indexToRemove = row;
       }
+    }
+    section.splice(indexToRemove, 1);
+  }
+}
+
+function needToSelectMatching(selectedId) {
+  let mapOfIds = new Map();
+  for (let section of inquiries) {
+    for (let cell of section) {
+      let id = cell.id;
+      let count = mapOfIds.get(id);
+      if (count) {
+        mapOfIds.set(id, count + 1);
+      } else {
+        mapOfIds.set(id, 1);
+      }
+    }
+  }
+  for (let [id, value] of mapOfIds) {
+    if (id !== selectedId && value === dto.options.sections) {
+      return false;
+    }
+  }
+  return true;
+}
+
+function replaceSelectedWithMatching(id) {
+  let nextMatchingId = findOneAvailableInAllSections();
+  if (!nextMatchingId) {
+    replaceSelectedWithAny(id);
+    return false;
+  }
+
+  for (let [col, section] of inquiries.entries()) {
+    for (let cell of section) {
+      if (cell.id === id) {
+        let slice = getAndRemoveMatchingOne(nextMatchingId, availableSections[col]);
+        cell.id = nextMatchingId;
+        cell.slice = slice;
+      }
+    }
+  }
+  return true;
+}
+
+function findOneAvailableInAllSections() {
+  let mapOfIds = new Map();
+  for (let section of availableSections) {
+    for (let cell of section) {
+      let id = cell.id;
+      let count = mapOfIds.get(id);
+      if (count) {
+        mapOfIds.set(id, count + 1);
+      } else {
+        mapOfIds.set(id, 1);
+      }
+    }
+  }
+  for (let [id, value] of mapOfIds) {
+    if (value === dto.options.sections) {
+      return id;
     }
   }
 }
 
-function needToSelectMatching(id, selectedSlices) {
-
-}
-
-function replaceSelectedSlicesWithMatching(id, selectedSlices){
-
+function getAndRemoveMatchingOne(nextMatchingId, availableSection) {
+  let indexToRemove = 0;
+  let slice = "nextMatchingId Not Found in this availableSection :-(";
+  for (let [row, cell] of availableSection.entries()) {
+    if (cell.id === nextMatchingId) {
+      indexToRemove = row;
+      slice = cell.slice;
+      break;
+    }
+  }
+  availableSection.splice(indexToRemove, 1);
+  return slice;
 }
 
 function replaceSelectedWithAny(id) {
@@ -355,14 +423,6 @@ function removeInquiriesAsCards() {
   }
   return inquiriesDiv;
 }
-
-function shuffleInquiries() {
-
-}
-
-
-
-
 
 function pageButtons() {
   let row = aDiv("row justify-content-start mt-5");
