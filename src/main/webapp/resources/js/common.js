@@ -49,6 +49,7 @@ export let paths = {
   apiLearnOptionsSplitSentences: contextPath +  "/api/learn/options/splitSentences",
   learnLessonSplitSentencesUrl: contextPath +   "/learn/lessonSplitSentences",
   apiLearnInquirySplitSentences: contextPath +  "/api/learn/inquiry/splitSentences",
+  apiStatsSplitSentences: contextPath +         "/api/stats/splitSentences"
 };
 
 export let links = {

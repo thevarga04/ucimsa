@@ -2,7 +2,6 @@ package ucimsa.text;
 
 import java.security.Principal;
 import java.util.List;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -14,7 +13,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/api/texts")
-@Slf4j
 public class TextRest {
 
   private final TextService textService;
@@ -47,7 +45,7 @@ public class TextRest {
 
 
   @PostMapping("/heapText")
-  public ResponseEntity<HeapText> postHeapText(HeapText heapText, Principal principal) {
+  public ResponseEntity<HeapText> saveHeapText(HeapText heapText, Principal principal) {
     final var savedText = textService.save(heapText, principal.getName());
     return ResponseEntity.ok(savedText);
   }

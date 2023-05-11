@@ -1,4 +1,4 @@
-package ucimsa.realm;
+package ucimsa.learn;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
@@ -10,22 +10,21 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Entity
-@Table(name = "roles")
+@Table(name = "lesson_split_sentences")
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class JpaRole {
+public class JpaLessonSplitSentences {
 
   @Id
-  private String name;
+  private int id;
+  private int userId;
+  private int textId;
+  private int coverage;
+  private int splits;
+  private int matching;
+  private int sections;
 
-
-  @Override
-  public String toString() {
-    return "RoleJpa{" +
-        "name='" + name + '\'' +
-        '}';
-  }
 }

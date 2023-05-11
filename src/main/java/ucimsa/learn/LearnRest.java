@@ -3,10 +3,10 @@ package ucimsa.learn;
 import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
 import java.security.Principal;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -15,7 +15,6 @@ import ucimsa.text.TextNotFoundException;
 
 @RestController
 @RequestMapping("/api/learn")
-@Slf4j
 public class LearnRest {
 
   private final LearnService learnService;
@@ -28,12 +27,10 @@ public class LearnRest {
 
 
   /**
-   * To start a learning session, first need to get and validate the textId and the lesson type options.
-   * 1. Validate input
+   * Before starting a learning session:
+   * 1. Validate input (textId and lesson type options)
    * 2. Generate unique lessonId
    * 3. Store the lessonId, LessonType and Options in the httpSession
-   *
-   * @return lessonId
    */
   @PostMapping("/options/splitSentences")
   public ResponseEntity<HttpStatus> postLearn(
@@ -49,6 +46,14 @@ public class LearnRest {
   public ResponseEntity<LessonSplitSentences> getInquirySplitSentences(HttpSession httpSession) {
     var lessonSplitSentences = (LessonSplitSentences) httpSession.getAttribute("lessonSplitSentences");
     return ResponseEntity.ok(lessonSplitSentences);
+  }
+
+  @DeleteMapping("/inquiry/splitSentences")
+  public ResponseEntity<HttpStatus> deleteLessonSplitSentences(
+      HttpSession httpSession
+  ) {
+    httpSession.removeAttribute("lessonSplitSentences");
+    return ResponseEntity.ok().build();
   }
 
 

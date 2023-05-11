@@ -47,6 +47,7 @@ CREATE TABLE sentences(
 -- Learning
 CREATE SEQUENCE seq_lessons start 1 increment 1;
 
+
 CREATE TABLE lesson_split_sentences(
     id              int                 PRIMARY KEY,
     user_id         int                 CONSTRAINT lesson_split_sentences_user_id REFERENCES users(id) ON DELETE CASCADE,
@@ -59,9 +60,12 @@ CREATE TABLE lesson_split_sentences(
 
 CREATE TABLE stats_split_sentences(
     id              serial              PRIMARY KEY,
+    user_id         int                 CONSTRAINT stats_split_sentences_user_id REFERENCES users(id) ON DELETE CASCADE,
+    text_id         int                 CONSTRAINT stats_split_sentences_text_id REFERENCES heap_texts(id) ON DELETE CASCADE,
     lesson_id       int                 CONSTRAINT stats_split_sentences_lesson_id REFERENCES lesson_split_sentences(id) ON DELETE CASCADE,
-    hit             boolean             DEFAULT FALSE
-
+    sentence_id     int                 NOT NULL, -- sentences are quite volatile
+    good_pick       boolean             DEFAULT FALSE,
+    timestamp       bigint              NOT NULL
 );
 
 commit;

@@ -6,6 +6,7 @@ import {
   appendix,
   csrfHeader,
   csrfToken,
+  debug,
   getCsrfToken,
   logResponseAndStatus,
   methods,
@@ -275,6 +276,7 @@ function notRightMessage() {
 
 function recordWrongPick(setOfPickedIds) {
   console.log("Wrong pick on IDs: " + JSON.stringify(Array.from(setOfPickedIds.values())));
+
   // ...
 
 }
@@ -294,8 +296,31 @@ function displayWholeSentence(id) {
 
 function recordGoodPick(id) {
   console.log("Good pick on ID: " + id);
-  // ...
 
+  let formData = new FormData();
+  formData.set("id", "0");
+  formData.set("textId", dto.heapText.id);
+  formData.set("lessonId", dto.options.lessonId);
+  formData.set("sentenceId", id);
+  formData.set("goodPick", "true");
+
+  if (debug) {
+    console.log(JSON.stringify(Object.fromEntries(formData)))
+  }
+
+  let xhttp = new XMLHttpRequest();
+  xhttp.open(methods.POST, paths.apiStatsSplitSentences);
+  xhttp.setRequestHeader(csrfHeader, csrfToken);
+  xhttp.send(formData);
+
+  xhttp.onreadystatechange = function () {
+    if (this.readyState === 4) {
+      if (this.status !== 200) {
+        console.log("Response status: " + this.status);
+        console.log(this.responseText);
+      }
+    }
+  }
 }
 
 function nextInquiry(id) {
@@ -442,6 +467,7 @@ function cancelLessonButton() {
   linkCancel.setAttribute("style", "width: 180px;");
   linkCancel.title = "Cancel Lesson";
   linkCancel.href = url;
+  linkCancel.onclick = function () { concludeLesson() };
   let linkCancelIcon = document.createElement("i");
   linkCancelIcon.setAttribute("class", "far fa-window-close me-2");
   let linkCancelText = document.createTextNode("Cancel Lesson");
@@ -473,6 +499,7 @@ function concludeLessonButton() {
   linkConclude.setAttribute("style", "width: 180px;");
   linkConclude.title = "Conclude Lesson";
   linkConclude.href = url;
+  linkConclude.onclick = function () { concludeLesson() };
   let linkConcludeIcon = document.createElement("i");
   linkConcludeIcon.setAttribute("class", "fa-regular fa-circle-check me-2");
   let linkConcludeText = document.createTextNode("Conclude Lesson");
@@ -482,5 +509,19 @@ function concludeLessonButton() {
 
 function concludeLesson() {
   console.log("Concluding this lesson ...");
+  form = null;
 
+  let xhttp = new XMLHttpRequest();
+  xhttp.open(methods.DELETE, paths.apiLearnInquirySplitSentences);
+  xhttp.setRequestHeader(csrfHeader, csrfToken);
+  xhttp.send();
+
+  xhttp.onreadystatechange = function () {
+    if (this.readyState === 4) {
+      if (this.status !== 200) {
+        console.log("Response status: " + this.status);
+        console.log(this.responseText);
+      }
+    }
+  }
 }

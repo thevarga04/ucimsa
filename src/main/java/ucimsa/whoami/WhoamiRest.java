@@ -3,7 +3,6 @@ package ucimsa.whoami;
 import static org.springframework.http.HttpStatus.MOVED_PERMANENTLY;
 
 import java.net.URI;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -13,7 +12,6 @@ import ucimsa.realm.LoginService;
 
 @RestController
 @RequestMapping("/api/whoami")
-@Slf4j
 public class WhoamiRest {
 
   private final LoginService loginService;
