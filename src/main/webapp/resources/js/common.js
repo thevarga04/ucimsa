@@ -79,7 +79,7 @@ export function anUrl(aPath, mapOfSearchParams) {
 
 let signOn = false;
 
-export function generateHeader() {
+export function generateHeaderBeforeContainerUI() {
   let containerHeader = document.createElement("div");
   containerHeader.id = "containerHeader";
   containerHeader.setAttribute("class", "container");
@@ -307,4 +307,32 @@ export function appendix(cardBody, form, card, containerUI) {
   form.append(cardBody);
   card.append(form);
   containerUI.append(card);
+}
+
+let monthNames = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+export function prettyDateTime(timestamp) {
+  let date = new Date(timestamp);
+  let Y = date.getFullYear();
+  let M = date.getMonth() < 10 ? "0" + date.getMonth() : date.getMonth();
+  let D = date.getDay() < 10 ? "0" + date.getDay() : date.getDay();
+  let H = date.getHours();
+  let m = date.getMinutes();
+  let s = date.getSeconds();
+  return `${Y}-${M}-${D} ${H}:${m}:${s}`;
+}
+
+export function prettyDate(timestamp) {
+  let date = new Date(timestamp);
+  let Y = date.getFullYear();
+  let M = date.getMonth() < 10 ? "0" + date.getMonth() : date.getMonth();
+  let D = date.getDay() < 10 ? "0" + date.getDay() : date.getDay();
+  return `${Y}-${M}-${D}`;
+}
+
+export function prettyTime(timestamp) {
+  let date = new Date(timestamp);
+  let H = date.getHours();
+  let m = date.getMinutes();
+  let s = date.getSeconds();
+  return `${H}:${m}:${s}`;
 }

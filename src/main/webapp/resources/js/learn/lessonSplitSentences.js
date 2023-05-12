@@ -209,7 +209,7 @@ function cardSlice(col, cell) {
   let aCard = aDiv("card card-body border-left-heap btn-outline-heap mx-1 my-1", "border-radius: 0.5rem");
   aCard.id = `slice_${col}_${cell.id}`;
   aCard.onclick = function () { selectOrSolve(this, col, cell.id) };
-  aCard.append(cell.id + " " + cell.slice);
+  aCard.append(cell.slice);
   return aCard;
 }
 

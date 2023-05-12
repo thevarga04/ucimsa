@@ -1,11 +1,19 @@
-import {aDiv, appendContainerUI, csrfToken, displayWarning, generateHeader, getCsrfToken, paths} from "./common.js";
+import {
+  aDiv,
+  appendContainerUI,
+  csrfToken,
+  displayWarning,
+  generateHeaderBeforeContainerUI,
+  getCsrfToken,
+  paths
+} from "./common.js";
 
 let containerUI = aDiv("container");
 
 // Generate the UI after page load is complete
 $(document).ready(function () {
   getCsrfToken();
-  generateHeader();
+  generateHeaderBeforeContainerUI();
   generateUI();
 });
 

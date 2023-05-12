@@ -20,14 +20,14 @@ public class StatsMapper {
   }
 
 
-  public JpaHitSplitSentences toJpa(HitSplitSentences stats, int userId) {
+  public JpaHitSplitSentences toJpa(HitSplitSentences hit, int userId) {
     return JpaHitSplitSentences.builder()
         .userId(userId)
-        .textId(stats.getTextId())
-        .lessonId(stats.getLessonId())
-        .sentenceId(stats.getSentenceId())
-        .goodPick(stats.isGoodPick())
-        .timestamp(dateTimeFacade.getCurrentTimestamp())
+        .textId(hit.getTextId())
+        .lessonId(hit.getLessonId())
+        .sentenceId(hit.getSentenceId())
+        .goodPick(hit.isGoodPick())
+        .timestamp(hit.getTimestamp())
         .build();
   }
 

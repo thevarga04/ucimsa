@@ -4,7 +4,7 @@ import {
   csrfHeader,
   csrfToken,
   displayWarning,
-  generateHeader,
+  generateHeaderBeforeContainerUI,
   getCsrfToken,
   paths
 } from "./common.js";
@@ -14,7 +14,7 @@ let containerUI = aDiv("container");
 // Generate the UI after page load is complete
 $(document).ready(function () {
   getCsrfToken();
-  generateHeader();
+  generateHeaderBeforeContainerUI();
   generateUI();
 });
 
