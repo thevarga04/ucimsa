@@ -101,11 +101,11 @@ public class WebSecurityConfig {
         .cors()
 
         .and()
-        .securityMatcher("/", "/home", "/registration", "/login", "/logout", "/texts/**", "/learn/**")
+        .securityMatcher("/", "/home", "/registration", "/login", "/logout", "/texts/**", "/learn/**", "/stats/**")
         .authorizeHttpRequests(auth -> auth
             .requestMatchers(HttpMethod.GET, "/", "/home", "/registration", "/login").permitAll()
             .requestMatchers(HttpMethod.POST, "/logout").permitAll()
-            .requestMatchers(HttpMethod.GET, "/texts/**", "/learn/**").authenticated()
+            .requestMatchers(HttpMethod.GET, "/texts/**", "/learn/**", "/stats/**").authenticated()
             .anyRequest().denyAll()
         )
 

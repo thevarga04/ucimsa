@@ -20,12 +20,12 @@ class LearnServiceTest {
   @Mock
   LessonRepo lessonRepo;
   @Mock
-  JpaLessonRepo jpaLessonRepo;
+  OptionsRepo optionsRepo;
 
   @Mock
   UserService userService;
 
-  LessonMapper lessonMapper;
+  OptionsMapper optionsMapper;
 
   @InjectMocks
   LearnService learnService;
@@ -33,7 +33,7 @@ class LearnServiceTest {
 
   @BeforeAll
   void init() {
-    learnService = new LearnService(textService, lessonRepo, userService, lessonMapper, jpaLessonRepo);
+    learnService = new LearnService(textService, lessonRepo, userService, optionsMapper, optionsRepo);
   }
 
 

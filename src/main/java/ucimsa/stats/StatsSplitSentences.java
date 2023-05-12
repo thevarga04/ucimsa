@@ -1,28 +1,21 @@
 package ucimsa.stats;
 
-import jakarta.validation.constraints.Min;
+import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import ucimsa.learn.OptionsSplitSentences;
+import ucimsa.text.HeapText;
 
 @Data
-@Builder
 @NoArgsConstructor
 @AllArgsConstructor
+@Builder
 public class StatsSplitSentences {
 
-  private int id;
-
-  @Min(1)
-  private int textId;
-
-  @Min(1)
-  private int lessonId;
-
-  @Min(1)
-  private int sentenceId;
-
-  private boolean goodPick;
+  private HeapText heapText;
+  private OptionsSplitSentences options;
+  private List<HitSplitSentences> hitSplitSentences;
 
 }

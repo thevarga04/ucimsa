@@ -251,10 +251,10 @@ function solveIfRight(id) {
 
   if (wrongPick) {
     notRightMessage();
-    recordWrongPick(setOfPickedIds);
+    recordWrongPicks(setOfPickedIds);
   } else {
     displayWholeSentence(id);
-    recordGoodPick(id);
+    recordPick(id, "true");
     nextInquiry(id);
   }
 }
@@ -274,35 +274,25 @@ function notRightMessage() {
   aMessage.innerHTML = "That is not right.";
 }
 
-function recordWrongPick(setOfPickedIds) {
+function recordWrongPicks(setOfPickedIds) {
   console.log("Wrong pick on IDs: " + JSON.stringify(Array.from(setOfPickedIds.values())));
 
-  // ...
-
-}
-
-function displayWholeSentence(id) {
-  let aMessage = document.getElementById("message");
-  while (aMessage.firstChild) {
-    aMessage.removeChild(aMessage.lastChild);
-  }
-  for (let sentence of dto.heapText.sentences) {
-    if (sentence.id === id) {
-      aMessage.innerHTML = sentence.line;
-      break;
-    }
+  for (let id of setOfPickedIds) {
+    recordPick(id, "false");
   }
 }
 
-function recordGoodPick(id) {
-  console.log("Good pick on ID: " + id);
+function recordPick(id, isGood) {
+  if (debug && isGood === "true") {
+    console.log("Good pick on ID: " + id);
+  }
 
   let formData = new FormData();
-  formData.set("id", "0");
   formData.set("textId", dto.heapText.id);
   formData.set("lessonId", dto.options.lessonId);
   formData.set("sentenceId", id);
-  formData.set("goodPick", "true");
+  formData.set("goodPick", isGood);
+  formData.set("timestamp", Date.now().toString());
 
   if (debug) {
     console.log(JSON.stringify(Object.fromEntries(formData)))
@@ -319,6 +309,19 @@ function recordGoodPick(id) {
         console.log("Response status: " + this.status);
         console.log(this.responseText);
       }
+    }
+  }
+}
+
+function displayWholeSentence(id) {
+  let aMessage = document.getElementById("message");
+  while (aMessage.firstChild) {
+    aMessage.removeChild(aMessage.lastChild);
+  }
+  for (let sentence of dto.heapText.sentences) {
+    if (sentence.id === id) {
+      aMessage.innerHTML = sentence.line;
+      break;
     }
   }
 }

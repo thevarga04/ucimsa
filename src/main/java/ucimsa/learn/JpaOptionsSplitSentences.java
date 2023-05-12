@@ -16,7 +16,7 @@ import lombok.Setter;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class JpaLessonSplitSentences {
+public class JpaOptionsSplitSentences {
 
   @Id
   private int id;

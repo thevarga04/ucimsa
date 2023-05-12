@@ -16,17 +16,17 @@ public class LearnService {
   private final TextService textService;
   private final LessonRepo lessonRepo;
   private final UserService userService;
-  private final LessonMapper lessonMapper;
-  private final JpaLessonRepo jpaLessonRepo;
+  private final OptionsMapper optionsMapper;
+  private final OptionsRepo optionsRepo;
 
 
   @Autowired
-  public LearnService(TextService textService, LessonRepo lessonRepo, UserService userService, LessonMapper lessonMapper, JpaLessonRepo jpaLessonRepo) {
+  public LearnService(TextService textService, LessonRepo lessonRepo, UserService userService, OptionsMapper optionsMapper, OptionsRepo optionsRepo) {
     this.textService = textService;
     this.lessonRepo = lessonRepo;
     this.userService = userService;
-    this.lessonMapper = lessonMapper;
-    this.jpaLessonRepo = jpaLessonRepo;
+    this.optionsMapper = optionsMapper;
+    this.optionsRepo = optionsRepo;
   }
 
   /**
@@ -46,8 +46,8 @@ public class LearnService {
     httpSession.setAttribute("lessonSplitSentences", lessonSplitSentences);
 
     final var jpaUser = userService.getByUsername(username);
-    final var jpa = lessonMapper.toJpa(lessonSplitSentences, jpaUser.getId());
-    jpaLessonRepo.save(jpa);
+    final var jpaOptions = optionsMapper.toJpa(options, jpaUser.getId());
+    optionsRepo.save(jpaOptions);
   }
 
   int calculateLimit(int splits, int numberOfSentences, int coverage) {

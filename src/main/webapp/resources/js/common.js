@@ -44,12 +44,13 @@ export let paths = {
   heapTextUrl: contextPath +                    "/texts/heapText",
   apiHeapTextUrl: contextPath +                 "/api/texts/heapText",
   chooseLessonTypeUrl: contextPath +            "/learn/chooseLessonType",
-  statsUrl: contextPath +                       "/texts/stats",
+  statsUrl: contextPath +                       "/stats",
   learnOptionsSplitSentencesUrl: contextPath +  "/learn/optionsSplitSentences",
   apiLearnOptionsSplitSentences: contextPath +  "/api/learn/options/splitSentences",
   learnLessonSplitSentencesUrl: contextPath +   "/learn/lessonSplitSentences",
   apiLearnInquirySplitSentences: contextPath +  "/api/learn/inquiry/splitSentences",
-  apiStatsSplitSentences: contextPath +         "/api/stats/splitSentences"
+  apiStatsSplitSentences: contextPath +         "/api/stats/splitSentences",
+  apiStatsLessons: contextPath +                "/api/stats/lessons/"
 };
 
 export let links = {

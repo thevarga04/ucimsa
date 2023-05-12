@@ -18,7 +18,7 @@ import lombok.Setter;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class JpaStatsSplitSentences {
+public class JpaHitSplitSentences {
 
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -28,6 +28,6 @@ public class JpaStatsSplitSentences {
   private int lessonId;
   private int sentenceId;
   private boolean goodPick;
-  private long timestamp;
+  private long timestamp; // https://currentmillis.com/
 
 }
