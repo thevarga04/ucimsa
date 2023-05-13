@@ -25,8 +25,8 @@ public class StatsMapper {
         .userId(userId)
         .textId(hit.getTextId())
         .lessonId(hit.getLessonId())
-        .sentenceId(hit.getSentenceId())
-        .goodPick(hit.isGoodPick())
+        .sentence(hit.getSentence())
+        .good(hit.isGood())
         .timestamp(hit.getTimestamp())
         .build();
   }
@@ -55,8 +55,8 @@ public class StatsMapper {
 
   public HitSplitSentences toHit(JpaHitSplitSentences jpa) {
     return HitSplitSentences.builder()
-        .sentenceId(jpa.getSentenceId())
-        .goodPick(jpa.isGoodPick())
+        .sentence(jpa.getSentence())
+        .good(jpa.isGood())
         .timestamp(jpa.getTimestamp())
         .build();
   }

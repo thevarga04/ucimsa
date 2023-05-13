@@ -3,8 +3,8 @@ import {
   appendContainerUI,
   csrfToken,
   displayWarning,
-  generateHeaderBeforeContainerUI,
   getCsrfToken,
+  headerAboveContainerUI,
   paths
 } from "./common.js";
 
@@ -13,7 +13,7 @@ let containerUI = aDiv("container");
 // Generate the UI after page load is complete
 $(document).ready(function () {
   getCsrfToken();
-  generateHeaderBeforeContainerUI();
+  headerAboveContainerUI();
   generateUI();
 });
 

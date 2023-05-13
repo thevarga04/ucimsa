@@ -6,8 +6,8 @@ import {
   appendix,
   csrfHeader,
   csrfToken,
-  generateHeaderBeforeContainerUI,
   getCsrfToken,
+  headerAboveContainerUI,
   logResponseAndStatus,
   params,
   paths,
@@ -22,7 +22,7 @@ let cardBody = aDiv("card-body");
 // Generate the UI after page load is complete
 $(document).ready(function () {
   getCsrfToken();
-  generateHeaderBeforeContainerUI();
+  headerAboveContainerUI();
   getTextsAndGenerateUI();
 });
 

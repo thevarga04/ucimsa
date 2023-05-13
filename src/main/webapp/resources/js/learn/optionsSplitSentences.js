@@ -7,9 +7,9 @@ import {
   csrfHeader,
   csrfToken,
   debug,
-  generateHeaderBeforeContainerUI,
   getCsrfToken,
   getParamNumberValueFromUrl,
+  headerAboveContainerUI,
   methods,
   params,
   paths,
@@ -26,7 +26,7 @@ let textId = 0;
 // Generate the UI after page load is complete
 $(document).ready(function () {
   getCsrfToken();
-  generateHeaderBeforeContainerUI();
+  headerAboveContainerUI();
   generateUI();
 });
 

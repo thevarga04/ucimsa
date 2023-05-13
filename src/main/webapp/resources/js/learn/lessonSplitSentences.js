@@ -8,6 +8,7 @@ import {
   csrfToken,
   debug,
   getCsrfToken,
+  getSentenceLineById,
   logResponseAndStatus,
   methods,
   params,
@@ -209,11 +210,12 @@ function cardSlice(col, cell) {
   let aCard = aDiv("card card-body border-left-heap btn-outline-heap mx-1 my-1", "border-radius: 0.5rem");
   aCard.id = `slice_${col}_${cell.id}`;
   aCard.onclick = function () { selectOrSolve(this, col, cell.id) };
-  aCard.append(cell.slice);
+  aCard.append(cell.id + " " + cell.slice);
   return aCard;
 }
 
 function selectOrSolve(aCard, col, id) {
+  // TODO: need to deselect aCard if equals to this
   deselectAllCardsInThisCol(col);
   selectThisCard(aCard);
   solveIfRight(id);
@@ -240,9 +242,11 @@ function solveIfRight(id) {
   }
 
   let wrongPick = false;
+  let wrongLine = "";
   let setOfPickedIds = new Set();
   for (let selectedSlice of selectedSlices) {
     let selectedId = parseInt(selectedSlice.id.split('_').pop(), 10);
+    wrongLine += selectedSlice.innerHTML + " ";
     setOfPickedIds.add(selectedId);
     if (selectedId !== id) {
       wrongPick = true;
@@ -251,10 +255,11 @@ function solveIfRight(id) {
 
   if (wrongPick) {
     notRightMessage();
-    recordWrongPicks(setOfPickedIds);
+    recordWrongPicks(wrongLine.trim(), setOfPickedIds);
   } else {
+    console.log("Good pick on ID: " + id);
     displayWholeSentence(id);
-    recordPick(id, "true");
+    recordPick(getSentenceLineById(id, dto.heapText.sentences), "true");
     nextInquiry(id);
   }
 }
@@ -274,24 +279,18 @@ function notRightMessage() {
   aMessage.innerHTML = "That is not right.";
 }
 
-function recordWrongPicks(setOfPickedIds) {
+function recordWrongPicks(wrongLine, setOfPickedIds) {
   console.log("Wrong pick on IDs: " + JSON.stringify(Array.from(setOfPickedIds.values())));
-
-  for (let id of setOfPickedIds) {
-    recordPick(id, "false");
-  }
+  console.log(wrongLine);
+  recordPick(wrongLine, "false");
 }
 
-function recordPick(id, isGood) {
-  if (debug && isGood === "true") {
-    console.log("Good pick on ID: " + id);
-  }
-
+function recordPick(sentence, isGood) {
   let formData = new FormData();
   formData.set("textId", dto.heapText.id);
   formData.set("lessonId", dto.options.lessonId);
-  formData.set("sentenceId", id);
-  formData.set("goodPick", isGood);
+  formData.set("sentence", sentence);
+  formData.set("good", isGood);
   formData.set("timestamp", Date.now().toString());
 
   if (debug) {
@@ -318,12 +317,7 @@ function displayWholeSentence(id) {
   while (aMessage.firstChild) {
     aMessage.removeChild(aMessage.lastChild);
   }
-  for (let sentence of dto.heapText.sentences) {
-    if (sentence.id === id) {
-      aMessage.innerHTML = sentence.line;
-      break;
-    }
-  }
+  aMessage.innerHTML = getSentenceLineById(id, dto.heapText.sentences);
 }
 
 function nextInquiry(id) {

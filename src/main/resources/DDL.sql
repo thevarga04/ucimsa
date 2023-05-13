@@ -41,7 +41,7 @@ CREATE TABLE heap_texts(
 CREATE TABLE sentences(
     id                      serial              PRIMARY KEY,
     text_id                 int                 CONSTRAINT sentences_text_id REFERENCES heap_texts(id) ON DELETE CASCADE,
-    line                    varchar(4096)       NOT NULL
+    line                    varchar(1024)       NOT NULL
 );
 
 -- Learning
@@ -63,8 +63,8 @@ CREATE TABLE stats_split_sentences(
     user_id         int                 CONSTRAINT stats_split_sentences_user_id REFERENCES users(id) ON DELETE CASCADE,
     text_id         int                 CONSTRAINT stats_split_sentences_text_id REFERENCES heap_texts(id) ON DELETE CASCADE,
     lesson_id       int                 CONSTRAINT stats_split_sentences_lesson_id REFERENCES lesson_split_sentences(id) ON DELETE CASCADE,
-    sentence_id     int                 NOT NULL, -- sentences are quite volatile
-    good_pick       boolean             DEFAULT FALSE,
+    sentence        varchar(1024)       NOT NULL, -- original sentence or mix of selected slices - the "wrong" pick
+    good            boolean             DEFAULT FALSE,
     timestamp       bigint              NOT NULL
 );
 

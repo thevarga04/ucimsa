@@ -26,8 +26,8 @@ public class JpaHitSplitSentences {
   private int userId;
   private int textId;
   private int lessonId;
-  private int sentenceId;
-  private boolean goodPick;
+  private String sentence; // original sentence or mix of selected slices - the "wrong" pick
+  private boolean good;
   private long timestamp; // https://currentmillis.com/
 
 }

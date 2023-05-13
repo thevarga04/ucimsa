@@ -79,7 +79,7 @@ export function anUrl(aPath, mapOfSearchParams) {
 
 let signOn = false;
 
-export function generateHeaderBeforeContainerUI() {
+export function headerAboveContainerUI() {
   let containerHeader = document.createElement("div");
   containerHeader.id = "containerHeader";
   containerHeader.setAttribute("class", "container");
@@ -335,4 +335,15 @@ export function prettyTime(timestamp) {
   let m = date.getMinutes();
   let s = date.getSeconds();
   return `${H}:${m}:${s}`;
+}
+
+export function getSentenceLineById(id, sentences) {
+  for (let sentence of sentences) {
+    if (sentence.id === id) {
+      return sentence.line;
+    }
+  }
+  let fail = `Sentence ${id} does not exits. :-(`;
+  console.log(fail);
+  return fail;
 }

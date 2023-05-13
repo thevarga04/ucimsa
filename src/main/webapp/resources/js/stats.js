@@ -5,9 +5,9 @@ import {
   appendix,
   csrfHeader,
   csrfToken,
-  generateHeaderBeforeContainerUI,
   getCsrfToken,
   getParamNumberValueFromUrl,
+  headerAboveContainerUI,
   logResponseAndStatus,
   params,
   paths,
@@ -44,8 +44,8 @@ let dtoLesson = {
     {
       textId: 0,
       lessonId: 0,
-      sentenceId: 0,
-      goodPick: false,
+      sentence: "",
+      good: false,
       timestamp: 0
     }
   ]
@@ -54,7 +54,7 @@ let dtoLesson = {
 // Generate the UI after page load is complete
 $(document).ready(function () {
   getCsrfToken();
-  generateHeaderBeforeContainerUI();
+  headerAboveContainerUI();
   appendContainerUI(containerUI);
   getStatsAndGenerateUI();
   appendix(cardBody, form, card, containerUI);
@@ -122,7 +122,7 @@ function optionsRow() {
   let wrongOnes = wrongHits();
   let wrongHitsClass = `col-auto fw-bold ${wrongOnes > 0 ? "text-danger" : "text-success"}`;
   let colWrongHits = aDiv(wrongHitsClass);
-  colWrongHits.append("Failures: " + wrongOnes);
+  colWrongHits.append("Mistakes: " + wrongOnes);
 
   aCardBody.append(colCoverage, colDate, colSplits, colSections, colHits, colWrongHits);
   aCard.append(aCardBody);
@@ -132,7 +132,7 @@ function optionsRow() {
 function wrongHits() {
   let wrongHits = 0;
   for (let hit of dtoLesson.hitSplitSentences) {
-    if (!hit.goodPick) {
+    if (!hit.good) {
       wrongHits++;
     }
   }
@@ -146,14 +146,14 @@ function lessonDetails() {
   for (let hit of dtoLesson.hitSplitSentences) {
     let aRow = aDiv("row justify-content-start");
 
-    let colPick = aDiv("col-1 fw-bold text-" + (hit.goodPick ? "success" : "danger"));
-    colPick.append(hit.goodPick ? "Good" : "Wrong");
+    let colPick = aDiv("col-1 fw-bold text-" + (hit.good ? "success" : "danger"));
+    colPick.append(hit.good ? "Good" : "Wrong");
 
     let colTime = aDiv("col-1");
     colTime.append(prettyTime(hit.timestamp));
 
     let colSentence = aDiv("col-auto");
-    colSentence.append(getSentenceLineById(hit.sentenceId));
+    colSentence.append(hit.sentence);
 
     aRow.append(colPick, colTime, colSentence);
     aCardBody.append(aRow);
@@ -161,16 +161,6 @@ function lessonDetails() {
   aCard.append(aCardBody);
   cardBody.append(aCard);
 }
-
-function getSentenceLineById(id) {
-  for (let sentence of dtoLesson.heapText.sentences) {
-    if (sentence.id === id) {
-      return sentence.line;
-    }
-  }
-}
-
-
 
 
 function displayStatsForText() {

@@ -1,6 +1,5 @@
 package ucimsa.stats;
 
-import jakarta.validation.Valid;
 import java.security.Principal;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -26,7 +25,7 @@ public class StatsRest {
 
 
   @PostMapping("/splitSentences")
-  public ResponseEntity<HttpStatus> saveHit(@Valid HitSplitSentences hitSplitSentences, Principal principal) {
+  public ResponseEntity<HttpStatus> saveHit(HitSplitSentences hitSplitSentences, Principal principal) {
     statsService.saveHit(hitSplitSentences, principal.getName());
     return ResponseEntity.ok().build();
   }

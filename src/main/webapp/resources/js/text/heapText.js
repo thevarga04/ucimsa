@@ -9,9 +9,9 @@ import {
   csrfToken,
   debug,
   displayWarning,
-  generateHeaderBeforeContainerUI,
   getCsrfToken,
   getParamNumberValueFromUrl,
+  headerAboveContainerUI,
   httpHeaders,
   logResponseAndStatus,
   methods,
@@ -35,7 +35,7 @@ let dto = {
 // Generate the UI after page load is complete
 $(document).ready(function () {
   getCsrfToken();
-  generateHeaderBeforeContainerUI();
+  headerAboveContainerUI();
   generateUIorFirstGetText();
 });
 

@@ -4,9 +4,9 @@ import {
   anUrl,
   appendContainerUI,
   appendix,
-  generateHeaderBeforeContainerUI,
   getCsrfToken,
   getParamNumberValueFromUrl,
+  headerAboveContainerUI,
   params,
   paths,
   theTitle
@@ -22,7 +22,7 @@ let textId = 0;
 // Generate the UI after page load is complete
 $(document).ready(function () {
   getCsrfToken();
-  generateHeaderBeforeContainerUI();
+  headerAboveContainerUI();
   generateUI();
 });
 
