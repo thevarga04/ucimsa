@@ -85,8 +85,12 @@ function displayStatsForLesson() {
   xhttp.onreadystatechange = function () {
     if (this.readyState === 4) {
       if (this.status === 200) {
-        dtoLesson = JSON.parse(this.responseText);
-        generateLessonStatsUI();
+        if (this.responseText) {
+          dtoLesson = JSON.parse(this.responseText);
+          generateLessonStatsUI();
+        } else {
+          cardBody.append("This lesson has any record.");
+        }
       } else {
         logResponseAndStatus(this.responseText, this.status);
       }
@@ -105,7 +109,7 @@ function optionsRow() {
   let aCardBody = aDiv("row card-body-list justify-content-between");
 
   let colCoverage = aDiv("col-auto");
-  colCoverage.append("Coverage: " + dtoLesson.options.coverage + " %");
+  colCoverage.append("Coverage: " + dtoLesson.options.coverage / 10 + " %");
 
   let colDate = aDiv("col-auto");
   colDate.append("Date: " + prettyDate(dtoLesson.hitSplitSentences[0].timestamp));

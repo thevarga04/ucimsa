@@ -24,7 +24,7 @@ let dto = {
   options: {
     lessonId: 0,
     textId: 0,
-    coverage: 100,
+    coverage: 1000,
     splits: 3,
     matching: 100,
     sections: 2

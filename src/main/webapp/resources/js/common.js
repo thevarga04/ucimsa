@@ -65,6 +65,7 @@ export let params = {
   TEXT_ID: "textId",
   TYPE: "type",
   LESSON_ID: "lessonId",
+  SENTENCES: "sentences"
 }
 
 export let baseUrl = `${window.location.protocol}//${window.location.host}`;
@@ -245,15 +246,17 @@ export function logResponseAndStatus(responseText, status) {
   }
 }
 
-export function getParamNumberValueFromUrl(id) {
-  let aValue = new URLSearchParams(window.location.search).get(id);
-  if (aValue != null) {
+export function getParamNumberValueFromUrl(param) {
+  let aValue = new URLSearchParams(window.location.search).get(param);
+  if (aValue) {
     let aNumber = parseInt(aValue, 10);
     if (!isNaN(aNumber)) {
       return aNumber;
     }
+  } else {
+    console.log("Failed to determinate " + param + " value from url.");
+    return null;
   }
-  return null;
 }
 
 export function aDiv(aClass, aStyle) {

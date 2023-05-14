@@ -37,7 +37,7 @@ public class LearnService {
     final var sentences = heapText.getSentences();
     Collections.shuffle(sentences);
 
-    if (options.getCoverage() != 100) {
+    if (options.getCoverage() != 1000) {
       final var limit = calculateLimit(options.getSplits(), sentences.size(), options.getCoverage());
       heapText.setSentences(sentences.stream().limit(limit).toList());
     }
@@ -51,7 +51,8 @@ public class LearnService {
   }
 
   int calculateLimit(int splits, int numberOfSentences, int coverage) {
-    return Math.max(splits, numberOfSentences * coverage / 100);
+    var limit = Math.round((float) numberOfSentences * coverage / 1000);
+    return Math.max(splits, limit);
   }
 
 }

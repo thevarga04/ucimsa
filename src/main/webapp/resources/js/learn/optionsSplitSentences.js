@@ -22,6 +22,7 @@ let form = aForm("form");
 let cardBody = aDiv("card-body");
 
 let textId = 0;
+let numberOfSentences = 0;
 
 // Generate the UI after page load is complete
 $(document).ready(function () {
@@ -32,7 +33,8 @@ $(document).ready(function () {
 
 function generateUI() {
   appendContainerUI(containerUI);
-  getTextId();
+  textId = getParamNumberValueFromUrl(params.TEXT_ID);
+  numberOfSentences = getParamNumberValueFromUrl(params.SENTENCES);
   theTitle(cardBody, "Choose Split Sentences Options");
   optionsSplitSentences();
   pageButtons();
@@ -40,12 +42,6 @@ function generateUI() {
   updateProgressBarValues();
 }
 
-function getTextId() {
-  textId = getParamNumberValueFromUrl(params.TEXT_ID);
-  if (!textId) {
-    console.log("Failed to determinate the ID, Don't Rattle My Cage. ;-)");
-  }
-}
 
 function updateProgressBarValues() {
   for (let anOption in options) {
@@ -71,27 +67,27 @@ let options = {
 
 function optionsSplitSentences() {
   let rowCoverage = aDiv(classes.OPTION);
-  let titleCoverage = "How many sentences to go through";
+  let titleCoverage = "Number of sentences to go through (learn)";
   let colTextingCoverage = aColumn("Coverage");
-  let colProgressCoverage = aProgress(10, 100, 50, 5, options.COVERAGE, titleCoverage, " %");
+  let colProgressCoverage = aProgress(3, numberOfSentences, Math.round(numberOfSentences / 2), 1, options.COVERAGE, titleCoverage, " sentences");
   rowCoverage.append(colTextingCoverage, colProgressCoverage);
 
   let rowSplits = aDiv(classes.OPTION);
   let titleSplits = "Number of sentences to split at once";
   let colTextingSplits = aColumn("Splits");
-  let colProgressSplits = aProgress(3, 10, 5, 1, options.SPLITS, titleSplits, null);
+  let colProgressSplits = aProgress(3, 10, 4, 1, options.SPLITS, titleSplits, " rows");
   rowSplits.append(colTextingSplits, colProgressSplits);
 
   let rowMatching = aDiv(classes.OPTION);
   let titleMatching = "Initial percentage of sentences which will match";
   let colTextingMatching = aColumn("Matching sentences");
-  let colProgressMatching = aProgress(10, 100, 30, 10, options.MATCHING, titleMatching, " %");
+  let colProgressMatching = aProgress(10, 100, 50, 10, options.MATCHING, titleMatching, " %");
   rowMatching.append(colTextingMatching, colProgressMatching);
 
   let rowSections = aDiv(classes.OPTION);
   let titleSections = "Number of sections to split sentences into";
   let colTextingSections = aColumn("Sections");
-  let colProgressSections = aProgress(2, 4, 2, 1, options.SECTIONS, titleSections, null);
+  let colProgressSections = aProgress(2, 4, 3, 1, options.SECTIONS, titleSections, " columns");
   rowSections.append(colTextingSections, colProgressSections);
 
   cardBody.append(rowCoverage, rowSplits, rowMatching, rowSections);
@@ -103,7 +99,7 @@ let classes = {
 }
 
 function aColumn(texting) {
-  let aCol = aDiv("fw-bold col-4");
+  let aCol = aDiv("fw-bold col-2");
   aCol.append(texting);
   return aCol;
 }
@@ -180,6 +176,8 @@ function addSpinner(button) {
 function startLesson() {
   let formData = new FormData(form);
   formData.set("textId", textId);
+  let sentencesToCover = formData.get("coverage");
+  formData.set("coverage", Math.round(sentencesToCover / numberOfSentences * 1000).toString());
 
   if (debug) {
     console.log(JSON.stringify(Object.fromEntries(formData)));

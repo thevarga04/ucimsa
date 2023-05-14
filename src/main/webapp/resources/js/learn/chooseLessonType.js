@@ -18,6 +18,7 @@ let form = aForm("form");
 let cardBody = aDiv("card-body");
 
 let textId = 0;
+let numberOfSentences = 0;
 
 // Generate the UI after page load is complete
 $(document).ready(function () {
@@ -28,17 +29,11 @@ $(document).ready(function () {
 
 function generateUI() {
   appendContainerUI(containerUI);
-  getId();
+  textId = getParamNumberValueFromUrl(params.TEXT_ID);
+  numberOfSentences = getParamNumberValueFromUrl(params.SENTENCES);
   theTitle(cardBody, "Choose Lesson Type");
   lessonTypesAsCards();
   appendix(cardBody, form, card, containerUI);
-}
-
-function getId() {
-  textId = getParamNumberValueFromUrl(params.TEXT_ID);
-  if (!textId) {
-    console.log("Failed to determinate the ID, Don't Rattle My Cage.");
-  }
 }
 
 function lessonTypesAsCards() {
@@ -46,7 +41,13 @@ function lessonTypesAsCards() {
 
   let textSplit = "Sentence splitting or sentence simplification is the task of taking a sentence that is usually too long and breaking it up into two or more simpler sentences.";
   let linkSplit = "Split sentences";
-  let hrefSplit = anUrl(paths.learnOptionsSplitSentencesUrl, new Map([[params.TEXT_ID, textId]]));
+
+  let searchOptions = new Map();
+  searchOptions.set(params.TEXT_ID, textId);
+  searchOptions.set(params.SENTENCES, numberOfSentences);
+  let url = anUrl(paths.learnOptionsSplitSentencesUrl, searchOptions);
+
+  let hrefSplit = url;
   let cardSplit = cardLesson("heap", textSplit, linkSplit, hrefSplit, 147, 147);
 
   // Find Mistake | Assembly Sentence | Fill Blanks (from shuffled letters)

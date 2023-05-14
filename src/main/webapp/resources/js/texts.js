@@ -19,6 +19,16 @@ let card = aDiv("card mt-3");
 let form = aForm("form");
 let cardBody = aDiv("card-body");
 
+let dtoTexts = [
+  {
+    id: 0,
+    textname: "",
+    lines: null,
+    sentences: null,
+    numberOfSentences: 0
+  }
+];
+
 // Generate the UI after page load is complete
 $(document).ready(function () {
   getCsrfToken();
@@ -35,8 +45,8 @@ function getTextsAndGenerateUI() {
   xhttp.onreadystatechange = function () {
     if (this.readyState === 4) {
       if (this.status === 200) {
-        let texts = JSON.parse(this.responseText);
-        generateUI(texts);
+        dtoTexts = JSON.parse(this.responseText);
+        generateUI();
       } else {
         logResponseAndStatus(this.responseText, this.status);
       }
@@ -45,11 +55,11 @@ function getTextsAndGenerateUI() {
 }
 
 
-function generateUI(texts) {
+function generateUI() {
   appendContainerUI(containerUI);
   newTextsLinks();
-  theTitle(cardBody, texts.length > 0 ? "Your Texts" : "");
-  textsAsCards(texts);
+  theTitle(cardBody, dtoTexts.length > 0 ? "Your Texts" : "");
+  textsAsCards();
   footer();
   appendix(cardBody, form, card, containerUI);
 }
@@ -74,21 +84,21 @@ function newTextsLinks() {
   containerUI.append(aRow);
 }
 
-function textsAsCards(texts) {
-  for (let text of texts) {
-    textCard(text.id, text.textname, text.numberOfSentences);
+function textsAsCards() {
+  for (let text of dtoTexts) {
+    textCard(text);
   }
 }
 
 // Textname :: Sentences/Entries :: Learn :: Stats :: Share/Private (Delete text when editing it)
-function textCard(textId, textname, entries) {
+function textCard(text) {
   let aTextCard = aDiv("d-flex card shadow border-left-heap");
   let aTextCardBody = aDiv("row card-body-list");
 
-  let colName = nameElement(textId, textname);
-  let colEntries = entriesElement(entries);
-  let colLinkLearn = linkLearnElement(textId);
-  let colLinkStats = linkStatsElement(textId);
+  let colName = nameElement(text.id, text.textname);
+  let colEntries = entriesElement(text.numberOfSentences);
+  let colLinkLearn = linkLearnElement(text);
+  let colLinkStats = linkStatsElement(text);
 
   aTextCardBody.append(colName, colEntries, colLinkLearn, colLinkStats);
   aTextCard.append(aTextCardBody);
@@ -123,14 +133,19 @@ function entriesElement(entries) {
   return aCol;
 }
 
-function linkLearnElement(textId) {
+function linkLearnElement(text) {
   let aCol = aDiv("col-auto");
+
+  let searchOptions = new Map();
+  searchOptions.set(params.TEXT_ID, text.id);
+  searchOptions.set(params.SENTENCES, text.numberOfSentences);
+  let url = anUrl(paths.chooseLessonTypeUrl, searchOptions);
 
   let linkLearn = document.createElement("a");
   linkLearn.setAttribute("class", "btn btn-outline-schedule btn-sm");
   linkLearn.setAttribute("style", "width: 90px;");
   linkLearn.title = "Start a learning session with this text";
-  linkLearn.href = anUrl(paths.chooseLessonTypeUrl, new Map([[params.TEXT_ID, textId]]));
+  linkLearn.href = url;
   let learnIcon = document.createElement("i");
   learnIcon.setAttribute("class", "fa-solid fa-graduation-cap me-2");
   let learnText = document.createTextNode("Learn");
@@ -140,14 +155,14 @@ function linkLearnElement(textId) {
   return aCol;
 }
 
-function linkStatsElement(textId) {
+function linkStatsElement(text) {
   let aCol = aDiv("col-auto");
 
   let linkStats = document.createElement("a");
   linkStats.setAttribute("class", "btn btn-outline-test btn-sm");
   linkStats.setAttribute("style", "width: 90px;");
   linkStats.title = "Start a statsing session with this text";
-  linkStats.href = anUrl(paths.statsUrl, new Map([[params.TEXT_ID, textId]]));
+  linkStats.href = anUrl(paths.statsUrl, new Map([[params.TEXT_ID, text.id]]));
   let statsIcon = document.createElement("i");
   statsIcon.setAttribute("class", "fa-solid fa-chart-line me-2");
   let statsText = document.createTextNode("Stats");

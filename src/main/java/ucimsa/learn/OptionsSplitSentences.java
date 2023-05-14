@@ -28,10 +28,10 @@ public class OptionsSplitSentences extends AbstractOptions {
   private int textId;
 
   /**
-   * Percentage of sentences a lesson is build from
+   * Per mille - ‰ of sentences a lesson is build from
    */
   @Min(10)
-  @Max(100)
+  @Max(1000)
   private int coverage;
 
   /**
