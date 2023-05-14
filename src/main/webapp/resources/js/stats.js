@@ -178,7 +178,11 @@ function displayStatsForText() {
       if (this.status === 200) {
         if (this.responseText) {
           dtoText = JSON.parse(this.responseText);
-          generateTextStatsUI();
+          if (dtoText && dtoText.length > 0) {
+            generateTextStatsUI();
+          } else {
+            cardBody.append("This text has any record.");
+          }
         } else {
           cardBody.append("This text has any record.");
         }
@@ -192,8 +196,8 @@ function displayStatsForText() {
 
 function generateTextStatsUI() {
   theTitle(cardBody, dtoText[0].heapText.textname);
-  for (let lesson of dtoText) {
-    lessonRow(lesson);
+  for (let i = dtoText.length - 1; i >= 0; i--) {
+    lessonRow(dtoText[i]);
   }
 }
 
