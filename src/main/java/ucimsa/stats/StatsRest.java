@@ -1,6 +1,7 @@
 package ucimsa.stats;
 
 import java.security.Principal;
+import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -37,6 +38,15 @@ public class StatsRest {
       , Principal principal
   ) throws TextNotFoundException {
     final var stats = statsService.getLessonStats(lessonId, principal.getName());
+    return ResponseEntity.ok(stats);
+  }
+
+  @GetMapping("/texts/{textId}")
+  public ResponseEntity<List<StatsSplitSentences>> getTextStats(
+      @PathVariable("textId") int textId
+      , Principal principal
+  ) throws TextNotFoundException {
+    final var stats = statsService.getTextStats(textId, principal.getName());
     return ResponseEntity.ok(stats);
   }
 

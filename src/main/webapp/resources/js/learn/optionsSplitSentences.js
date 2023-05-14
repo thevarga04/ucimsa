@@ -175,6 +175,7 @@ function addSpinner(button) {
 
 function startLesson() {
   let formData = new FormData(form);
+  formData.set("lessonId", "0");
   formData.set("textId", textId);
   let sentencesToCover = formData.get("coverage");
   formData.set("coverage", Math.round(sentencesToCover / numberOfSentences * 1000).toString());

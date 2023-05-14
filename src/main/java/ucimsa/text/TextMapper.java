@@ -11,12 +11,16 @@ public class TextMapper {
 
   public List<HeapText> toHeapTextList(List<JpaHeapText> jpaHeapTextList) {
     return jpaHeapTextList.stream()
-        .map(jpa -> HeapText.builder()
-            .id(jpa.getId())
-            .textname(jpa.getName())
-            .numberOfSentences(jpa.getSentences().size())
-            .build())
+        .map(this::toHeapText)
         .toList();
+  }
+
+  public HeapText toHeapText(JpaHeapText jpa) {
+    return HeapText.builder()
+        .id(jpa.getId())
+        .textname(jpa.getName())
+        .numberOfSentences(jpa.getSentences().size())
+        .build();
   }
 
   public HeapText toHeapText(JpaHeapText jpaHeapText, boolean asLines) {

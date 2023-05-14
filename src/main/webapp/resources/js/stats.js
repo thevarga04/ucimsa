@@ -1,6 +1,7 @@
 import {
   aDiv,
   aForm,
+  anUrl,
   appendContainerUI,
   appendix,
   csrfHeader,
@@ -12,6 +13,7 @@ import {
   params,
   paths,
   prettyDate,
+  prettyDateTime,
   prettyTime,
   theTitle
 } from "./common.js";
@@ -20,6 +22,7 @@ let containerUI = aDiv("container");
 let card = aDiv("card mt-3");
 let form = aForm("form");
 let cardBody = aDiv("card-body");
+
 let lessonId;
 let textId;
 
@@ -27,18 +30,14 @@ let dtoLesson = {
   heapText: {
     id: 0,
     textname: "",
-    sentences: [
-      {
-        id: 0,
-        line: ""
-      }
-    ]
+    numberOfSentences: 0,
   },
   options: {
+    lessonId: 0,
     coverage: 0,
     splits: 0,
     matching: 0,
-    sections: 0
+    sections: 0,
   },
   hitSplitSentences: [
     {
@@ -46,10 +45,11 @@ let dtoLesson = {
       lessonId: 0,
       sentence: "",
       good: false,
-      timestamp: 0
+      timestamp: 0,
     }
   ]
 }
+let dtoText = [dtoLesson];
 
 // Generate the UI after page load is complete
 $(document).ready(function () {
@@ -123,7 +123,7 @@ function optionsRow() {
   let colHits = aDiv("col-auto fw-bold");
   colHits.append("Hits: " + dtoLesson.hitSplitSentences.length);
 
-  let wrongOnes = wrongHits();
+  let wrongOnes = wrongHits(dtoLesson);
   let wrongHitsClass = `col-auto fw-bold ${wrongOnes > 0 ? "text-danger" : "text-success"}`;
   let colWrongHits = aDiv(wrongHitsClass);
   colWrongHits.append("Mistakes: " + wrongOnes);
@@ -133,9 +133,9 @@ function optionsRow() {
   cardBody.append(aCard);
 }
 
-function wrongHits() {
+function wrongHits(lesson) {
   let wrongHits = 0;
-  for (let hit of dtoLesson.hitSplitSentences) {
+  for (let hit of lesson.hitSplitSentences) {
     if (!hit.good) {
       wrongHits++;
     }
@@ -168,7 +168,70 @@ function lessonDetails() {
 
 
 function displayStatsForText() {
+  let xhttp = new XMLHttpRequest();
+  xhttp.open("GET", paths.apiStatsTexts + textId);
+  xhttp.setRequestHeader(csrfHeader, csrfToken);
+  xhttp.send();
 
+  xhttp.onreadystatechange = function () {
+    if (this.readyState === 4) {
+      if (this.status === 200) {
+        if (this.responseText) {
+          dtoText = JSON.parse(this.responseText);
+          generateTextStatsUI();
+        } else {
+          cardBody.append("This text has any record.");
+        }
+      } else {
+        logResponseAndStatus(this.responseText, this.status);
+      }
+    }
+  }
+
+}
+
+function generateTextStatsUI() {
+  theTitle(cardBody, dtoText[0].heapText.textname);
+  for (let lesson of dtoText) {
+    lessonRow(lesson);
+  }
+}
+
+function lessonRow(lesson) {
+  let aCard = aDiv("card shadow border-left-heap my-2");
+  let aCardBody = aDiv("card-body-list row justify-content-start");
+
+  let colDateTime = aDiv("col-2");
+  colDateTime.append("Date: " + prettyDateTime(lesson.hitSplitSentences[0].timestamp));
+
+  let colCoverage = aDiv("col-2");
+  colCoverage.append("Coverage (lines): " + Math.round(lesson.heapText.numberOfSentences * lesson.options.coverage / 1000));
+
+  let colSplits = aDiv("col-2");
+  colSplits.append("Splits: " + lesson.options.splits);
+
+  let colSections = aDiv("col-2");
+  colSections.append("Sections: " + lesson.options.sections);
+
+  let colHits = aDiv("col-2 fw-bold");
+  colHits.append("Hits: " + lesson.hitSplitSentences.length);
+
+  let wrongOnes = wrongHits(lesson);
+  let wrongHitsClass = `col-auto fw-bold ${wrongOnes > 0 ? "text-danger" : "text-success"}`;
+  let colWrongHits = aDiv(wrongHitsClass);
+  colWrongHits.append("Mistakes: " + wrongOnes);
+
+  let searchOptions = new Map();
+  searchOptions.set(params.LESSON_ID, lesson.options.lessonId);
+  let url = anUrl(paths.statsUrl, searchOptions);
+
+  let lessonStats = document.createElement("a");
+  lessonStats.setAttribute("class", "stretched-link");
+  lessonStats.href = url;
+
+  aCardBody.append(colDateTime, colCoverage, colSplits, colSections, colHits, colWrongHits, lessonStats);
+  aCard.append(aCardBody);
+  cardBody.append(aCard);
 }
 
 

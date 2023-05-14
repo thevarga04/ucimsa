@@ -3,20 +3,20 @@ package ucimsa.stats;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import ucimsa.common.DateTimeFacade;
 import ucimsa.learn.JpaOptionsSplitSentences;
 import ucimsa.learn.OptionsSplitSentences;
-import ucimsa.text.HeapText;
+import ucimsa.text.JpaHeapText;
+import ucimsa.text.TextMapper;
 
 @Component
 public class StatsMapper {
 
-  private final DateTimeFacade dateTimeFacade;
+  private final TextMapper textMapper;
 
 
   @Autowired
-  public StatsMapper(DateTimeFacade dateTimeFacade) {
-    this.dateTimeFacade = dateTimeFacade;
+  public StatsMapper(TextMapper textMapper) {
+    this.textMapper = textMapper;
   }
 
 
@@ -33,23 +33,27 @@ public class StatsMapper {
 
 
   public StatsSplitSentences toStatsList(
-      HeapText heapText
+      JpaHeapText jpaHeapText
       , JpaOptionsSplitSentences jpaOptions
       , List<JpaHitSplitSentences> jpaHits
   ) {
     return StatsSplitSentences.builder()
-        .heapText(heapText)
-        .options(OptionsSplitSentences.builder()
-            .coverage(jpaOptions.getCoverage())
-            .splits(jpaOptions.getSplits())
-            .matching(jpaOptions.getMatching())
-            .sections(jpaOptions.getSections())
-            .build()
-        )
+        .heapText(textMapper.toHeapText(jpaHeapText))
+        .options(toOptions(jpaOptions))
         .hitSplitSentences(jpaHits.stream()
             .map(this::toHit)
             .toList()
         )
+        .build();
+  }
+
+  public OptionsSplitSentences toOptions(JpaOptionsSplitSentences jpa) {
+    return OptionsSplitSentences.builder()
+        .lessonId(jpa.getId())
+        .coverage(jpa.getCoverage())
+        .splits(jpa.getSplits())
+        .matching(jpa.getMatching())
+        .sections(jpa.getSections())
         .build();
   }
 

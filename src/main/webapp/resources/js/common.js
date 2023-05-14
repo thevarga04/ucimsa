@@ -50,7 +50,8 @@ export let paths = {
   learnLessonSplitSentencesUrl: contextPath +   "/learn/lessonSplitSentences",
   apiLearnInquirySplitSentences: contextPath +  "/api/learn/inquiry/splitSentences",
   apiStatsSplitSentences: contextPath +         "/api/stats/splitSentences",
-  apiStatsLessons: contextPath +                "/api/stats/lessons/"
+  apiStatsLessons: contextPath +                "/api/stats/lessons/",
+  apiStatsTexts: contextPath +                  "/api/stats/texts/",
 };
 
 export let links = {
@@ -320,8 +321,7 @@ export function prettyDateTime(timestamp) {
   let D = date.getDay() < 10 ? "0" + date.getDay() : date.getDay();
   let H = date.getHours();
   let m = date.getMinutes();
-  let s = date.getSeconds();
-  return `${Y}-${M}-${D} ${H}:${m}:${s}`;
+  return `${Y}-${M}-${D} ${H}:${m}`;
 }
 
 export function prettyDate(timestamp) {
