@@ -12,8 +12,7 @@ import {
   logResponseAndStatus,
   methods,
   params,
-  paths,
-  theTitle
+  paths
 } from "../common.js";
 
 let containerUI = aDiv("container");
@@ -181,7 +180,7 @@ function shuffleArrayOfSections(arrayOfSections) {
 }
 
 function generateUI() {
-  theTitle(cardBody, dto.heapText.textname);
+  theTitleAndInquiries();
 
   let inquiriesDiv = aDiv("row");
   inquiriesDiv.id = "inquiriesDiv";
@@ -191,6 +190,23 @@ function generateUI() {
   messageRow();
   pageButtons();
   appendix(cardBody, form, card, containerUI);
+}
+
+function theTitleAndInquiries() {
+  let legendRow = aDiv("grid d-flex justify-content-between mx-2 mb-3");
+
+  let legendCol = aDiv("d-flex col-auto fs-4");
+  legendCol.append(dto.heapText.textname);
+  legendCol.id = "header";
+  legendCol.title = "Textname";
+
+  let remainingInquiries = aDiv("d-flex col-auto fw-bold");
+  remainingInquiries.id = "remainingInquiries";
+  remainingInquiries.append("Remaining: " + (availableSections[0].length + inquiries[0].length));
+  remainingInquiries.title = "Remaining inquiries in this lesson";
+
+  legendRow.append(legendCol, remainingInquiries);
+  cardBody.append(legendRow);
 }
 
 function addInquiriesAsCards(inquiriesDiv) {
@@ -209,28 +225,28 @@ function addInquiriesAsCards(inquiriesDiv) {
 function cardSlice(col, cell) {
   let aCard = aDiv("card card-body border-left-heap btn-outline-heap mx-1 my-1", "border-radius: 0.5rem");
   aCard.id = `slice_${col}_${cell.id}`;
-  aCard.onclick = function () { selectOrSolve(this, col, cell.id) };
-  aCard.append(cell.id + " " + cell.slice);
+  aCard.onclick = function () { selectOrDeselectOrSolve(this, col, cell.id) };
+  aCard.append(cell.slice);
   return aCard;
 }
 
-function selectOrSolve(aCard, col, id) {
-  // TODO: need to deselect aCard if equals to this
-  deselectAllCardsInThisCol(col);
-  selectThisCard(aCard);
+function selectOrDeselectOrSolve(aCard, col, id) {
+  selectOrDeselectThisOrOtherCardInThisCol(col, aCard);
   solveIfRight(id);
 }
 
-function deselectAllCardsInThisCol(col) {
+function selectOrDeselectThisOrOtherCardInThisCol(col, aCard) {
   let pattern = `slice_${col}`;
   let cardsInThisCol = document.querySelectorAll(`[id^=${CSS.escape(pattern)}]`);
-  for (let aCard of cardsInThisCol) {
-    aCard.classList.remove("btn-outline-heap-selected");
-    aCard.classList.add("btn-outline-heap");
+  for (let card of cardsInThisCol) {
+    if (card.classList.contains("btn-outline-heap-selected")) {
+      card.classList.remove("btn-outline-heap-selected");
+      card.classList.add("btn-outline-heap");
+      if (card.id === aCard.id) {
+        return;
+      }
+    }
   }
-}
-
-function selectThisCard(aCard) {
   aCard.classList.remove("btn-outline-heap");
   aCard.classList.add("btn-outline-heap-selected");
 }
@@ -242,25 +258,27 @@ function solveIfRight(id) {
   }
 
   let wrongPick = false;
-  let wrongLine = "";
+  let slices = Array(dto.options.sections).fill("");
   let setOfPickedIds = new Set();
   for (let selectedSlice of selectedSlices) {
-    let selectedId = parseInt(selectedSlice.id.split('_').pop(), 10);
-    wrongLine += selectedSlice.innerHTML + " ";
-    setOfPickedIds.add(selectedId);
-    if (selectedId !== id) {
+    let selectedSliceId = parseInt(selectedSlice.id.split('_').pop(), 10);
+    let selectedSliceCol = parseInt(selectedSlice.id.split('_')[1], 10);
+    slices[selectedSliceCol] = selectedSlice.innerHTML + " ";
+    setOfPickedIds.add(selectedSliceId);
+    if (selectedSliceId !== id) {
       wrongPick = true;
     }
   }
 
   if (wrongPick) {
     notRightMessage();
-    recordWrongPicks(wrongLine.trim(), setOfPickedIds);
+    recordWrongPicks(slices, setOfPickedIds);
   } else {
     console.log("Good pick on ID: " + id);
     displayWholeSentence(id);
     recordPick(getSentenceLineById(id, dto.heapText.sentences), "true");
     nextInquiry(id);
+    updateRemainingInquiries();
   }
 }
 
@@ -279,10 +297,13 @@ function notRightMessage() {
   aMessage.innerHTML = "That is not right.";
 }
 
-function recordWrongPicks(wrongLine, setOfPickedIds) {
+function recordWrongPicks(slices, setOfPickedIds) {
   console.log("Wrong pick on IDs: " + JSON.stringify(Array.from(setOfPickedIds.values())));
-  console.log(wrongLine);
-  recordPick(wrongLine, "false");
+  let wrongLine = "";
+  for (let slice of slices) {
+    wrongLine += slice;
+  }
+  recordPick(wrongLine.trim(), "false");
 }
 
 function recordPick(sentence, isGood) {
@@ -445,6 +466,13 @@ function removeInquiriesAsCards() {
   }
   return inquiriesDiv;
 }
+
+function updateRemainingInquiries() {
+  console.log("inquiries.length: " + availableSections[0].length);
+  let remaining = document.getElementById("remainingInquiries");
+  remaining.innerHTML = "Remaining: " + (availableSections[0].length + inquiries[0].length);
+}
+
 
 function pageButtons() {
   let row = aDiv("row justify-content-start mt-5");
