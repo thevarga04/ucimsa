@@ -5,6 +5,7 @@ import static ucimsa.common.ApplicationConstants.EMAIL_REGEX_PATTERN;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import org.springframework.lang.NonNull;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.HandlerInterceptor;
@@ -14,7 +15,7 @@ public class PrincipalUsernameInterceptor implements HandlerInterceptor {
 
 
   @Override
-  public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
+  public boolean preHandle(HttpServletRequest request, @NonNull HttpServletResponse response, @NonNull Object handler) throws Exception {
     final var principal = request.getUserPrincipal();
     if (isEmpty(principal) || isEmpty(principal.getName())) {
       throw new BadCredentialsException("Provided empty or null username.");
