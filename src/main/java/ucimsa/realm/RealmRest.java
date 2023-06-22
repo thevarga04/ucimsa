@@ -29,7 +29,7 @@ public class RealmRest {
   @PostMapping(value = "/registration")
   public ResponseEntity<HttpStatus> postRegistration(User user, HttpServletRequest request, HttpServletResponse response
   ) throws UserRegistrationException {
-    userRegistrationValidator.validateUnique(user);
+    userRegistrationValidator.validateUnique(userService, user);
     userService.save(user);
     loginService.login(user, request, response);
     return ResponseEntity.ok().build();

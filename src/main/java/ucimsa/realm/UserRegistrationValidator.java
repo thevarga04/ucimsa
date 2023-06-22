@@ -1,25 +1,16 @@
 package ucimsa.realm;
 
 import static org.springframework.util.ObjectUtils.isEmpty;
+import static ucimsa.common.ApplicationConstants.EMAIL_REGEX_PATTERN;
 
 import java.util.List;
-import java.util.regex.Pattern;
 import org.springframework.stereotype.Component;
 
 @Component
 public class UserRegistrationValidator {
 
-  private static final Pattern EMAIL_REGEX_PATTERN = Pattern
-      .compile("^[a-zA-Z0-9_~.+-]+@[a-zA-Z0-9.-]+$");
 
-  private final UserService userService;
-
-
-  public UserRegistrationValidator(UserService userService) {
-    this.userService = userService;
-  }
-
-  public void validateUnique(User user) throws UserRegistrationException {
+  public void validateUnique(UserService userService, User user) throws UserRegistrationException {
     if (user == null) {
       throw new UserRegistrationException("Provided null user.");
     }

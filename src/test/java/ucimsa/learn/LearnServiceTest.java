@@ -9,7 +9,7 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import ucimsa.realm.UserService;
+import ucimsa.realm.UserServiceImpl;
 import ucimsa.text.TextServiceImpl;
 
 @TestInstance(Lifecycle.PER_CLASS)
@@ -23,7 +23,7 @@ class LearnServiceTest {
   OptionsRepo optionsRepo;
 
   @Mock
-  UserService userService;
+  UserServiceImpl userServiceImpl;
 
   OptionsMapper optionsMapper;
 
@@ -33,7 +33,7 @@ class LearnServiceTest {
 
   @BeforeAll
   void init() {
-    learnService = new LearnService(textService, lessonRepo, userService, optionsMapper, optionsRepo);
+    learnService = new LearnService(textService, lessonRepo, userServiceImpl, optionsMapper, optionsRepo);
   }
 
 
