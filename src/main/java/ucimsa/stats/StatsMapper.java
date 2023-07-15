@@ -1,12 +1,13 @@
 package ucimsa.stats;
 
-import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import ucimsa.learn.JpaOptionsSplitSentences;
 import ucimsa.learn.OptionsSplitSentences;
 import ucimsa.text.JpaHeapText;
 import ucimsa.text.TextMapper;
+
+import java.util.List;
 
 @Component
 public class StatsMapper {
@@ -38,7 +39,7 @@ public class StatsMapper {
       , List<JpaHitSplitSentences> jpaHits
   ) {
     return StatsSplitSentences.builder()
-        .heapText(textMapper.toHeapText(jpaHeapText))
+        .heapTextList(textMapper.toHeapTextList(jpaHeapText))
         .options(toOptions(jpaOptions))
         .hitSplitSentences(jpaHits.stream()
             .map(this::toHit)

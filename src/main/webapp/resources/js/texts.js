@@ -19,12 +19,10 @@ let card = aDiv("card mt-3");
 let form = aForm("form");
 let cardBody = aDiv("card-body");
 
-let dtoTexts = [
+let dtoList = [
   {
     id: 0,
     textname: "",
-    lines: null,
-    sentences: null,
     numberOfSentences: 0
   }
 ];
@@ -45,7 +43,7 @@ function getTextsAndGenerateUI() {
   xhttp.onreadystatechange = function () {
     if (this.readyState === 4) {
       if (this.status === 200) {
-        dtoTexts = JSON.parse(this.responseText);
+        dtoList = JSON.parse(this.responseText);
         generateUI();
       } else {
         logResponseAndStatus(this.responseText, this.status);
@@ -58,7 +56,7 @@ function getTextsAndGenerateUI() {
 function generateUI() {
   appendContainerUI(containerUI);
   newTextsLinks();
-  theTitle(cardBody, dtoTexts.length > 0 ? "Your Texts" : "");
+  theTitle(cardBody, dtoList.length > 0 ? "Your Texts" : "");
   textsAsCards();
   footer();
   appendix(cardBody, form, card, containerUI);
@@ -85,7 +83,7 @@ function newTextsLinks() {
 }
 
 function textsAsCards() {
-  for (let text of dtoTexts) {
+  for (let text of dtoList) {
     textCard(text);
   }
 }

@@ -10,16 +10,16 @@ import java.util.List;
 /**
  * id <br>
  * textname <br>
- * sentences - Used when learning (to record sentence grained stats) <br>
+ * lines - Used to create or update one, UI does not need all the details <br>
  */
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class HeapText {
+public class HeapTextLines {
 
   private int id;
   private String textname;
-  private List<Sentence> sentences;
+  private List<String> lines;
 
 }

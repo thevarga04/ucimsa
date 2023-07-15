@@ -17,15 +17,8 @@ select * from stats_split_sentences;
 -- delete from sentences;
 
 
-
 -- HeapText and Sentences
 select h.id, h.user_id, h.name, s.line
 from heap_texts h, sentences s
 where h.id = s.text_id;
-
-
-
-select * from stats_split_sentences
-    where user_id = ( select id from users where username = 'a@a')
-    and lesson_id = 71;
 

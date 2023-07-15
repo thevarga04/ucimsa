@@ -3,3 +3,10 @@ GET http://localhost:9191/api/whoami
 
 ### home
 GET http://localhost:9191/
+
+### test v3
+GET http://localhost:9191/test/v3
+
+### swagger
+http://localhost:9191/swagger-ui.html
+

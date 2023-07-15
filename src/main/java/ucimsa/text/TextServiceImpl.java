@@ -1,11 +1,12 @@
 package ucimsa.text;
 
-import java.util.List;
-import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ucimsa.realm.UserService;
+
+import java.util.List;
+import java.util.Optional;
 
 @Service
 @Transactional
@@ -25,7 +26,7 @@ public class TextServiceImpl implements TextService {
 
 
   @Override
-  public List<HeapText> getTextsList(String username) {
+  public List<HeapTextList> getTextsList(String username) {
     final var jpaUser = userService.getByUsername(username);
     final var jpaHeapTextList = heapTextRepo.findByUserId(jpaUser.getId());
     return textMapper.toHeapTextList(jpaHeapTextList);
@@ -33,13 +34,23 @@ public class TextServiceImpl implements TextService {
 
 
   @Override
-  public HeapText getText(int textId, String username, boolean asLines) throws TextNotFoundException {
+  public HeapText getText(int textId, String username) throws TextNotFoundException {
     final var optionalJpaHeapText = getJpaText(textId, username);
     return optionalJpaHeapText
-        .map(jpa -> textMapper.toHeapText(jpa, asLines))
-        .orElseThrow(() -> new TextNotFoundException(
-            "TextId " + textId + " either does not exists or is for user " + username + " inaccessible."
-        ));
+      .map(textMapper::toHeapText)
+      .orElseThrow(() -> new TextNotFoundException(
+        "TextId " + textId + " either does not exists or is for user " + username + " inaccessible."
+      ));
+  }
+
+  @Override
+  public HeapTextLines getTextLines(int textId, String username) throws TextNotFoundException {
+    final var optionalJpaHeapText = getJpaText(textId, username);
+    return optionalJpaHeapText
+      .map(textMapper::toHeapTextLines)
+      .orElseThrow(() -> new TextNotFoundException(
+        "TextId " + textId + " either does not exists or is for user " + username + " inaccessible."
+      ));
   }
 
   @Override
@@ -57,9 +68,9 @@ public class TextServiceImpl implements TextService {
 
 
   @Override
-  public HeapText save(HeapText heapText, String username) {
+  public HeapText save(HeapTextLines heapTextLines, String username) {
     final var jpaUser = userService.getByUsername(username);
-    final var jpaHeapText = textMapper.toJpaHeapTextAsLines(heapText, jpaUser.getId());
+    final var jpaHeapText = textMapper.toJpaHeapText(heapTextLines, jpaUser.getId());
     final var saved = heapTextRepo.saveAndFlush(jpaHeapText);
     return HeapText.builder()
         .id(saved.getId())

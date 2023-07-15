@@ -2,16 +2,13 @@ package ucimsa.learn;
 
 import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
-import java.security.Principal;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import ucimsa.text.TextNotFoundException;
+
+import java.security.Principal;
 
 @RestController
 @RequestMapping("/api/learn")
@@ -49,9 +46,7 @@ public class LearnRest {
   }
 
   @DeleteMapping("/inquiry/splitSentences")
-  public ResponseEntity<HttpStatus> deleteLessonSplitSentences(
-      HttpSession httpSession
-  ) {
+  public ResponseEntity<HttpStatus> deleteLessonSplitSentences(HttpSession httpSession) {
     httpSession.removeAttribute("lessonSplitSentences");
     return ResponseEntity.ok().build();
   }

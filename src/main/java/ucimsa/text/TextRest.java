@@ -1,15 +1,11 @@
 package ucimsa.text;
 
-import java.security.Principal;
-import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.security.Principal;
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/texts")
@@ -25,15 +21,15 @@ public class TextRest {
 
 
   @GetMapping
-  public ResponseEntity<List<HeapText>> getTexts(Principal principal) {
+  public ResponseEntity<List<HeapTextList>> getTexts(Principal principal) {
     final var texts = textService.getTextsList(principal.getName());
     return ResponseEntity.ok(texts);
   }
 
 
   @GetMapping("/heapText/{textId}")
-  public ResponseEntity<HeapText> getHeapText(@PathVariable("textId") int textId, Principal principal) throws TextNotFoundException {
-    final var text = textService.getText(textId, principal.getName(), true);
+  public ResponseEntity<HeapTextLines> getHeapTextLines(@PathVariable("textId") int textId, Principal principal) throws TextNotFoundException {
+    final var text = textService.getTextLines(textId, principal.getName());
     return ResponseEntity.ok(text);
   }
 
@@ -45,9 +41,9 @@ public class TextRest {
 
 
   @PostMapping("/heapText")
-  public ResponseEntity<HeapText> saveHeapText(HeapText heapText, Principal principal) {
-    final var savedText = textService.save(heapText, principal.getName());
-    return ResponseEntity.ok(savedText);
+  public ResponseEntity<HeapText> saveHeapText(HeapTextLines heapTextLines, Principal principal) {
+    final var savedHeapText = textService.save(heapTextLines, principal.getName());
+    return ResponseEntity.ok(savedHeapText);
   }
 
 }

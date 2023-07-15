@@ -5,21 +5,19 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.util.List;
-
 /**
  * id <br>
  * textname <br>
- * sentences - Used when learning (to record sentence grained stats) <br>
+ * numberOfSentences - Used when providing a list of texts, UI needs just id, textname and number of sentences <br>
  */
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class HeapText {
+public class HeapTextList {
 
   private int id;
   private String textname;
-  private List<Sentence> sentences;
+  private int numberOfSentences;
 
 }

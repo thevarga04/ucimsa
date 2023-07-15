@@ -27,7 +27,7 @@ let lessonId;
 let textId;
 
 let dtoLesson = {
-  heapText: {
+  heapTextList: {
     id: 0,
     textname: "",
     numberOfSentences: 0,
@@ -99,7 +99,7 @@ function displayStatsForLesson() {
 }
 
 function generateLessonStatsUI() {
-  theTitle(cardBody, dtoLesson.heapText.textname);
+  theTitle(cardBody, dtoLesson.heapTextList.textname);
   optionsRow();
   lessonDetails();
 }
@@ -195,7 +195,7 @@ function displayStatsForText() {
 }
 
 function generateTextStatsUI() {
-  theTitle(cardBody, dtoText[0].heapText.textname);
+  theTitle(cardBody, dtoText[0].heapTextList.textname);
   for (let i = dtoText.length - 1; i >= 0; i--) {
     lessonRow(dtoText[i]);
   }
@@ -209,7 +209,7 @@ function lessonRow(lesson) {
   colDateTime.append("Date: " + prettyDateTime(lesson.hitSplitSentences[0].timestamp));
 
   let colCoverage = aDiv("col-2");
-  colCoverage.append("Coverage (lines): " + Math.round(lesson.heapText.numberOfSentences * lesson.options.coverage / 1000));
+  colCoverage.append("Coverage (lines): " + Math.round(lesson.heapTextList.numberOfSentences * lesson.options.coverage / 1000));
 
   let colSplits = aDiv("col-2");
   colSplits.append("Splits: " + lesson.options.splits);

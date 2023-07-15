@@ -2,11 +2,10 @@ package ucimsa.learn;
 
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
+
+import static ucimsa.common.ApplicationConstants.TEN;
+import static ucimsa.common.ApplicationConstants.THOUSAND;
 
 /**
  * textId <br>
@@ -30,8 +29,8 @@ public class OptionsSplitSentences {
   /**
    * Per mille - ‰ of sentences a lesson is build from
    */
-  @Min(10)
-  @Max(1000)
+  @Min(TEN)
+  @Max(THOUSAND)
   private int coverage;
 
   /**

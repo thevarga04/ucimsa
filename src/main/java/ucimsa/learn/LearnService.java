@@ -1,58 +1,55 @@
 package ucimsa.learn;
 
 import jakarta.servlet.http.HttpSession;
-import java.util.Collections;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import ucimsa.realm.UserService;
+import ucimsa.common.math.Abacus;
 import ucimsa.text.TextNotFoundException;
 import ucimsa.text.TextService;
+
+import java.util.Collections;
+
+import static ucimsa.common.ApplicationConstants.THOUSAND;
 
 @Service
 @Transactional
 public class LearnService {
 
   private final TextService textService;
+  private final Abacus abacus;
   private final LessonRepo lessonRepo;
-  private final UserService userService;
-  private final OptionsMapper optionsMapper;
-  private final OptionsRepo optionsRepo;
+  private final OptionsService optionsService;
 
 
   @Autowired
-  public LearnService(TextService textService, LessonRepo lessonRepo, UserService userService, OptionsMapper optionsMapper, OptionsRepo optionsRepo) {
+  public LearnService(TextService textService, Abacus abacus, LessonRepo lessonRepo, OptionsService optionsService) {
     this.textService = textService;
+    this.abacus = abacus;
     this.lessonRepo = lessonRepo;
-    this.userService = userService;
-    this.optionsMapper = optionsMapper;
-    this.optionsRepo = optionsRepo;
+    this.optionsService = optionsService;
   }
+
 
   /**
-   * Choose sentences to learn in this session, calculate limit from coverage, but at least as many as splits
+   * Create new lesson containing sentences to learn from given options in this session
    */
   public void createLessonSplitSentences(OptionsSplitSentences options, HttpSession httpSession, String username) throws TextNotFoundException {
-    final var heapText = textService.getText(options.getTextId(), username, false);
-    final var sentences = heapText.getSentences();
-    Collections.shuffle(sentences);
-
-    if (options.getCoverage() != 1000) {
-      final var limit = calculateLimit(options.getSplits(), sentences.size(), options.getCoverage());
-      heapText.setSentences(sentences.stream().limit(limit).toList());
-    }
+    final var text = textService.getText(options.getTextId(), username);
     options.setLessonId(lessonRepo.nextLessonId());
-    final var lessonSplitSentences = new LessonSplitSentences(options, heapText);
+
+    final var sentences = text.getSentences();
+    Collections.shuffle(sentences);
+    if (options.getCoverage() < THOUSAND) {
+      final var ratio = (float) options.getCoverage() / THOUSAND;
+      final var limit = abacus.atLeastMinUpToMaxByRatio(options.getSplits(), sentences.size(), ratio);
+      text.setSentences(sentences.stream().limit(limit).toList());
+    }
+    optionsService.save(options, username);
+
+    final var lessonSplitSentences = new LessonSplitSentences(options, text);
     httpSession.setAttribute("lessonSplitSentences", lessonSplitSentences);
-
-    final var jpaUser = userService.getByUsername(username);
-    final var jpaOptions = optionsMapper.toJpa(options, jpaUser.getId());
-    optionsRepo.save(jpaOptions);
   }
 
-  int calculateLimit(int splits, int numberOfSentences, int coverage) {
-    var limit = Math.round((float) numberOfSentences * coverage / 1000);
-    return Math.max(splits, limit);
-  }
 
 }

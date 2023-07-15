@@ -5,13 +5,16 @@ import java.util.Optional;
 
 public interface TextService {
 
-  List<HeapText> getTextsList(String username);
+  List<HeapTextList> getTextsList(String username);
 
-  HeapText getText(int textId, String username, boolean asLines) throws TextNotFoundException;
+  HeapText getText(int textId, String username) throws TextNotFoundException;
+
+  HeapTextLines getTextLines(int textId, String username) throws TextNotFoundException;
 
   Optional<JpaHeapText> getJpaText(int textId, String username);
 
   Integer deleteText(int textId, String username);
 
-  HeapText save(HeapText heapText, String username);
+  HeapText save(HeapTextLines heapTextLines, String username);
+
 }

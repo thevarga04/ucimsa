@@ -7,7 +7,7 @@ import ucimsa.common.ObjectValidator;
 
 @Service
 @Transactional
-public class UserServiceImpl implements UserService {
+public class UserServiceRDBMS implements UserService {
 
   private final UserRepo userRepo;
   private final UserMapper userMapper;
@@ -15,7 +15,7 @@ public class UserServiceImpl implements UserService {
 
 
   @Autowired
-  public UserServiceImpl(UserRepo userRepo, UserMapper userMapper, ObjectValidator objectValidator) {
+  public UserServiceRDBMS(UserRepo userRepo, UserMapper userMapper, ObjectValidator objectValidator) {
     this.userRepo = userRepo;
     this.userMapper = userMapper;
     this.objectValidator = objectValidator;
